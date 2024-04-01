@@ -9,15 +9,25 @@ import (
 func UserRequestToModel(req request.UserRequest) models.User {
 	return models.User{
 		Username: req.Username,
-		Email: req.Email,
+		Email:    req.Email,
 		Password: req.Password,
 	}
 }
 
 func UserModelToResponse(user models.User) response.UserResponse {
 	return response.UserResponse{
-		ID: user.ID,
+		ID:       user.ID,
 		Username: user.Username,
-		Email: user.Email,
+		Email:    user.Email,
 	}
+}
+
+func UsersModelsToResponse(users []models.User) []response.UserResponse {
+	resp := make([]response.UserResponse, len(users))
+
+	for i, v := range users {
+		resp[i] = UserModelToResponse(v)
+	}
+
+	return resp
 }

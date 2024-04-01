@@ -48,9 +48,10 @@ func GetAllUsers(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
+	resp := mapper.UsersModelsToResponse(*users)
 	pagination := common.GeneratePagination(totalItems, limitInt, int64(offsetInt))
 
-	return c.JSON(response.NewResponsePagination(&users, pagination))
+	return c.JSON(response.NewResponsePagination(resp, pagination))
 }
 
 func CreateUser(c *fiber.Ctx) error {
