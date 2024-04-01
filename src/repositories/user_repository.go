@@ -26,27 +26,3 @@ func CreateUser(newUser models.User) (*models.User, error) {
 	}
 	return &newUser, nil
 }
-
-// func GetAllUser(c *fiber.Ctx) (*[]models.User, error) {
-// 	var users []models.User
-// 	database.DB.Find(&users)
-// 	return &users, nil
-// }
-
-// func CreateUser(c *fiber.Ctx) (*models.User, error) {
-// 	newUser := new(models.User)
-
-// 	if err := c.BodyParser(newUser); err != nil {
-// 		return nil, err
-// 	}
-
-// if err := validate.Struct(newUser); err != nil {
-// 	return nil, err
-// }
-
-// 	if err := database.DB.Create(&newUser).Error; err != nil {
-// 		return nil, err
-// 	}
-
-// 	return newUser, nil
-// }

@@ -12,7 +12,7 @@ type BaseResponse[T any] struct {
 func NewResponse[T any](resource T) BaseResponse[T] {
 	return BaseResponse[T]{
 		Success:    true,
-		Message:    []string{""},
+		Message:    nil,
 		Resource:   resource,
 		Pagination: nil,
 	}
@@ -21,7 +21,7 @@ func NewResponse[T any](resource T) BaseResponse[T] {
 func NewResponsePagination[T any](resource T, meta common.Pagination) BaseResponse[T] {
 	return BaseResponse[T]{
 		Success:    true,
-		Message:    []string{""},
+		Message:    nil,
 		Resource:   resource,
 		Pagination: &meta,
 	}

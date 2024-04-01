@@ -2,10 +2,12 @@ package services
 
 import (
 	"pet_api/src/common"
+	"pet_api/src/dto/request"
 	"pet_api/src/dto/response"
-	"pet_api/src/models"
+	"pet_api/src/mapper"
 	"pet_api/src/repositories"
 	"strconv"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -52,17 +54,20 @@ func GetAllUsers(c *fiber.Ctx) error {
 }
 
 func CreateUser(c *fiber.Ctx) error {
-	newUser := new(models.User)
+	newUser := new(request.UserRequest)
 
 	if err := c.BodyParser(newUser); err != nil {
 		return c.Status(500).JSON(response.ErrorResponse(err.Error()))
 	}
 	if err := validate.Struct(newUser); err != nil {
-		return c.Status(400).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(400).JSON(response.ErrorsResponse(strings.Split(err.Error(), "\n")))
 	}
-	_, err := repositories.CreateUser(*newUser)
+
+	user := mapper.UserRequestToModel(*newUser)
+	_, err := repositories.CreateUser(user)
 	if err != nil {
 		return c.Status(500).JSON(response.ErrorResponse(err.Error()))
 	}
-	return c.JSON(response.NewResponse(*newUser))
+	resp := mapper.UserModelToResponse(user)
+	return c.JSON(response.NewResponse(resp))
 }
