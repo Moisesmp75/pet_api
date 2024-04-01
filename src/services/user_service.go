@@ -7,14 +7,8 @@ import (
 	"pet_api/src/mapper"
 	"pet_api/src/repositories"
 	"strconv"
-	"strings"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-)
-
-var (
-	validate = validator.New()
 )
 
 func GetAllUsers(c *fiber.Ctx) error {
@@ -55,20 +49,16 @@ func GetAllUsers(c *fiber.Ctx) error {
 }
 
 func CreateUser(c *fiber.Ctx) error {
-	newUser := new(request.UserRequest)
-
-	if err := c.BodyParser(newUser); err != nil {
-		return c.Status(500).JSON(response.ErrorResponse(err.Error()))
-	}
-	if err := validate.Struct(newUser); err != nil {
-		return c.Status(400).JSON(response.ErrorsResponse(strings.Split(err.Error(), "\n")))
+	model := request.UserRequest{}
+	if _, err := common.ValidateRequest(c.Body(), &model); err != nil {
+		return c.Status(400).JSON(response.ErrorsResponse(err))
 	}
 
-	user := mapper.UserRequestToModel(*newUser)
-	_, err := repositories.CreateUser(user)
+	user := mapper.UserRequestToModel(model)
+	userCreated, err := repositories.CreateUser(user)
 	if err != nil {
 		return c.Status(500).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.UserModelToResponse(user)
+	resp := mapper.UserModelToResponse(*userCreated)
 	return c.JSON(response.NewResponse(resp))
 }

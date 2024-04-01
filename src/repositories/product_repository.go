@@ -1,50 +1,50 @@
 package repositories
 
-import (
-	"pet_api/src/database"
-	"pet_api/src/models"
+// import (
+// 	"pet_api/src/database"
+// 	"pet_api/src/models"
 
-	// "github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
-)
-
-// var (
-// 	validate = validator.New()
+// 	// "github.com/go-playground/validator/v10"
+// 	"github.com/gofiber/fiber/v2"
 // )
 
-func GetAllProduct(c *fiber.Ctx) (*[]models.Product, error) {
-	var products []models.Product
-	database.DB.Find(&products)
-	return &products, nil
-}
+// // var (
+// // 	validate = validator.New()
+// // )
 
-func GetProduct(c *fiber.Ctx) (*models.Product, error) {
-	id := c.Params("id")
+// func GetAllProduct(c *fiber.Ctx) (*[]models.Product, error) {
+// 	var products []models.Product
+// 	database.DB.Find(&products)
+// 	return &products, nil
+// }
 
-	var product models.Product
-	result := database.DB.Find(&product, id)
+// func GetProduct(c *fiber.Ctx) (*models.Product, error) {
+// 	id := c.Params("id")
 
-	if result.Error != nil || result.RowsAffected == 0 {
-		return nil, result.Error
-	}
+// 	var product models.Product
+// 	result := database.DB.Find(&product, id)
 
-	return &product, nil
-}
+// 	if result.Error != nil || result.RowsAffected == 0 {
+// 		return nil, result.Error
+// 	}
 
-func CreateProduct(c *fiber.Ctx) (*models.Product, error) {
-	newProduct := new(models.Product)
+// 	return &product, nil
+// }
 
-	if err := c.BodyParser(newProduct); err != nil {
-		return nil, err
-	}
+// func CreateProduct(c *fiber.Ctx) (*models.Product, error) {
+// 	newProduct := new(models.Product)
 
-	// if err := validate.Struct(newProduct); err != nil {
-	// 	return nil, err
-	// }
+// 	if err := c.BodyParser(newProduct); err != nil {
+// 		return nil, err
+// 	}
 
-	if err := database.DB.Create(&newProduct).Error; err != nil {
-		return nil, err
-	}
+// 	// if err := validate.Struct(newProduct); err != nil {
+// 	// 	return nil, err
+// 	// }
 
-	return newProduct, nil
-}
+// 	if err := database.DB.Create(&newProduct).Error; err != nil {
+// 		return nil, err
+// 	}
+
+// 	return newProduct, nil
+// }
