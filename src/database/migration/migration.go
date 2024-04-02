@@ -11,4 +11,9 @@ func RunMigration() {
 	if errUser != nil {
 		log.Fatal(errUser.Error())
 	}
+
+	errPet := database.DB.AutoMigrate(&models.Pet{})
+	if errPet != nil {
+		log.Fatal(errPet.Error())
+	}
 }
