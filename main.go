@@ -24,7 +24,8 @@ func main() {
 
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
 	}))
 
 	apiRoute := app.Group("/api")
@@ -41,7 +42,7 @@ func main() {
 	controllers.AddControllers(apiV1)
 
 	port := os.Getenv("PORT")
-	err := app.Listen(fmt.Sprintf(":%v",port))
+	err := app.Listen(fmt.Sprintf(":%v", port))
 	if err != nil {
 		log.Fatal(err.Error())
 	}

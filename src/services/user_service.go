@@ -80,5 +80,12 @@ func LoginUser(c *fiber.Ctx) error {
 	}
 	lgResp := mapper.UserResponseToLoginResponse(resp)
 	lgResp.Token = token
+
+	c.Cookie(&fiber.Cookie{
+		Name:        "token",
+		Value:       token,
+		Secure:      true,
+		SessionOnly: false,
+	})
 	return c.JSON(response.NewResponse(lgResp))
 }
