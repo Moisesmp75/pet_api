@@ -2,7 +2,7 @@ package request
 
 import "time"
 
-type Pet struct {
+type PetRequest struct {
 	Name        string    `json:"name" validate:"required,gt=0"`
 	Breed       string    `json:"breed" validate:"required,gt=0"`
 	BornDate    time.Time `json:"born_date" validate:"required,datetime"`

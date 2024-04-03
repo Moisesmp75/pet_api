@@ -1,6 +1,8 @@
 package services
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 func GetAllPets(c *fiber.Ctx) error {
 	return nil

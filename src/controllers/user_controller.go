@@ -11,4 +11,5 @@ func UserController(api fiber.Router) {
 
 	usersRoute.Get("/", services.GetAllUsers)
 	usersRoute.Post("/", services.CreateUser)
+	usersRoute.Post("/login", services.LoginUser)
 }

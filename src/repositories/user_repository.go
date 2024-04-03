@@ -26,3 +26,12 @@ func CreateUser(newUser models.User) (*models.User, error) {
 	}
 	return &newUser, nil
 }
+
+func GetUserByEmail(email string) (*models.User, error) {
+	var user models.User
+	data := database.DB.Where("email = ?", email).First(&user)
+	if data.Error != nil {
+		return nil, data.Error
+	}
+	return &user, nil
+}
