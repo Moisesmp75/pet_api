@@ -1,16 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"pet_api/src/controllers"
 	"pet_api/src/database"
 	"pet_api/src/database/migration"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("No se pudo cargar el archivo .env")
+	}
 
 	database.InitDatabase()
 	migration.RunMigration()
@@ -33,7 +40,8 @@ func main() {
 
 	controllers.AddControllers(apiV1)
 
-	err := app.Listen(":3000")
+	port := os.Getenv("PORT")
+	err := app.Listen(fmt.Sprintf(":%v",port))
 	if err != nil {
 		log.Fatal(err.Error())
 	}
