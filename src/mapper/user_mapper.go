@@ -31,3 +31,11 @@ func UsersModelsToResponse(users []models.User) []response.UserResponse {
 
 	return resp
 }
+
+func UserResponseToLoginResponse(userResp response.UserResponse) response.LoginResponse {
+	return response.LoginResponse{
+		Email:    userResp.Email,
+		Username: userResp.Username,
+		Token:    "",
+	}
+}

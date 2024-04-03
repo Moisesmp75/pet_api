@@ -1,6 +1,7 @@
 package services
 
 import (
+	"log"
 	"pet_api/src/auth"
 	"pet_api/src/common"
 	"pet_api/src/dto/request"
@@ -14,12 +15,16 @@ import (
 func GetAllUsers(c *fiber.Ctx) error {
 	offset, limit, errors := ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
+		for _, v := range errors {
+			log.Println(v)
+		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(errors))
 	}
-	
+
 	totalItems := repositories.CountUsers()
 	users, err := repositories.GetAllUsers(offset, limit)
 	if err != nil {
+		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 	resp := mapper.UsersModelsToResponse(*users)
@@ -31,6 +36,9 @@ func GetAllUsers(c *fiber.Ctx) error {
 func CreateUser(c *fiber.Ctx) error {
 	model := request.UserRequest{}
 	if _, err := common.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
 
@@ -38,6 +46,7 @@ func CreateUser(c *fiber.Ctx) error {
 	user.Password = auth.Encrypt_password(user.Password)
 	userCreated, err := repositories.CreateUser(user)
 	if err != nil {
+		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 	resp := mapper.UserModelToResponse(*userCreated)
@@ -47,16 +56,29 @@ func CreateUser(c *fiber.Ctx) error {
 func LoginUser(c *fiber.Ctx) error {
 	model := request.LoginRequest{}
 	if _, err := common.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
 	user, err := repositories.GetUserByEmail(model.Email)
 	if err != nil {
+		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 
 	if !auth.DecryptPasswordHash(user.Password, model.Password) {
+		log.Println("Invalid Credentials")
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse("Invalid Credentials"))
 	}
+
 	resp := mapper.UserModelToResponse(*user)
-	return c.JSON(response.NewResponse(resp))
+	token, err := auth.GenerateToken(resp)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	lgResp := mapper.UserResponseToLoginResponse(resp)
+	lgResp.Token = token
+	return c.JSON(response.NewResponse(lgResp))
 }
