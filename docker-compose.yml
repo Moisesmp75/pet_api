@@ -14,6 +14,8 @@ services:
       MYSQL_DATABASE: pet_db
     container_name: pet_db
     volumes:
-      - /var/lib/docker/volumes/pet_db/_data:/var/lib/mysql
+      - pet_db:/var/lib/mysql
     ports:
       - "3306:3306"
+volumes:
+  pet_db:

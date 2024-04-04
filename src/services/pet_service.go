@@ -27,11 +27,23 @@ func GetAllPets(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	//Mapper PetsModel to PetsResponse
+
+	users_id := []uint{}
+	for _, p := range pets {
+		users_id = append(users_id, p.UserID)
+	}
+
+	users, err := repositories.GetUsersById(users_id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	resp := mapper.PetsModelsToResponse(pets, users)
 
 	pagination := common.GeneratePagination(totalItems, limit, int64(offset))
 
-	return c.JSON(response.NewResponsePagination(pets, pagination))
+	return c.JSON(response.NewResponsePagination(resp, pagination))
 }
 
 func GetPetById(c *fiber.Ctx) error {
@@ -46,8 +58,9 @@ func GetPetById(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-	//Mapper PetModel to PetResponse
-	return c.JSON(response.NewResponse(pet))
+	user, _ := repositories.GetUserById(pet.UserID)
+	resp := mapper.PetModelToResponse(pet, user)
+	return c.JSON(response.NewResponse(resp))
 }
 
 func CreatePet(c *fiber.Ctx) error {
@@ -59,12 +72,12 @@ func CreatePet(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
 	pet := mapper.PetRequestToModel(model)
-	user, err := repositories.GetUserById(pet.UserID)
+	user, err := repositories.GetUserById(model.UserID)
 	if err != nil {
+		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	userResponse := mapper.UserModelToResponse(*user)
 	petCreated, err := repositories.CreatePet(pet)
 
 	if err != nil {
@@ -72,6 +85,6 @@ func CreatePet(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	resp := mapper.PetModelToResponse(*petCreated, userResponse)
+	resp := mapper.PetModelToResponse(petCreated, user)
 	return c.JSON(response.NewResponse(resp))
 }

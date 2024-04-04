@@ -13,5 +13,5 @@ type PetResponse struct {
 	Gender      string       `json:"gender"`
 	Color       string       `json:"color"`
 	Weight      float32      `json:"weight"`
-	User        UserResponse `json:"user"`
+	User     	  UserResponse `json:"user,omitempty"`
 }

@@ -14,11 +14,21 @@ func UserRequestToModel(req request.UserRequest) models.User {
 	}
 }
 
+func OnlyUserModelToResponse(user models.User) *response.UserResponse {
+	return &response.UserResponse{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		// Pets: 		OnlyPetsModelsToResponse(user.Pets),
+	}
+}
+
 func UserModelToResponse(user models.User) response.UserResponse {
 	return response.UserResponse{
 		ID:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
+		Pets: 		OnlyPetsModelsToResponse(user.Pets),
 	}
 }
 

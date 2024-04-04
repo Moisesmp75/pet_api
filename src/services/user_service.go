@@ -8,6 +8,7 @@ import (
 	"pet_api/src/dto/response"
 	"pet_api/src/mapper"
 	"pet_api/src/repositories"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,10 +28,26 @@ func GetAllUsers(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.UsersModelsToResponse(*users)
+	resp := mapper.UsersModelsToResponse(users)
 	pagination := common.GeneratePagination(totalItems, limit, int64(offset))
 
 	return c.JSON(response.NewResponsePagination(resp, pagination))
+}
+
+func GetUserById(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.Atoi(strid)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	user, err := repositories.GetUserById(uint(id))
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.UserModelToResponse(user)
+	return c.JSON(response.NewResponse(resp))
 }
 
 func CreateUser(c *fiber.Ctx) error {
@@ -49,7 +66,7 @@ func CreateUser(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.UserModelToResponse(*userCreated)
+	resp := mapper.UserModelToResponse(userCreated)
 	return c.JSON(response.NewResponse(resp))
 }
 
@@ -72,7 +89,7 @@ func LoginUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse("Invalid Credentials"))
 	}
 
-	resp := mapper.UserModelToResponse(*user)
+	resp := mapper.UserModelToResponse(user)
 	token, err := auth.GenerateToken(resp)
 	if err != nil {
 		log.Println(err.Error())

@@ -1,8 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Pet struct {
+	gorm.Model
 	ID          uint      `gorm:"primaryKey;autoIncrement"`
 	Name        string    `gorm:"size:20;not null"`
 	Breed       string    `gorm:"size:20;not null"`
@@ -12,5 +17,5 @@ type Pet struct {
 	Gender      string    `gorm:"size:1"`
 	Color       string    `gorm:"size:40"`
 	Weight      float32   `gorm:"not null"`
-	UserID      uint      `gorm:"not null"`
+	UserID     	uint      `gorm:"not null"`
 }
