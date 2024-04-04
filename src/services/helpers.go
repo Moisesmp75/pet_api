@@ -17,7 +17,6 @@ func ValidatePaginationParams(offset, limit string) (int, int, []string) {
 
 	if len(errors) > 0 {
 		return 0, 0, errors
-		// return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(errors))
 	}
 
 	if offsetInt < 0 {

@@ -11,27 +11,27 @@ func CountPets() int64 {
 	return total_items
 }
 
-func CreatePet(newPet models.Pet) (*models.Pet, error){
+func CreatePet(newPet models.Pet) (*models.Pet, error) {
 	if err := database.DB.Create(&newPet).Error; err != nil {
 		return nil, err
 	}
 	return &newPet, nil
 }
 
-func GetPetById(id uint64) (*models.Pet, error) {
+func GetPetById(id uint) (*models.Pet, error) {
 	var pet models.Pet
-	data := database.DB.Find(&pet, id)
+	data := database.DB.First(&pet, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
 		return nil, data.Error
 	}
-	
+
 	return &pet, nil
 }
 
 func GetAllPets(offset, limit int) (*[]models.Pet, error) {
 	var pets []models.Pet
-	data := database.DB.Offset(offset).Limit(limit).Find(pets)
+	data := database.DB.Offset(offset).Limit(limit).Find(&pets)
 	if data.Error != nil {
 		return nil, data.Error
 	}

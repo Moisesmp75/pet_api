@@ -16,7 +16,7 @@ import (
 func main() {
 
 	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("No se pudo cargar el archivo .env")
+		log.Fatal("Could no load .env file")
 	}
 
 	database.InitDatabase()
@@ -25,7 +25,7 @@ func main() {
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
-		AllowCredentials: true,
+		AllowCredentials: false,
 	}))
 
 	apiRoute := app.Group("/api")

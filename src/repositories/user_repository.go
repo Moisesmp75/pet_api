@@ -35,3 +35,12 @@ func GetUserByEmail(email string) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+func GetUserById(id uint) (*models.User, error) {
+	var user models.User
+	data := database.DB.Find(&user, id)
+	if data.Error != nil || data.RowsAffected == 0 {
+		return nil, data.Error
+	}
+	return &user, nil
+}
