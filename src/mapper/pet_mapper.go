@@ -32,7 +32,7 @@ func PetModelToResponse(pet models.Pet, user models.User) response.PetResponse {
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
-		User:      	 us,
+		User:        us,
 	}
 }
 
@@ -46,7 +46,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
-		// User: 			 nil,
+		User:        nil,
 	}
 }
 
