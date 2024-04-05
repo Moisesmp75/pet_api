@@ -19,6 +19,7 @@ func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 		ID:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
+		Role:     user.Role.Name,
 	}
 }
 
@@ -28,7 +29,7 @@ func UserModelToResponse(user models.User) response.UserResponse {
 		Username: user.Username,
 		Email:    user.Email,
 		Pets:     OnlyPetsModelsToResponse(user.Pets),
-		Role: 		user.Role.Name,
+		Role:     user.Role.Name,
 	}
 }
 
@@ -46,6 +47,7 @@ func UserResponseToLoginResponse(userResp response.UserResponse) response.LoginR
 	return response.LoginResponse{
 		Email:    userResp.Email,
 		Username: userResp.Username,
+		Role:     userResp.Role,
 		Token:    "",
 	}
 }

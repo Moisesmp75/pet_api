@@ -89,7 +89,7 @@ func LoginUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 	if user.Role.ID != model.RoleID {
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse("Access Denied: Your account does not have the necessary privileges to log in as an organization. Please make sure you are using the correct credentials for your user type."))
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse("Access Denied: Your account does not have the necessary privileges. Please make sure you are using the correct credentials for your user type."))
 	}
 	if !auth.DecryptPasswordHash(user.Password, model.Password) {
 		log.Println("Invalid Credentials")

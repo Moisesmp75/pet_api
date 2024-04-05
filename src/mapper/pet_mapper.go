@@ -21,8 +21,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 	}
 }
 
-func PetModelToResponse(pet models.Pet, user models.User) response.PetResponse {
-	us := OnlyUserModelToResponse(user)
+func PetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
 		Breed:       pet.Breed,
@@ -32,7 +31,7 @@ func PetModelToResponse(pet models.Pet, user models.User) response.PetResponse {
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
-		User:        us,
+		User:        OnlyUserModelToResponse(pet.User),
 	}
 }
 
@@ -50,11 +49,11 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 	}
 }
 
-func PetsModelsToResponse(pets []models.Pet, users []models.User) []response.PetResponse {
+func PetsModelsToResponse(pets []models.Pet) []response.PetResponse {
 	resp := make([]response.PetResponse, len(pets))
 
 	for i, v := range pets {
-		resp[i] = PetModelToResponse(v, users[i])
+		resp[i] = PetModelToResponse(v)
 	}
 
 	return resp

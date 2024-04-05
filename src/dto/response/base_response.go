@@ -3,18 +3,18 @@ package response
 import "pet_api/src/common"
 
 type BaseResponse[T any] struct {
-	Success  bool     `json:"success"`
-	Message  []string `json:"message"`
-	Resource T        `json:"resource"`
-	// Pagination *common.Pagination `json:"meta"`
-}
-
-type BaseResponsePag[T any] struct {
 	Success    bool               `json:"success"`
 	Message    []string           `json:"message"`
 	Resource   T                  `json:"resource"`
-	Pagination *common.Pagination `json:"meta"`
+	Pagination *common.Pagination `json:"meta,omitempty"`
 }
+
+// type BaseResponsePag[T any] struct {
+// 	Success    bool               `json:"success"`
+// 	Message    []string           `json:"message"`
+// 	Resource   T                  `json:"resource"`
+// 	Pagination *common.Pagination `json:"meta"`
+// }
 
 func NewResponse[T any](resource T) BaseResponse[T] {
 	return BaseResponse[T]{
@@ -25,8 +25,8 @@ func NewResponse[T any](resource T) BaseResponse[T] {
 	}
 }
 
-func NewResponsePagination[T any](resource T, meta common.Pagination) BaseResponsePag[T] {
-	return BaseResponsePag[T]{
+func NewResponsePagination[T any](resource T, meta common.Pagination) BaseResponse[T] {
+	return BaseResponse[T]{
 		Success:    true,
 		Message:    nil,
 		Resource:   resource,

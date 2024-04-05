@@ -28,18 +28,7 @@ func GetAllPets(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	users_id := []uint{}
-	for _, p := range pets {
-		users_id = append(users_id, p.UserID)
-	}
-
-	users, err := repositories.GetUsersById(users_id)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
-	}
-
-	resp := mapper.PetsModelsToResponse(pets, users)
+	resp := mapper.PetsModelsToResponse(pets)
 
 	pagination := common.GeneratePagination(totalItems, limit, int64(offset))
 
@@ -58,8 +47,8 @@ func GetPetById(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-	user, _ := repositories.GetUserById(pet.UserID)
-	resp := mapper.PetModelToResponse(pet, user)
+
+	resp := mapper.PetModelToResponse(pet)
 	return c.JSON(response.NewResponse(resp))
 }
 
@@ -72,7 +61,8 @@ func CreatePet(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
 	pet := mapper.PetRequestToModel(model)
-	user, err := repositories.GetUserById(model.UserID)
+
+	_, err := repositories.GetUserById(model.UserID)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
@@ -85,6 +75,6 @@ func CreatePet(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	resp := mapper.PetModelToResponse(petCreated, user)
+	resp := mapper.PetModelToResponse(petCreated)
 	return c.JSON(response.NewResponse(resp))
 }

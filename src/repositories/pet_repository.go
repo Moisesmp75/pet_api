@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"pet_api/src/database"
 	"pet_api/src/models"
 )
@@ -12,7 +13,7 @@ func CountPets() int64 {
 }
 
 func CreatePet(newPet models.Pet) (models.Pet, error) {
-	if err := database.DB.Create(&newPet).Error; err != nil {
+	if err := database.DB.Model(&models.Pet{}).Create(&newPet).Error; err != nil {
 		return models.Pet{}, err
 	}
 	return newPet, nil
@@ -20,20 +21,29 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 
 func GetPetById(id uint) (models.Pet, error) {
 	var pet models.Pet
-	data := database.DB.Model(&models.Pet{}).First(&pet,id)
+	data := database.DB.Model(&models.Pet{}).Preload("User").First(&pet, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
-		return models.Pet{}, data.Error
+		return models.Pet{}, fmt.Errorf("pet with ID %d not found", id)
 	}
 
+	if err := database.DB.Preload("Role").First(&pet.User, pet.UserID).Error; err != nil {
+		return models.Pet{}, err
+	}
 	return pet, nil
 }
 
 func GetAllPets(offset, limit int) ([]models.Pet, error) {
 	var pets []models.Pet
-	data := database.DB.Offset(offset).Limit(limit).Find(&pets)
+	data := database.DB.Model(&models.Pet{}).Offset(offset).Limit(limit).Preload("User").Find(&pets)
 	if data.Error != nil {
 		return nil, data.Error
+	}
+
+	for i := range pets {
+		if err := database.DB.Preload("Role").First(&pets[i].User, pets[i].UserID).Error; err != nil {
+			return nil, err
+		}
 	}
 	return pets, nil
 }

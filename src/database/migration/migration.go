@@ -34,8 +34,20 @@ func SetupDefaultRoles() error {
 	}
 
 	for _, role := range roles {
-		if err := database.DB.Create(&role).Error; err != nil {
-			return err
+		var existingRole models.Role
+		result := database.DB.Model(&models.Role{}).Where("name = ?", role.Name).First(&existingRole)
+		if result.Error != nil {
+			return result.Error
+		}
+		if result.RowsAffected == 0 {
+			if err := database.DB.Create(&role).Error; err != nil {
+				return err
+			}
+		} else {
+			existingRole.Description = role.Description
+			if err := database.DB.Save(&existingRole).Error; err != nil {
+				return err
+			}
 		}
 	}
 
