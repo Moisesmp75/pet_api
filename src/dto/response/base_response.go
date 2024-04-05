@@ -9,19 +9,11 @@ type BaseResponse[T any] struct {
 	Pagination *common.Pagination `json:"meta,omitempty"`
 }
 
-// type BaseResponsePag[T any] struct {
-// 	Success    bool               `json:"success"`
-// 	Message    []string           `json:"message"`
-// 	Resource   T                  `json:"resource"`
-// 	Pagination *common.Pagination `json:"meta"`
-// }
-
 func NewResponse[T any](resource T) BaseResponse[T] {
 	return BaseResponse[T]{
 		Success:  true,
 		Message:  nil,
 		Resource: resource,
-		// Pagination: nil,
 	}
 }
 

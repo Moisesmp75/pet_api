@@ -4,6 +4,7 @@ import (
 	"pet_api/src/dto/request"
 	"pet_api/src/dto/response"
 	"pet_api/src/models"
+	"time"
 )
 
 func UserRequestToModel(req request.UserRequest) models.User {
@@ -24,6 +25,7 @@ func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 		PhoneNumber: user.PhoneNumber,
 		Email:    	 user.Email,
 		Role:     	 user.Role.Name,
+		ImageUrl:    user.ImageUrl,
 	}
 }
 
@@ -36,6 +38,7 @@ func UserModelToResponse(user models.User) response.UserResponse {
 		Email:    	 user.Email,
 		Pets:     	 OnlyPetsModelsToResponse(user.Pets),
 		Role:     	 user.Role.Name,
+		ImageUrl:    user.ImageUrl,
 	}
 }
 
@@ -51,8 +54,10 @@ func UsersModelsToResponse(users []models.User) []response.UserResponse {
 
 func UserResponseToLoginResponse(userResp response.UserResponse) response.LoginResponse {
 	return response.LoginResponse{
-		Email:    userResp.Email,
-		Role:     userResp.Role,
-		Token:    "",
+		Email:  userResp.Email,
+		Role:   userResp.Role,
+		Token:	"",
+		Iat: 		time.Now(),
+		Exp: 		time.Now().Add(12 * time.Hour),
 	}
 }

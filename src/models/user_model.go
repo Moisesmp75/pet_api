@@ -13,4 +13,5 @@ type User struct {
 	Pets     		[]Pet  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:UserID;references:ID"`
 	RoleID   		uint   `gorm:"not null"`
 	Role     		Role   `gorm:"foreignKey:RoleID"`
+	ImageUrl    string `gorm:"type:LONGTEXT"`
 }

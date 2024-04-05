@@ -97,18 +97,20 @@ func LoginUser(c *fiber.Ctx) error {
 	}
 
 	resp := mapper.UserModelToResponse(user)
-	token, err := auth.GenerateToken(resp)
+	lgResp := mapper.UserResponseToLoginResponse(resp)
+	token, err := auth.GenerateToken(lgResp)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	lgResp := mapper.UserResponseToLoginResponse(resp)
 	lgResp.Token = token
 
 	c.Cookie(&fiber.Cookie{
 		Name:        "token",
 		Value:       token,
+		Expires: 		 lgResp.Exp,
 		Secure:      true,
+		HTTPOnly: true,
 		SessionOnly: false,
 	})
 	return c.JSON(response.NewResponse(lgResp))

@@ -28,6 +28,11 @@ func RunMigration() {
 	if err := SetupDefaultRoles(); err != nil {
 		log.Fatal(err.Error())
 	}
+
+	errPetImg := database.DB.AutoMigrate(&models.Image{})
+	if errPetImg != nil {
+		log.Fatal(errPetImg.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

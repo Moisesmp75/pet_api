@@ -8,4 +8,5 @@ type UserResponse struct {
 	Email       string        `json:"email"`
 	Role        string        `json:"role"`
 	Pets        []PetResponse `json:"pets,omitempty"`
+	ImageUrl    string        `json:"image_url"`
 }
