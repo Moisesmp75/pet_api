@@ -43,11 +43,19 @@ func GetUserByEmailOrPhone(identity string) (models.User, error) {
 	return user, nil
 }
 
-func GetUserById(id uint) (models.User, error) {
+func GetUserById(id uint64) (models.User, error) {
 	var user models.User
 	data := database.DB.Model(&models.User{}).Preload("Pets").Preload("Role").First(&user, id)
 	if data.RowsAffected == 0 || data.Error != nil {
 		return models.User{}, fmt.Errorf("user with ID %d not found", id)
+	}
+	return user, nil
+}
+
+func UpdateUser(user models.User) (models.User, error) {
+	data := database.DB.Model(&models.User{}).Where("id = ?", user.ID).Updates(user)
+	if data.RowsAffected == 0 || data.Error != nil{
+		return models.User{}, data.Error
 	}
 	return user, nil
 }

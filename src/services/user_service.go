@@ -36,12 +36,12 @@ func GetAllUsers(c *fiber.Ctx) error {
 
 func GetUserById(c *fiber.Ctx) error {
 	strid := c.Params("id")
-	id, err := strconv.Atoi(strid)
+	id, err := strconv.ParseUint(strid, 10, 64)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	user, err := repositories.GetUserById(uint(id))
+	user, err := repositories.GetUserById(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
@@ -114,4 +114,41 @@ func LoginUser(c *fiber.Ctx) error {
 		SessionOnly: false,
 	})
 	return c.JSON(response.NewResponse(lgResp))
+}
+
+func UpdateUserImage(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	user, err := repositories.GetUserById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	file, err := c.FormFile("user_img")
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	encodedImage, err := common.ConvertToBase64(file)
+	if err != nil {
+		// log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))	
+	}
+	
+	user.ImageUrl = encodedImage
+
+	updateUser, err := repositories.UpdateUser(user)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	resp := mapper.UserModelToResponse(updateUser)
+	return c.JSON(response.NewResponse(resp))
 }
