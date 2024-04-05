@@ -58,8 +58,13 @@ func CreateUser(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
-
+	rol, err := repositories.GetRoleById(model.RoleID)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
 	user := mapper.UserRequestToModel(model)
+	user.Role = rol
 	user.Password = auth.Encrypt_password(user.Password)
 	userCreated, err := repositories.CreateUser(user)
 	if err != nil {
@@ -83,7 +88,9 @@ func LoginUser(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-
+	if user.Role.ID != model.RoleID {
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse("Access Denied: Your account does not have the necessary privileges to log in as an organization. Please make sure you are using the correct credentials for your user type."))
+	}
 	if !auth.DecryptPasswordHash(user.Password, model.Password) {
 		log.Println("Invalid Credentials")
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse("Invalid Credentials"))

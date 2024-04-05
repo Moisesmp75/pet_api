@@ -28,6 +28,7 @@ func UserModelToResponse(user models.User) response.UserResponse {
 		Username: user.Username,
 		Email:    user.Email,
 		Pets:     OnlyPetsModelsToResponse(user.Pets),
+		Role: 		user.Role.Name,
 	}
 }
 

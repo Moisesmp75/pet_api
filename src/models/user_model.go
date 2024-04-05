@@ -8,5 +8,7 @@ type User struct {
 	Username string `gorm:"unique;not null"`
 	Email    string `gorm:"unique; not null"`
 	Password string `gorm:"not null"`
-	Pets     []Pet 	`gorm:"foreignKey:UserID;references:ID"`
+	Pets     []Pet 	`gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:UserID;references:ID"`
+	RoleID   uint   `gorm:"not null"`
+	Role     Role   `gorm:"foreignKey:RoleID"`
 }
