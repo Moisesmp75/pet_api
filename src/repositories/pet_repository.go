@@ -24,7 +24,7 @@ func GetPetById(id uint) (models.Pet, error) {
 	data := database.DB.Model(&models.Pet{}).Preload("User").First(&pet, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
-		return models.Pet{}, fmt.Errorf("pet with ID %d not found", id)
+		return models.Pet{}, fmt.Errorf("pet with id '%d' not found", id)
 	}
 
 	if err := database.DB.Preload("Role").First(&pet.User, pet.UserID).Error; err != nil {

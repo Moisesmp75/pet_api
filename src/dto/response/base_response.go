@@ -41,3 +41,11 @@ func ErrorsResponse(messages []string) BaseResponse[*any] {
 		Resource: nil,
 	}
 }
+
+func MessageResposne(message string) BaseResponse[*any] {
+	return BaseResponse[*any]{
+		Success:  true,
+		Message:  []string{message},
+		Resource: nil,
+	}
+}

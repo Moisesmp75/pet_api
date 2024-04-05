@@ -108,9 +108,9 @@ func LoginUser(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
 		Name:        "token",
 		Value:       token,
-		Expires: 		 lgResp.Exp,
+		Expires:     lgResp.Exp,
 		Secure:      true,
-		HTTPOnly: true,
+		HTTPOnly:    true,
 		SessionOnly: false,
 	})
 	return c.JSON(response.NewResponse(lgResp))
@@ -137,18 +137,16 @@ func UpdateUserImage(c *fiber.Ctx) error {
 
 	encodedImage, err := common.ConvertToBase64(file)
 	if err != nil {
-		// log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))	
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	
+
 	user.ImageUrl = encodedImage
 
-	updateUser, err := repositories.UpdateUser(user)
-	if err != nil {
+	if _, err := repositories.UpdateUser(user); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	resp := mapper.UserModelToResponse(updateUser)
-	return c.JSON(response.NewResponse(resp))
+	return c.JSON(response.MessageResposne("user updated successfully"))
 }

@@ -36,7 +36,7 @@ func GetUserByEmailOrPhone(identity string) (models.User, error) {
 	data := database.DB.Model(&models.User{}).Where("email = ? OR phone_number = ?", identity, identity).Preload("Role").First(&user)
 	if data.Error != nil {
 		if errors.Is(data.Error, gorm.ErrRecordNotFound) {
-			return models.User{}, fmt.Errorf("user with email or phone number %s not found", identity)
+			return models.User{}, fmt.Errorf("user with email or phone number '%s' not found", identity)
 		}
 		return models.User{}, fmt.Errorf("failed to get user by email or phone number: %v", data.Error)
 	}
@@ -47,14 +47,14 @@ func GetUserById(id uint64) (models.User, error) {
 	var user models.User
 	data := database.DB.Model(&models.User{}).Preload("Pets").Preload("Role").First(&user, id)
 	if data.RowsAffected == 0 || data.Error != nil {
-		return models.User{}, fmt.Errorf("user with ID %d not found", id)
+		return models.User{}, fmt.Errorf("user with id '%d' not found", id)
 	}
 	return user, nil
 }
 
 func UpdateUser(user models.User) (models.User, error) {
 	data := database.DB.Model(&models.User{}).Where("id = ?", user.ID).Updates(user)
-	if data.RowsAffected == 0 || data.Error != nil{
+	if data.RowsAffected == 0 || data.Error != nil {
 		return models.User{}, data.Error
 	}
 	return user, nil
