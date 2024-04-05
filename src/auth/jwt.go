@@ -15,6 +15,7 @@ func GenerateToken(user response.UserResponse) (string, error) {
 		"username": user.Username,
 		"iat":      time.Now().Unix(),
 		"exp":      time.Now().Add(12 * time.Hour).Unix(),
+		"role":     user.Role,
 	})
 
 	jwt_secret := os.Getenv("JWT_SECRET")
