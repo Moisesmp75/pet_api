@@ -1,9 +1,12 @@
 package migration
 
 import (
+	"errors"
 	"log"
 	"pet_api/src/database"
 	"pet_api/src/models"
+
+	"gorm.io/gorm"
 )
 
 func RunMigration() {
@@ -36,17 +39,20 @@ func SetupDefaultRoles() error {
 	for _, role := range roles {
 		var existingRole models.Role
 		result := database.DB.Model(&models.Role{}).Where("name = ?", role.Name).First(&existingRole)
-		if result.Error != nil {
+		if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return result.Error
 		}
+
 		if result.RowsAffected == 0 {
 			if err := database.DB.Create(&role).Error; err != nil {
 				return err
 			}
 		} else {
-			existingRole.Description = role.Description
-			if err := database.DB.Save(&existingRole).Error; err != nil {
-				return err
+			if existingRole.Description != role.Description {
+				existingRole.Description = role.Description
+				if err := database.DB.Save(&existingRole).Error; err != nil {
+					return err
+				}
 			}
 		}
 	}

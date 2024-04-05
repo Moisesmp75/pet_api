@@ -83,7 +83,7 @@ func LoginUser(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
-	user, err := repositories.GetUserByEmail(model.Email)
+	user, err := repositories.GetUserByEmailOrPhone(model.Identity)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))

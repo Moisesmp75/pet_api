@@ -1,9 +1,12 @@
 package repositories
 
 import (
+	"errors"
 	"fmt"
 	"pet_api/src/database"
 	"pet_api/src/models"
+
+	"gorm.io/gorm"
 )
 
 func CountUsers() int64 {
@@ -28,11 +31,14 @@ func CreateUser(newUser models.User) (models.User, error) {
 	return newUser, nil
 }
 
-func GetUserByEmail(email string) (models.User, error) {
+func GetUserByEmailOrPhone(identity string) (models.User, error) {
 	var user models.User
-	data := database.DB.Model(&models.User{}).Where("email = ?", email).Preload("Role").First(&user)
+	data := database.DB.Model(&models.User{}).Where("email = ? OR phone_number = ?", identity, identity).Preload("Role").First(&user)
 	if data.Error != nil {
-		return models.User{}, fmt.Errorf("user with email %s not found", email)
+		if errors.Is(data.Error, gorm.ErrRecordNotFound) {
+			return models.User{}, fmt.Errorf("user with email or phone number %s not found", identity)
+		}
+		return models.User{}, fmt.Errorf("failed to get user by email or phone number: %v", data.Error)
 	}
 	return user, nil
 }

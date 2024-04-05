@@ -8,28 +8,34 @@ import (
 
 func UserRequestToModel(req request.UserRequest) models.User {
 	return models.User{
-		Username: req.Username,
-		Email:    req.Email,
-		Password: req.Password,
+		Name: 			 req.Name,
+		LastName: 	 req.LastName,
+		PhoneNumber: req.PhoneNumber,
+		Email:    	 req.Email,
+		Password: 	 req.Password,
 	}
 }
 
 func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 	return &response.UserResponse{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		Role:     user.Role.Name,
+		ID:       	 user.ID,
+		Name: 			 user.Name,
+		LastName: 	 user.LastName,
+		PhoneNumber: user.PhoneNumber,
+		Email:    	 user.Email,
+		Role:     	 user.Role.Name,
 	}
 }
 
 func UserModelToResponse(user models.User) response.UserResponse {
 	return response.UserResponse{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		Pets:     OnlyPetsModelsToResponse(user.Pets),
-		Role:     user.Role.Name,
+		ID:      		 user.ID,
+		Name: 			 user.Name,
+		LastName: 	 user.LastName,
+		PhoneNumber: user.PhoneNumber,
+		Email:    	 user.Email,
+		Pets:     	 OnlyPetsModelsToResponse(user.Pets),
+		Role:     	 user.Role.Name,
 	}
 }
 
@@ -46,7 +52,6 @@ func UsersModelsToResponse(users []models.User) []response.UserResponse {
 func UserResponseToLoginResponse(userResp response.UserResponse) response.LoginResponse {
 	return response.LoginResponse{
 		Email:    userResp.Email,
-		Username: userResp.Username,
 		Role:     userResp.Role,
 		Token:    "",
 	}
