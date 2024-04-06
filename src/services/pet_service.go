@@ -37,12 +37,12 @@ func GetAllPets(c *fiber.Ctx) error {
 
 func GetPetById(c *fiber.Ctx) error {
 	strid := c.Params("id")
-	id, err := strconv.Atoi(strid)
+	id, err := strconv.ParseUint(strid, 10, 64)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	pet, err := repositories.GetPetById(uint(id))
+	pet, err := repositories.GetPetById(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
@@ -77,4 +77,35 @@ func CreatePet(c *fiber.Ctx) error {
 
 	resp := mapper.PetModelToResponse(petCreated)
 	return c.JSON(response.NewResponse(resp))
+}
+
+func UpdatePet(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	pet, err := repositories.GetPetById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	// files, err := c.Request().MultipartForm().["images"]
+	files, err := c.FormFile("")
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	encodedImage, err := common.ConvertToBase64(files)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	// pet.Images = encodedImage
+
+	return nil
 }

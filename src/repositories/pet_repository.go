@@ -19,7 +19,7 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 	return newPet, nil
 }
 
-func GetPetById(id uint) (models.Pet, error) {
+func GetPetById(id uint64) (models.Pet, error) {
 	var pet models.Pet
 	data := database.DB.Model(&models.Pet{}).Preload("User").First(&pet, id)
 
@@ -46,4 +46,12 @@ func GetAllPets(offset, limit int) ([]models.Pet, error) {
 		}
 	}
 	return pets, nil
+}
+
+func UpdatePet(pet models.Pet) (models.Pet, error) {
+	data := database.DB.Model(&models.Pet{}).Where("id = ?", pet.ID).Updates(pet)
+	if data.RowsAffected == 0 || data.Error != nil {
+		return models.Pet{}, data.Error
+	}
+	return pet, nil
 }
