@@ -79,7 +79,7 @@ func CreatePet(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
-func UpdatePet(c *fiber.Ctx) error {
+func UpdatePetImages(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
 	if err != nil {
@@ -92,20 +92,16 @@ func UpdatePet(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	// files, err := c.Request().MultipartForm().["images"]
-	files, err := c.FormFile("")
+	form, err := c.MultipartForm()
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	encodedImage, err := common.ConvertToBase64(files)
-	if err != nil {
+	if _, err := CreatePetImages(pet.ID, form); err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))	
 	}
 
-	// pet.Images = encodedImage
-
-	return nil
+	return c.JSON(response.MessageResposne("images created successfully"))
 }

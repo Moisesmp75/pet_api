@@ -29,7 +29,7 @@ func RunMigration() {
 		log.Fatal(err.Error())
 	}
 
-	errPetImg := database.DB.AutoMigrate(&models.Image{})
+	errPetImg := database.DB.AutoMigrate(&models.PetImage{})
 	if errPetImg != nil {
 		log.Fatal(errPetImg.Error())
 	}
