@@ -6,9 +6,21 @@ import (
 	"pet_api/src/models"
 )
 
-func CountPets() int64 {
+func CountPets(breed, color string) int64 {
 	var total_items int64
-	database.DB.Model(&models.Pet{}).Count(&total_items)
+	query := database.DB.Model(&models.Pet{})
+
+	if breed != "" {
+		query = query.Where("breed = ?", breed)
+	}
+	if color != "" {
+		query = query.Where("color = ?", color)
+	}
+
+	if err := query.Count(&total_items).Error; err != nil {
+		return 0
+	}
+	// database.DB.Model(&models.Pet{}).Count(&total_items)
 	return total_items
 }
 
@@ -16,6 +28,11 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 	if err := database.DB.Model(&models.Pet{}).Create(&newPet).Error; err != nil {
 		return models.Pet{}, err
 	}
+
+	if err := database.DB.Preload("User").Preload("User.Role").First(&newPet, newPet.ID).Error; err != nil {
+		return models.Pet{}, err
+	}
+
 	return newPet, nil
 }
 
@@ -33,9 +50,19 @@ func GetPetById(id uint64) (models.Pet, error) {
 	return pet, nil
 }
 
-func GetAllPets(offset, limit int) ([]models.Pet, error) {
+func GetAllPets(offset, limit int, breed, color string) ([]models.Pet, error) {
 	var pets []models.Pet
-	data := database.DB.Model(&models.Pet{}).Offset(offset).Limit(limit).Preload("User").Find(&pets)
+	query := database.DB.Model(&models.Pet{})
+
+	if breed != "" {
+		query = query.Where("breed = ?", breed)
+	}
+
+	if color != "" {
+		query = query.Where("color = ?", color)
+	}
+
+	data := query.Offset(offset).Limit(limit).Preload("User").Find(&pets)
 	if data.Error != nil {
 		return nil, data.Error
 	}
@@ -55,3 +82,22 @@ func UpdatePet(pet models.Pet) (models.Pet, error) {
 	}
 	return pet, nil
 }
+
+// func FilterPetsByBreedOrColor(breed, color string) ([]models.Pet, error) {
+// 	var pets []models.Pet
+// 	query := database.DB.Model(&models.Pet{})
+
+// 	if breed != "" {
+// 		query = query.Where("breed = ?", breed)
+// 	}
+
+// 	if color != "" {
+// 		query = query.Where("color = ?", color)
+// 	}
+
+// 	if err := query.Find(&pets).Error; err != nil {
+// 		return nil, err
+// 	}
+
+// 	return pets, nil
+// }

@@ -20,9 +20,10 @@ func GetAllPets(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(errors))
 	}
-
-	totalItems := repositories.CountPets()
-	pets, err := repositories.GetAllPets(offset, limit)
+	breed := c.Query("breed", "")
+	color := c.Query("color", "")
+	totalItems := repositories.CountPets(breed, color)
+	pets, err := repositories.GetAllPets(offset, limit, breed, color)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
@@ -69,7 +70,7 @@ func CreatePet(c *fiber.Ctx) error {
 	}
 
 	petCreated, err := repositories.CreatePet(pet)
-
+	// petCreated.User = user
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
