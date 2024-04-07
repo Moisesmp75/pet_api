@@ -1,4 +1,4 @@
-package common
+package helpers
 
 import (
 	"encoding/base64"
@@ -12,7 +12,7 @@ import (
 func ConvertToBase64(img *multipart.FileHeader) (string, error) {
 	ext := filepath.Ext(img.Filename)
 	if ext != ".png" && ext != ".jpg" {
-		return "",fmt.Errorf("solo se permiten archivos PNG o JPG: %s", img.Filename)
+		return "", fmt.Errorf("solo se permiten archivos PNG o JPG: %s", img.Filename)
 	}
 	src, err := img.Open()
 	if err != nil {
@@ -35,7 +35,7 @@ func ImagesToBase64(files *multipart.Form) ([]string, error) {
 	if files == nil || len(files.File) == 0 {
 		return nil, errors.New("no se han proporcionado archivos para convertir")
 	}
-	
+
 	for _, headers := range files.File {
 		for _, fileHeader := range headers {
 			encodedImage, err := ConvertToBase64(fileHeader)
