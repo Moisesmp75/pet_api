@@ -14,4 +14,5 @@ type PetResponse struct {
 	Color       string        `json:"color"`
 	Weight      float32       `json:"weight"`
 	User        *UserResponse `json:"user,omitempty"`
+	Location    string        `json:"location"`
 }

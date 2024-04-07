@@ -18,6 +18,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 		Color:       req.Color,
 		Weight:      req.Weight,
 		UserID:      req.UserID,
+		Location:    req.Location,
 	}
 }
 
@@ -32,6 +33,7 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		Color:       pet.Color,
 		Weight:      pet.Weight,
 		User:        OnlyUserModelToResponse(pet.User),
+		Location:    pet.Location,
 	}
 }
 
@@ -46,6 +48,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		Color:       pet.Color,
 		Weight:      pet.Weight,
 		User:        nil,
+		Location:    pet.Location,
 	}
 }
 
