@@ -59,3 +59,15 @@ func UpdateUser(user models.User) (models.User, error) {
 	}
 	return user, nil
 }
+
+func GetUserByEmail(email string) (models.User, error) {
+	var user models.User
+	data := database.DB.Model(&models.User{}).Where("email = ?", email).Preload("Role").First(&user)
+	if data.Error != nil {
+		if errors.Is(data.Error, gorm.ErrRecordNotFound) {
+			return models.User{}, fmt.Errorf("user with email '%s' not found", email)
+		}
+		return models.User{}, fmt.Errorf("failed to get user by email: %v", data.Error)
+	}
+	return user, nil
+}

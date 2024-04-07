@@ -5,6 +5,7 @@ import (
 	"pet_api/src/common"
 	"pet_api/src/dto/request"
 	"pet_api/src/dto/response"
+	"pet_api/src/helpers"
 	"pet_api/src/mapper"
 	"pet_api/src/repositories"
 	"strconv"
@@ -13,7 +14,7 @@ import (
 )
 
 func GetAllPets(c *fiber.Ctx) error {
-	offset, limit, errors := ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
+	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
 		for _, v := range errors {
 			log.Println(v)
@@ -55,7 +56,7 @@ func GetPetById(c *fiber.Ctx) error {
 
 func CreatePet(c *fiber.Ctx) error {
 	model := request.PetRequest{}
-	if _, err := common.ValidateRequest(c.Body(), &model); err != nil {
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
 		for _, v := range err {
 			log.Println(v)
 		}
@@ -66,7 +67,7 @@ func CreatePet(c *fiber.Ctx) error {
 	_, err := repositories.GetUserById(model.UserID)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 
 	petCreated, err := repositories.CreatePet(pet)
@@ -101,8 +102,8 @@ func UpdatePetImages(c *fiber.Ctx) error {
 
 	if _, err := CreatePetImages(pet.ID, form); err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))	
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	return c.JSON(response.MessageResposne("images created successfully"))
+	return c.JSON(response.MessageResponse("images created successfully"))
 }

@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"pet_api/src/common"
 	"pet_api/src/dto/request"
 	"pet_api/src/dto/response"
+	"pet_api/src/helpers"
 	"pet_api/src/models"
 )
 
@@ -11,7 +11,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 	return models.Pet{
 		Name:        req.Name,
 		Breed:       req.Breed,
-		BornDate:    common.ParseDate(req.BornDate),
+		BornDate:    helpers.ParseDate(req.BornDate),
 		Description: req.Description,
 		Size:        req.Size,
 		Gender:      req.Gender,

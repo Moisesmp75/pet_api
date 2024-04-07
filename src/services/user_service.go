@@ -6,6 +6,7 @@ import (
 	"pet_api/src/common"
 	"pet_api/src/dto/request"
 	"pet_api/src/dto/response"
+	"pet_api/src/helpers"
 	"pet_api/src/mapper"
 	"pet_api/src/repositories"
 	"strconv"
@@ -14,7 +15,7 @@ import (
 )
 
 func GetAllUsers(c *fiber.Ctx) error {
-	offset, limit, errors := ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
+	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
 		for _, v := range errors {
 			log.Println(v)
@@ -39,7 +40,7 @@ func GetUserById(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(strid, 10, 64)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 	user, err := repositories.GetUserById(id)
 	if err != nil {
@@ -52,7 +53,7 @@ func GetUserById(c *fiber.Ctx) error {
 
 func CreateUser(c *fiber.Ctx) error {
 	model := request.UserRequest{}
-	if _, err := common.ValidateRequest(c.Body(), &model); err != nil {
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
 		for _, v := range err {
 			log.Println(v)
 		}
@@ -77,7 +78,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 func LoginUser(c *fiber.Ctx) error {
 	model := request.LoginRequest{}
-	if _, err := common.ValidateRequest(c.Body(), &model); err != nil {
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
 		for _, v := range err {
 			log.Println(v)
 		}
@@ -121,7 +122,7 @@ func UpdateUserImage(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(strid, 10, 64)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 	user, err := repositories.GetUserById(id)
 	if err != nil {
@@ -135,7 +136,7 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	encodedImage, err := common.ConvertToBase64(file)
+	encodedImage, err := helpers.ConvertToBase64(file)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
@@ -148,5 +149,35 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	return c.JSON(response.MessageResposne("user updated successfully"))
+	return c.JSON(response.MessageResponse("user updated successfully"))
+}
+
+func RecoverPassword(c *fiber.Ctx) error {
+	req := request.PasswordResetRequest{}
+	if _, err := helpers.ValidateRequest(c.Body(), &req); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	}
+	user, err := repositories.GetUserByEmail(req.Email)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	newPassword := helpers.GeneratePassword(10, 1, 1, 1)
+
+	if err := common.SendResetPasswordEmail(user, newPassword); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	user.Password = auth.Encrypt_password(newPassword)
+	if _, err := repositories.UpdateUser(user); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	return c.JSON(response.MessageResponse("check your email"))
 }

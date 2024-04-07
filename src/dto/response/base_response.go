@@ -42,7 +42,7 @@ func ErrorsResponse(messages []string) BaseResponse[*any] {
 	}
 }
 
-func MessageResposne(message string) BaseResponse[*any] {
+func MessageResponse(message string) BaseResponse[*any] {
 	return BaseResponse[*any]{
 		Success:  true,
 		Message:  []string{message},

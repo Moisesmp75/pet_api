@@ -3,13 +3,13 @@ package services
 import (
 	"log"
 	"mime/multipart"
-	"pet_api/src/common"
+	"pet_api/src/helpers"
 	"pet_api/src/models"
 	"pet_api/src/repositories"
 )
 
 func CreatePetImages(petID uint, form *multipart.Form) ([]models.PetImage, error) {
-	images, err := common.ImagesToBase64(form)
+	images, err := helpers.ImagesToBase64(form)
 	if err != nil {
 		return nil, err
 	}
