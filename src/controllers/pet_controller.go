@@ -12,5 +12,5 @@ func PetController(api fiber.Router) {
 	petsRoute.Get("/", services.GetAllPets)
 	petsRoute.Get("/:id", services.GetPetById)
 	petsRoute.Post("/", services.CreatePet)
-	petsRoute.Post("/:id/img", services.UpdatePetImages)
+	petsRoute.Patch("/:id/img", services.UpdatePetImages)
 }

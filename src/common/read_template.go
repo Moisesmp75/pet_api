@@ -24,7 +24,7 @@ func SendResetPasswordEmail(user models.User, newPassword string) error {
 		NewPassword:   newPassword,
 	}
 
-	tmpl, err := template.ParseFiles("templates/reset_password.html")
+	tmpl, err := template.ParseFiles("src/common/templates/reset_password.html")
 	if err != nil {
 		return fmt.Errorf("error loading HTML template: %w", err)
 	}

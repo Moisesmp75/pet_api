@@ -61,3 +61,19 @@ func UserResponseToLoginResponse(userResp response.UserResponse) response.LoginR
 		Exp:   time.Now().Add(12 * time.Hour),
 	}
 }
+
+func UpdateUserRequestToModel(req request.UpdateUserRequest, user models.User) models.User {
+	if req.Name != "" {
+		user.Name = req.Name
+	}
+	if req.LastName != "" {
+		user.LastName = req.LastName
+	}
+	if req.PhoneNumber != "" {
+		user.PhoneNumber = req.PhoneNumber
+	}
+	if req.Password != "" {
+		user.Password = req.Password
+	}
+	return user
+}

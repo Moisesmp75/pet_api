@@ -181,3 +181,35 @@ func RecoverPassword(c *fiber.Ctx) error {
 
 	return c.JSON(response.MessageResponse("check your email"))
 }
+
+func UpdateUser(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	model := request.UpdateUserRequest{}
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	}
+	user, err := repositories.GetUserById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	if model.Password != "" {
+		model.Password = auth.Encrypt_password(model.Password)
+	}
+	updateUser := mapper.UpdateUserRequestToModel(model, user)
+
+	if _, err := repositories.UpdateUser(updateUser); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	return c.JSON(response.MessageResponse("user updated successfully"))
+}
