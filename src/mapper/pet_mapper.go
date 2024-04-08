@@ -25,6 +25,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 func PetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
+		Name: 			 pet.Name,
 		Breed:       pet.Breed,
 		Age:         helpers.CalculateAge(pet.BornDate),
 		Description: pet.Description,
@@ -35,12 +36,14 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		User:        OnlyUserModelToResponse(pet.User),
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
+		Images: 		 PetImagesModelToResponse(pet.Images),
 	}
 }
 
 func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
+		Name: 			 pet.Name,
 		Breed:       pet.Breed,
 		Age:         helpers.CalculateAge(pet.BornDate),
 		Description: pet.Description,
@@ -51,6 +54,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		User:        nil,
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
+		Images: 		 PetImagesModelToResponse(pet.Images),
 	}
 }
 

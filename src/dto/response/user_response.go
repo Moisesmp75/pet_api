@@ -4,6 +4,7 @@ type UserResponse struct {
 	ID          uint          `json:"id"`
 	Name        string        `json:"name"`
 	LastName    string        `json:"last_name"`
+	UserName    string        `json:"user_name"`
 	PhoneNumber string        `json:"phone_number"`
 	Dni         string        `json:"dni"`
 	Address     string        `json:"address"`

@@ -11,6 +11,7 @@ func UserRequestToModel(req request.UserRequest) models.User {
 	return models.User{
 		Name:        req.Name,
 		LastName:    req.LastName,
+		Username: 	 req.UserName,
 		PhoneNumber: req.PhoneNumber,
 		Email:       req.Email,
 		Password:    req.Password,
@@ -25,6 +26,7 @@ func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 		ID:          user.ID,
 		Name:        user.Name,
 		LastName:    user.LastName,
+		UserName: 	 user.Username,
 		PhoneNumber: user.PhoneNumber,
 		Dni:         user.Dni,
 		Address:     user.Address,
@@ -40,6 +42,7 @@ func UserModelToResponse(user models.User) response.UserResponse {
 		ID:          user.ID,
 		Name:        user.Name,
 		LastName:    user.LastName,
+		UserName:    user.Username,
 		PhoneNumber: user.PhoneNumber,
 		Dni:         user.Dni,
 		Address:     user.Address,
@@ -77,6 +80,9 @@ func UpdateUserRequestToModel(req request.UpdateUserRequest, user models.User) m
 	}
 	if req.LastName != "" {
 		user.LastName = req.LastName
+	}
+	if req.UserName != "" {
+		user.Username = req.UserName
 	}
 	if req.PhoneNumber != "" {
 		user.PhoneNumber = req.PhoneNumber

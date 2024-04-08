@@ -25,7 +25,7 @@ func GetAllUsers(offset, limit int) ([]models.User, error) {
 }
 
 func CreateUser(newUser models.User) (models.User, error) {
-	if err := database.DB.Model(&models.User{}).Create(&newUser).Error; err != nil {
+	if err := database.DB.Model(&models.User{}).Create(&newUser).Preload("Role").Error; err != nil {
 		return models.User{}, err
 	}
 	return newUser, nil
@@ -45,7 +45,9 @@ func GetUserByEmailOrPhone(identity string) (models.User, error) {
 
 func GetUserById(id uint64) (models.User, error) {
 	var user models.User
-	data := database.DB.Model(&models.User{}).Preload("Pets").Preload("Role").First(&user, id)
+	data := database.DB.Model(&models.User{})
+	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Images")
+	data = data.Preload("Role").First(&user, id)
 	if data.RowsAffected == 0 || data.Error != nil {
 		return models.User{}, fmt.Errorf("user with id '%d' not found", id)
 	}

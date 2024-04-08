@@ -37,7 +37,7 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 
 func GetPetById(id uint64) (models.Pet, error) {
 	var pet models.Pet
-	data := database.DB.Model(&models.Pet{}).Preload("User").First(&pet, id)
+	data := database.DB.Model(&models.Pet{}).Preload("PetType").Preload("User").Preload("Images").First(&pet, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
 		return models.Pet{}, fmt.Errorf("pet with id '%d' not found", id)

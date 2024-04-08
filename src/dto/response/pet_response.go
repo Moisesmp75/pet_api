@@ -2,6 +2,7 @@ package response
 
 type PetResponse struct {
 	ID          uint          `json:"id"`
+	Name        string        `json:"name"`
 	Breed       string        `json:"breed"`
 	Age         int           `json:"age"`
 	Description string        `json:"description"`
@@ -12,4 +13,5 @@ type PetResponse struct {
 	User        *UserResponse `json:"user,omitempty"`
 	Location    string        `json:"location"`
 	PetType     string        `json:"pet_type"`
+	Images      []string      `json:"images"`
 }

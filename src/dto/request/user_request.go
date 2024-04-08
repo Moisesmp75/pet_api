@@ -2,6 +2,7 @@ package request
 
 type UserRequest struct {
 	Name        string `json:"name" validate:"required,gt=0"`
+	UserName    string `json:"user_name"`
 	LastName    string `json:"last_name" validate:"required,gt=0"`
 	PhoneNumber string `json:"phone_number" validate:"required,gt=0"`
 	Dni         string `json:"dni" validate:"required,gt=0"`
