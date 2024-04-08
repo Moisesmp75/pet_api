@@ -1,13 +1,9 @@
 package response
 
-import (
-	"time"
-)
-
 type PetResponse struct {
 	ID          uint          `json:"id"`
 	Breed       string        `json:"breed"`
-	BornDate    time.Time     `json:"born_date"`
+	Age         int           `json:"age"`
 	Description string        `json:"description"`
 	Height      float32       `json:"height"`
 	Gender      string        `json:"gender"`

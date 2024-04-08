@@ -26,7 +26,7 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
 		Breed:       pet.Breed,
-		BornDate:    pet.BornDate,
+		Age:         helpers.CalculateAge(pet.BornDate),
 		Description: pet.Description,
 		Height:      pet.Height,
 		Gender:      pet.Gender,
@@ -41,7 +41,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
 		Breed:       pet.Breed,
-		BornDate:    pet.BornDate,
+		Age:         helpers.CalculateAge(pet.BornDate),
 		Description: pet.Description,
 		Height:      pet.Height,
 		Gender:      pet.Gender,
