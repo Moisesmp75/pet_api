@@ -34,6 +34,7 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		Weight:      pet.Weight,
 		User:        OnlyUserModelToResponse(pet.User),
 		Location:    pet.Location,
+		PetType:     pet.PetType.Name,
 	}
 }
 
@@ -49,6 +50,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		Weight:      pet.Weight,
 		User:        nil,
 		Location:    pet.Location,
+		PetType:     pet.PetType.Name,
 	}
 }
 
@@ -80,7 +82,6 @@ func UpdatePetRequestToModel(req request.UpdatePetRequest, pet models.Pet) model
 	if req.Location != "" {
 		pet.Location = req.Location
 	}
-
 	return pet
 }
 

@@ -11,4 +11,5 @@ type PetRequest struct {
 	Weight      float32 `json:"weight" validate:"required"`
 	UserID      uint64  `json:"user_id" validate:"required"`
 	Location    string  `json:"location" validate:"required"`
+	PetTypeId   uint    `json:"pet_type_id" validate:"required"`
 }

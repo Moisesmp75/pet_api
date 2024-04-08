@@ -10,4 +10,5 @@ type UpdatePetRequest struct {
 	Color       string  `json:"color"`
 	Weight      float32 `json:"weight"`
 	Location    string  `json:"location"`
+	PetTypeId   uint    `json:"pet_type_id"`
 }

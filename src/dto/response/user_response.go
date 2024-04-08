@@ -5,6 +5,9 @@ type UserResponse struct {
 	Name        string        `json:"name"`
 	LastName    string        `json:"last_name"`
 	PhoneNumber string        `json:"phone_number"`
+	Dni         string        `json:"dni"`
+	Address     string        `json:"address"`
+	City        string        `json:"city"`
 	Email       string        `json:"email"`
 	Role        string        `json:"role"`
 	Pets        []PetResponse `json:"pets,omitempty"`

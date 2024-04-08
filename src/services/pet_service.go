@@ -62,16 +62,20 @@ func CreatePet(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
-	pet := mapper.PetRequestToModel(model)
-
-	_, err := repositories.GetUserById(model.UserID)
+	petType, err := repositories.GetPetTypeById(model.PetTypeId)
 	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	pet := mapper.PetRequestToModel(model)
+	pet.PetType = petType
+
+	if _, err := repositories.GetUserById(model.UserID); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 
 	petCreated, err := repositories.CreatePet(pet)
-	// petCreated.User = user
+
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))

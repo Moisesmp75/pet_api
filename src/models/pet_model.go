@@ -21,4 +21,6 @@ type Pet struct {
 	User        User       `gorm:"foreignKey:UserID"`
 	Images      []PetImage `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:PetID"`
 	Location    string     `gorm:"size:50"`
+	PetTypeId   uint       `gorm:"not null"`
+	PetType     PetType    `gorm:"foreignKey:PetTypeId"`
 }

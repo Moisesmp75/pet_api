@@ -33,6 +33,15 @@ func RunMigration() {
 	if errPetImg != nil {
 		log.Fatal(errPetImg.Error())
 	}
+
+	errPetType := database.DB.AutoMigrate(&models.PetType{})
+	if errPetType != nil {
+		log.Fatal(errPetType.Error())
+	}
+
+	if err := SetupDefaultPetTypes(); err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 func SetupDefaultRoles() error {
@@ -59,6 +68,32 @@ func SetupDefaultRoles() error {
 					return err
 				}
 			}
+		}
+	}
+
+	return nil
+}
+
+func SetupDefaultPetTypes() error {
+	petTypes := []models.PetType{
+		{Name: "Dog"},
+		{Name: "Hamster"},
+		{Name: "Cat"},
+		{Name: "Rabbit"},
+	}
+
+	for _, petType := range petTypes {
+		var existingType models.PetType
+		result := database.DB.Where("name = ?", petType.Name).First(&existingType)
+		if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return result.Error
+		}
+
+		if result.RowsAffected == 0 {
+			if err := database.DB.Create(&petType).Error; err != nil {
+				return err
+			}
+			log.Printf("Created default pet type: %s\n", petType.Name)
 		}
 	}
 
