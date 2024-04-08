@@ -5,7 +5,7 @@ type PetRequest struct {
 	Breed       string  `json:"breed" validate:"required,gt=0"`
 	BornDate    string  `json:"born_date" validate:"required,datetime=2006/01/02"`
 	Description string  `json:"description"`
-	Size        float32 `json:"size" validate:"required"`
+	Height      float32 `json:"height" validate:"required"`
 	Gender      string  `json:"gender" validate:"len=1"`
 	Color       string  `json:"color" validate:"required"`
 	Weight      float32 `json:"weight" validate:"required"`

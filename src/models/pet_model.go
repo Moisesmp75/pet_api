@@ -13,7 +13,7 @@ type Pet struct {
 	Breed       string    `gorm:"size:30;not null"`
 	BornDate    time.Time `gorm:"not null"`
 	Description string    `gorm:"size:500"`
-	Size        float32   `gorm:"not null"`
+	Height      float32   `gorm:"not null"`
 	Gender      string    `gorm:"size:1"`
 	Color       string    `gorm:"size:40"`
 	Weight      float32   `gorm:"not null"`

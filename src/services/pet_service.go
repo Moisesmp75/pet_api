@@ -107,3 +107,32 @@ func UpdatePetImages(c *fiber.Ctx) error {
 
 	return c.JSON(response.MessageResponse("images created successfully"))
 }
+
+func UpdatePet(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	model := request.UpdatePetRequest{}
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	}
+	pet, err := repositories.GetPetById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	updatePet := mapper.UpdatePetRequestToModel(model, pet)
+
+	if _, err := repositories.UpdatePet(updatePet); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	return c.JSON(response.MessageResponse("pet updated successfully"))
+}

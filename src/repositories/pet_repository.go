@@ -20,7 +20,6 @@ func CountPets(breed, color string) int64 {
 	if err := query.Count(&total_items).Error; err != nil {
 		return 0
 	}
-	// database.DB.Model(&models.Pet{}).Count(&total_items)
 	return total_items
 }
 
@@ -82,22 +81,3 @@ func UpdatePet(pet models.Pet) (models.Pet, error) {
 	}
 	return pet, nil
 }
-
-// func FilterPetsByBreedOrColor(breed, color string) ([]models.Pet, error) {
-// 	var pets []models.Pet
-// 	query := database.DB.Model(&models.Pet{})
-
-// 	if breed != "" {
-// 		query = query.Where("breed = ?", breed)
-// 	}
-
-// 	if color != "" {
-// 		query = query.Where("color = ?", color)
-// 	}
-
-// 	if err := query.Find(&pets).Error; err != nil {
-// 		return nil, err
-// 	}
-
-// 	return pets, nil
-// }

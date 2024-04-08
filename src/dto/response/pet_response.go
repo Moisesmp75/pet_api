@@ -9,7 +9,7 @@ type PetResponse struct {
 	Breed       string        `json:"breed"`
 	BornDate    time.Time     `json:"born_date"`
 	Description string        `json:"description"`
-	Size        float32       `json:"size"`
+	Height      float32       `json:"height"`
 	Gender      string        `json:"gender"`
 	Color       string        `json:"color"`
 	Weight      float32       `json:"weight"`

@@ -13,7 +13,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 		Breed:       req.Breed,
 		BornDate:    helpers.ParseDate(req.BornDate),
 		Description: req.Description,
-		Size:        req.Size,
+		Height:      req.Height,
 		Gender:      req.Gender,
 		Color:       req.Color,
 		Weight:      req.Weight,
@@ -28,7 +28,7 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		Breed:       pet.Breed,
 		BornDate:    pet.BornDate,
 		Description: pet.Description,
-		Size:        pet.Size,
+		Height:      pet.Height,
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
@@ -43,13 +43,45 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		Breed:       pet.Breed,
 		BornDate:    pet.BornDate,
 		Description: pet.Description,
-		Size:        pet.Size,
+		Height:      pet.Height,
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
 		User:        nil,
 		Location:    pet.Location,
 	}
+}
+
+func UpdatePetRequestToModel(req request.UpdatePetRequest, pet models.Pet) models.Pet {
+	if req.Name != "" {
+		pet.Name = req.Name
+	}
+	if req.Breed != "" {
+		pet.Breed = req.Breed
+	}
+	if req.BornDate != "" {
+		pet.BornDate = helpers.ParseDate(req.BornDate)
+	}
+	if req.Description != "" {
+		pet.Description = req.Description
+	}
+	if req.Height != 0 {
+		pet.Height = req.Height
+	}
+	if req.Gender != "" {
+		pet.Gender = req.Gender
+	}
+	if req.Color != "" {
+		pet.Color = req.Color
+	}
+	if req.Weight != 0 {
+		pet.Weight = req.Weight
+	}
+	if req.Location != "" {
+		pet.Location = req.Location
+	}
+
+	return pet
 }
 
 func PetsModelsToResponse(pets []models.Pet) []response.PetResponse {
