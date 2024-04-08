@@ -11,7 +11,7 @@ func GetRoleById(id uint) (models.Role, error) {
 	data := database.DB.Model(&models.Role{}).First(&role, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
-		return models.Role{}, fmt.Errorf("rol with ID %d not found", id)
+		return models.Role{}, fmt.Errorf("rol with id '%d' not found", id)
 	}
 	return role, nil
 }
