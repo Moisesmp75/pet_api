@@ -42,6 +42,11 @@ func RunMigration() {
 	if err := SetupDefaultPetTypes(); err != nil {
 		log.Fatal(err.Error())
 	}
+	
+	errVisit := database.DB.AutoMigrate(&models.Visit{})
+	if errVisit != nil {
+		log.Fatal(errVisit.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

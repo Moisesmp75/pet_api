@@ -27,11 +27,6 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 	if err := database.DB.Model(&models.Pet{}).Create(&newPet).Error; err != nil {
 		return models.Pet{}, err
 	}
-
-	if err := database.DB.Preload("User").Preload("User.Role").First(&newPet, newPet.ID).Error; err != nil {
-		return models.Pet{}, err
-	}
-
 	return newPet, nil
 }
 

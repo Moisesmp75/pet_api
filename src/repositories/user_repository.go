@@ -11,7 +11,9 @@ import (
 
 func CountUsers() int64 {
 	var total_items int64
-	database.DB.Model(&models.User{}).Count(&total_items)
+	if err := database.DB.Model(&models.User{}).Count(&total_items).Error; err != nil {
+		return 0
+	}
 	return total_items
 }
 

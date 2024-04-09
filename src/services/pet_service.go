@@ -64,16 +64,17 @@ func CreatePet(c *fiber.Ctx) error {
 	}
 	petType, err := repositories.GetPetTypeById(model.PetTypeId)
 	if err != nil {
+		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 	pet := mapper.PetRequestToModel(model)
 	pet.PetType = petType
-
-	if _, err := repositories.GetUserById(model.UserID); err != nil {
+	user, err := repositories.GetUserById(model.UserID);
+	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-
+	pet.User = user
 	petCreated, err := repositories.CreatePet(pet)
 
 	if err != nil {

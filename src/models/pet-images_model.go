@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type PetImage struct {
 	gorm.Model
-	ID      uint   `gorm:"primaryKey;autoIncrement"`
+	ID      uint64 `gorm:"primaryKey;autoIncrement"`
 	URL     string `gorm:"not null"`
-	PetID   uint   `gorm:"not null"`
+	PetID   uint64 `gorm:"not null"`
 }

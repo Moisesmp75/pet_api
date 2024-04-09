@@ -13,3 +13,8 @@ func ParseDate(dateStr string) time.Time {
 
 	return date
 }
+
+func IsFutureDate(date time.Time) bool {
+	now := time.Now()
+	return !date.Before(now)
+}

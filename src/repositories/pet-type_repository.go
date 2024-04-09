@@ -6,7 +6,7 @@ import (
 	"pet_api/src/models"
 )
 
-func GetPetTypeById(id uint) (models.PetType, error) {
+func GetPetTypeById(id uint64) (models.PetType, error) {
 	var petType models.PetType
 	data := database.DB.Model(&models.PetType{}).First(&petType, id)
 

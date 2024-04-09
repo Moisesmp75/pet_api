@@ -6,7 +6,7 @@ import (
 	"pet_api/src/models"
 )
 
-func GetRoleById(id uint) (models.Role, error) {
+func GetRoleById(id uint64) (models.Role, error) {
 	var role models.Role
 	data := database.DB.Model(&models.Role{}).First(&role, id)
 
