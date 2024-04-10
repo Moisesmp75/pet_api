@@ -51,7 +51,7 @@ func CreateVisit(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	if user.ID == model.UserID {
+	if user.ID == pet.UserID {
 		log.Println("you can't visit your own pet")
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse("you can't visit your own pet"))
 	}
@@ -62,12 +62,11 @@ func CreateVisit(c *fiber.Ctx) error {
 	}
 	newVisit.Pet = pet
 	newVisit.User = user
-	visitCreate, err := repositories.CreateVisit(newVisit)
-	if err != nil {
+	if _, err := repositories.CreateVisit(newVisit); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.VisitModelToResponse(visitCreate)
+	resp := mapper.VisitModelToResponse(newVisit)
 
 	return c.JSON(response.NewResponse(resp))
 }

@@ -16,5 +16,5 @@ func ParseDate(dateStr string) time.Time {
 
 func IsFutureDate(date time.Time) bool {
 	now := time.Now()
-	return !date.Before(now)
+	return date.Before(now)
 }
