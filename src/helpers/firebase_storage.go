@@ -37,15 +37,12 @@ func UploadFile(file *multipart.FileHeader, route string) (string, error) {
 	ctx := context.Background()
 	firebaseStorageClient, err := initializeFirebaseStorage(ctx)
 	if err != nil {
-		// log.Printf("Error inicializando Firebase Storage: %v", err)
 		return "", err
-		// return c.Status(fiber.StatusInternalServerError).SendString("Error interno del servidor")
 	}
 
 	src, err := file.Open()
 	if err != nil {
 		return "", err
-		// return c.Status(fiber.StatusInternalServerError).SendString("Error al abrir el archivo")
 	}
 	defer src.Close()
 
@@ -53,24 +50,18 @@ func UploadFile(file *multipart.FileHeader, route string) (string, error) {
 	bucketName := "hairypets.appspot.com"
 	bucket, err := firebaseStorageClient.Bucket(bucketName)
 	if err != nil {
-		// log.Printf("Error obteniendo el bucket de Firebase Storage: %v", err)
 		return "", err
-		// return c.Status(fiber.StatusInternalServerError).SendString("Error interno del servidor")
 	}
 	objectPath := route + filename
 	obj := bucket.Object(objectPath)
 	wc := obj.NewWriter(ctx)
 
 	if _, err := io.Copy(wc, src); err != nil {
-		// log.Printf("Error subiendo archivo a Firebase Storage: %v", err)
 		return "", err
-		// return c.Status(fiber.StatusInternalServerError).SendString("Error interno del servidor")
 	}
 
 	if err := wc.Close(); err != nil {
 		return "", err
-		// log.Printf("Error cerrando escritor de Firebase Storage: %v", err)
-		// return c.Status(fiber.StatusInternalServerError).SendString("Error interno del servidor")
 	}
 
 	url, err := bucket.SignedURL(obj.ObjectName(), &storage.SignedURLOptions{
@@ -79,7 +70,6 @@ func UploadFile(file *multipart.FileHeader, route string) (string, error) {
 	})
 	if err != nil {
 		return "", err
-		// log.Fatalf("error getting download URL: %v\n", err)
 	}
 
 	return url, nil
