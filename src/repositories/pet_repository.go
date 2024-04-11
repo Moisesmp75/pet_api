@@ -56,7 +56,7 @@ func GetAllPets(offset, limit int, breed, color string) ([]models.Pet, error) {
 		query = query.Where("color = ?", color)
 	}
 
-	data := query.Offset(offset).Limit(limit).Preload("User").Find(&pets)
+	data := query.Offset(offset).Limit(limit).Preload("User").Preload("Images").Find(&pets)
 	if data.Error != nil {
 		return nil, data.Error
 	}

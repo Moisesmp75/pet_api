@@ -69,7 +69,7 @@ func CreatePet(c *fiber.Ctx) error {
 	}
 	pet := mapper.PetRequestToModel(model)
 	pet.PetType = petType
-	user, err := repositories.GetUserById(model.UserID);
+	user, err := repositories.GetUserById(model.UserID)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))

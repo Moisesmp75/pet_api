@@ -9,7 +9,7 @@ import (
 )
 
 func CreatePetImages(petID uint64, form *multipart.Form) ([]models.PetImage, error) {
-	images, err := helpers.ImagesToBase64(form)
+	images, err := helpers.UploadFiles(form, "pet_images/")
 	if err != nil {
 		return nil, err
 	}
