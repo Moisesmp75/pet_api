@@ -135,20 +135,14 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	url_img, err := helpers.UploadFile(file, "user_images/")
+	file.Filename = "user_" + user.Role.Name + "_" + "image_" + strconv.FormatUint(user.ID, 10)
+	url_img, _, err := helpers.UploadFile(file, "user_images/", false)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 
 	user.ImageUrl = url_img
-	// encodedImage, err := helpers.ConvertToBase64(file)
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
-	// }
-
-	// user.ImageUrl = encodedImage
 
 	if _, err := repositories.UpdateUser(user); err != nil {
 		log.Println(err.Error())

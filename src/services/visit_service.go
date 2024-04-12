@@ -44,12 +44,12 @@ func CreateVisit(c *fiber.Ctx) error {
 	pet, err := repositories.GetPetById(model.PetID)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 	user, err := repositories.GetUserById(model.UserID)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 	if user.ID == pet.UserID {
 		log.Println("you can't visit your own pet")

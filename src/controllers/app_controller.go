@@ -6,4 +6,5 @@ func AddControllers(api fiber.Router) {
 	UserController(api)
 	PetController(api)
 	VisitController(api)
+	ReportController(api)
 }

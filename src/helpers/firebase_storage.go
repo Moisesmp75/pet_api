@@ -33,35 +33,38 @@ func initializeFirebaseStorage(ctx context.Context) (*fbs.Client, error) {
 	return client, nil
 }
 
-func UploadFile(file *multipart.FileHeader, route string) (string, error) {
+func UploadFile(file *multipart.FileHeader, route string, generateName bool) (string, string, error) {
 	ctx := context.Background()
 	firebaseStorageClient, err := initializeFirebaseStorage(ctx)
 	if err != nil {
-		return "", err
+		return "", file.Filename, err
 	}
 
 	src, err := file.Open()
 	if err != nil {
-		return "", err
+		return "", file.Filename, err
 	}
 	defer src.Close()
+	filename := file.Filename
+	if generateName {
+		filename = filepath.Base(GenerateUniqueFileName(file.Filename))
+	}
 
-	filename := filepath.Base(GenerateUniqueFileName(file.Filename))
 	bucketName := "hairypets.appspot.com"
 	bucket, err := firebaseStorageClient.Bucket(bucketName)
 	if err != nil {
-		return "", err
+		return "", filename, err
 	}
 	objectPath := route + filename
 	obj := bucket.Object(objectPath)
 	wc := obj.NewWriter(ctx)
 
 	if _, err := io.Copy(wc, src); err != nil {
-		return "", err
+		return "", filename, err
 	}
 
 	if err := wc.Close(); err != nil {
-		return "", err
+		return "", filename, err
 	}
 
 	url, err := bucket.SignedURL(obj.ObjectName(), &storage.SignedURLOptions{
@@ -69,27 +72,29 @@ func UploadFile(file *multipart.FileHeader, route string) (string, error) {
 		Method:  "GET",
 	})
 	if err != nil {
-		return "", err
+		return "", filename, err
 	}
 
-	return url, nil
+	return url, filename, nil
 }
 
-func UploadFiles(files *multipart.Form, route string) ([]string, error) {
+func UploadFiles(files *multipart.Form, route string) ([]string, []string, error) {
 	var url_images []string
+	var filenames []string
 	if files == nil || len(files.File) == 0 {
-		return nil, errors.New("no files provided to upload")
+		return nil, nil, errors.New("no files provided to upload")
 	}
 
 	for _, headers := range files.File {
 		for _, fileHeader := range headers {
-			url, err := UploadFile(fileHeader, route)
+			url, filename, err := UploadFile(fileHeader, route, true)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			url_images = append(url_images, url)
+			filenames = append(filenames, filename)
 		}
 	}
 
-	return url_images, nil
+	return url_images, filenames, nil
 }
