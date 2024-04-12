@@ -10,6 +10,7 @@ type PetResponse struct {
 	Gender      string        `json:"gender"`
 	Color       string        `json:"color"`
 	Weight      float32       `json:"weight"`
+	Adopted     bool          `json:"adppted,omitempty"`
 	User        *UserResponse `json:"user,omitempty"`
 	Location    string        `json:"location"`
 	PetType     string        `json:"pet_type"`

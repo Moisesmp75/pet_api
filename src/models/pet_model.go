@@ -17,6 +17,7 @@ type Pet struct {
 	Gender      string     `gorm:"size:1"`
 	Color       string     `gorm:"size:40"`
 	Weight      float32    `gorm:"not null"`
+	Adopted     bool       `gorm:"not null;default:false"`
 	UserID      uint64     `gorm:"not null"`
 	User        User       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:UserID"`
 	Images      []PetImage `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:PetID"`

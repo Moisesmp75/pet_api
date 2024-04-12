@@ -25,7 +25,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 func PetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
-		Name: 			 pet.Name,
+		Name:        pet.Name,
 		Breed:       pet.Breed,
 		Age:         helpers.CalculateAge(pet.BornDate),
 		Description: pet.Description,
@@ -33,17 +33,18 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
+		Adopted:     pet.Adopted,
 		User:        OnlyUserModelToResponse(pet.User),
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
-		Images: 		 PetImagesModelToResponse(pet.Images),
+		Images:      PetImagesModelToResponse(pet.Images),
 	}
 }
 
 func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 	return response.PetResponse{
 		ID:          pet.ID,
-		Name: 			 pet.Name,
+		Name:        pet.Name,
 		Breed:       pet.Breed,
 		Age:         helpers.CalculateAge(pet.BornDate),
 		Description: pet.Description,
@@ -54,7 +55,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		User:        nil,
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
-		Images: 		 PetImagesModelToResponse(pet.Images),
+		Images:      PetImagesModelToResponse(pet.Images),
 	}
 }
 
@@ -85,6 +86,9 @@ func UpdatePetRequestToModel(req request.UpdatePetRequest, pet models.Pet) model
 	}
 	if req.Location != "" {
 		pet.Location = req.Location
+	}
+	if req.Adopted != nil {
+		pet.Adopted = *req.Adopted
 	}
 	return pet
 }
