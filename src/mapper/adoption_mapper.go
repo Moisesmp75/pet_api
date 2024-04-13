@@ -26,3 +26,13 @@ func AdoptionModelToResponse(adoption models.Adoption) response.AdoptionResponse
 		Comment:         adoption.Comment,
 	}
 }
+
+func AdoptionModelsToResponse(adoptions []models.Adoption) []response.AdoptionResponse {
+	resp := make([]response.AdoptionResponse, len(adoptions))
+
+	for i, v := range adoptions {
+		resp[i] = AdoptionModelToResponse(v)
+	}
+
+	return resp
+}

@@ -7,4 +7,5 @@ func AddControllers(api fiber.Router) {
 	PetController(api)
 	VisitController(api)
 	ReportController(api)
+	AdoptionController(api)
 }
