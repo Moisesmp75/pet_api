@@ -3,10 +3,16 @@ package response
 import "pet_api/src/common"
 
 type BaseResponse[T any] struct {
-	Success    bool               `json:"success"`
-	Message    []string           `json:"message"`
-	Resource   T                  `json:"resource"`
-	Pagination *common.Pagination `json:"meta,omitempty"`
+	Success  bool     `json:"success"`
+	Message  []string `json:"message"`
+	Resource T        `json:"resource"`
+}
+
+type BaseResponsePag[T any] struct {
+	Success    bool              `json:"success"`
+	Message    []string          `json:"message"`
+	Resource   T                 `json:"resource"`
+	Pagination common.Pagination `json:"meta,omitempty"`
 }
 
 func NewResponse[T any](resource T) BaseResponse[T] {
@@ -17,12 +23,12 @@ func NewResponse[T any](resource T) BaseResponse[T] {
 	}
 }
 
-func NewResponsePagination[T any](resource T, meta common.Pagination) BaseResponse[T] {
-	return BaseResponse[T]{
+func NewResponsePagination[T any](resource T, meta common.Pagination) BaseResponsePag[T] {
+	return BaseResponsePag[T]{
 		Success:    true,
 		Message:    nil,
 		Resource:   resource,
-		Pagination: &meta,
+		Pagination: meta,
 	}
 }
 
@@ -42,10 +48,10 @@ func ErrorsResponse(messages []string) BaseResponse[*any] {
 	}
 }
 
-func MessageResponse(message string) BaseResponse[*any] {
-	return BaseResponse[*any]{
+func MessageResponse[T any](message string, resource T) BaseResponse[T] {
+	return BaseResponse[T]{
 		Success:  true,
 		Message:  []string{message},
-		Resource: nil,
+		Resource: resource,
 	}
 }

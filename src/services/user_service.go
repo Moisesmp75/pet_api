@@ -149,7 +149,8 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	return c.JSON(response.MessageResponse("user updated successfully"))
+	resp := mapper.OnlyUserModelToResponse(user)
+	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }
 
 func RecoverPassword(c *fiber.Ctx) error {
@@ -178,8 +179,8 @@ func RecoverPassword(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	return c.JSON(response.MessageResponse("check your email"))
+	resp := mapper.OnlyUserModelToResponse(user)
+	return c.JSON(response.MessageResponse("check your email", resp))
 }
 
 func UpdateUser(c *fiber.Ctx) error {
@@ -210,6 +211,6 @@ func UpdateUser(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	return c.JSON(response.MessageResponse("user updated successfully"))
+	resp := mapper.OnlyUserModelToResponse(updateUser)
+	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }

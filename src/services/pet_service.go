@@ -13,6 +13,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetAllPets godoc
+// @Summary Lista a todas las mascotas
+// @Description Lista todas las mascotas de la aplicación.
+// @Tags pets
+// @Accept json
+// @Produce json
+// @Param petRequest body request.PetRequest true "Pet request payload"
+// @Success 200 {object} response.BaseResponsePag[[]response.PetResponse]
+// @Router /pets [get]
 func GetAllPets(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
@@ -37,6 +46,15 @@ func GetAllPets(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponsePagination(resp, pagination))
 }
 
+// GetAllPets godoc
+// @Summary Mostrar a una mascota
+// @Description Muestra una mascota con el id.
+// @Tags pets
+// @Accept json
+// @Produce json
+// @Param        id   path      int  true  "Pet ID"
+// @Success 200 {object} response.BaseResponse[response.PetResponse]
+// @Router /pets/{id} [get]
 func GetPetById(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
@@ -54,6 +72,15 @@ func GetPetById(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// CreatePet godoc
+// @Summary Crea una nueva mascota
+// @Description Crea una nueva mascota en la aplicación.
+// @Tags pets
+// @Accept json
+// @Produce json
+// @Param petRequest body request.PetRequest true "Pet request payload"
+// @Success 200 {object} response.BaseResponse[response.PetResponse]
+// @Router /pets [post]
 func CreatePet(c *fiber.Ctx) error {
 	model := request.PetRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
@@ -104,13 +131,14 @@ func UpdatePetImages(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	if _, err := CreatePetImages(pet.ID, form); err != nil {
+	images, err := CreatePetImages(pet.ID, form)
+	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	return c.JSON(response.MessageResponse("images created successfully"))
+	pet.Images = images
+	resp := mapper.OnlyPetModelToResponse(pet)
+	return c.JSON(response.MessageResponse("images created successfully", resp))
 }
 
 func UpdatePet(c *fiber.Ctx) error {
@@ -138,6 +166,6 @@ func UpdatePet(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	return c.JSON(response.MessageResponse("pet updated successfully"))
+	resp := mapper.OnlyPetModelToResponse(updatePet)
+	return c.JSON(response.MessageResponse("pet updated successfully", resp))
 }
