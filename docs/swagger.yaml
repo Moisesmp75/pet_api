@@ -1,0 +1,288 @@
+basePath: /
+definitions:
+  common.Pagination:
+    properties:
+      current_page:
+        type: integer
+      has_next_page:
+        type: boolean
+      has_prev_page:
+        type: boolean
+      items_per_page:
+        type: integer
+      total_items:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  request.PetRequest:
+    properties:
+      born_date:
+        type: string
+      breed:
+        type: string
+      color:
+        type: string
+      description:
+        type: string
+      gender:
+        type: string
+      height:
+        type: number
+      location:
+        type: string
+      name:
+        type: string
+      pet_type_id:
+        type: integer
+      user_id:
+        type: integer
+      weight:
+        type: number
+    required:
+    - born_date
+    - breed
+    - color
+    - height
+    - location
+    - name
+    - pet_type_id
+    - user_id
+    - weight
+    type: object
+  request.UpdatePetRequest:
+    properties:
+      adopted:
+        type: boolean
+      born_date:
+        type: string
+      breed:
+        type: string
+      color:
+        type: string
+      description:
+        type: string
+      gender:
+        type: string
+      height:
+        type: number
+      location:
+        type: string
+      name:
+        type: string
+      pet_type_id:
+        type: integer
+      weight:
+        type: number
+    type: object
+  response.BaseResponse-response_PetResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.PetResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponsePag-response_PetResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        $ref: '#/definitions/response.PetResponse'
+      success:
+        type: boolean
+    type: object
+  response.PetResponse:
+    properties:
+      adppted:
+        type: boolean
+      age:
+        type: integer
+      breed:
+        type: string
+      color:
+        type: string
+      description:
+        type: string
+      gender:
+        type: string
+      height:
+        type: number
+      id:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
+      location:
+        type: string
+      name:
+        type: string
+      pet_type:
+        type: string
+      user:
+        $ref: '#/definitions/response.UserResponse'
+      weight:
+        type: number
+    type: object
+  response.UserResponse:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      dni:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      last_name:
+        type: string
+      name:
+        type: string
+      pets:
+        items:
+          $ref: '#/definitions/response.PetResponse'
+        type: array
+      phone_number:
+        type: string
+      role:
+        type: string
+      user_name:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a HairyPets API swagger
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: HairyPets API
+  version: "1.0"
+paths:
+  /pets:
+    get:
+      consumes:
+      - application/json
+      description: Lista todas las mascotas de la aplicación.
+      parameters:
+      - description: Pet request payload
+        in: body
+        name: petRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.PetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-response_PetResponse'
+      summary: Lista a todas las mascotas
+      tags:
+      - pets
+    post:
+      consumes:
+      - application/json
+      description: Crea una nueva mascota en la aplicación.
+      parameters:
+      - description: Pet request payload
+        in: body
+        name: petRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.PetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      summary: Crea una nueva mascota
+      tags:
+      - pets
+  /pets/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Muestra una mascota con el id.
+      parameters:
+      - description: Pet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      summary: Mostrar a una mascota
+      tags:
+      - pets
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los detalles de una mascota identificada por su ID.
+      parameters:
+      - description: Pet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Pet update request payload
+        in: body
+        name: updatePetRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdatePetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      summary: Actualiza los detalles de una mascota
+      tags:
+      - pets
+  /pets/{id}/images:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Actualiza las imágenes de una mascota identificada por su ID.
+      parameters:
+      - description: Pet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      summary: Actualiza las imágenes de una mascota
+      tags:
+      - pets
+swagger: "2.0"
