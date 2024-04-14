@@ -15,7 +15,7 @@ type BaseResponsePag[T any] struct {
 	Pagination common.Pagination `json:"meta,omitempty"`
 }
 
-func NewResponse[T any](resource T) BaseResponse[T] {
+func NewResponse[T interface{}](resource T) BaseResponse[T] {
 	return BaseResponse[T]{
 		Success:  true,
 		Message:  nil,
@@ -23,7 +23,7 @@ func NewResponse[T any](resource T) BaseResponse[T] {
 	}
 }
 
-func NewResponsePagination[T any](resource T, meta common.Pagination) BaseResponsePag[T] {
+func NewResponsePagination[T interface{}](resource T, meta common.Pagination) BaseResponsePag[T] {
 	return BaseResponsePag[T]{
 		Success:    true,
 		Message:    nil,
@@ -32,23 +32,23 @@ func NewResponsePagination[T any](resource T, meta common.Pagination) BaseRespon
 	}
 }
 
-func ErrorResponse(message string) BaseResponse[*any] {
-	return BaseResponse[*any]{
+func ErrorResponse(message string) BaseResponse[interface{}] {
+	return BaseResponse[interface{}]{
 		Success:  false,
 		Message:  []string{message},
 		Resource: nil,
 	}
 }
 
-func ErrorsResponse(messages []string) BaseResponse[*any] {
-	return BaseResponse[*any]{
+func ErrorsResponse(messages []string) BaseResponse[interface{}] {
+	return BaseResponse[interface{}]{
 		Success:  false,
 		Message:  messages,
 		Resource: nil,
 	}
 }
 
-func MessageResponse[T any](message string, resource T) BaseResponse[T] {
+func MessageResponse[T interface{}](message string, resource T) BaseResponse[T] {
 	return BaseResponse[T]{
 		Success:  true,
 		Message:  []string{message},

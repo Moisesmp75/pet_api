@@ -14,6 +14,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetAllUsers godoc
+//
+// @Summary Lista todos los usuarios
+// @Description Lista todos los usuarios de la aplicación.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param offset query int false "Offset de paginación"
+// @Param limit query int false "Límite de resultados por página"
+// @Success 200 {object} response.BaseResponsePag[response.UserResponse] "Respuesta exitosa"
+// @Router /users [get]
 func GetAllUsers(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
@@ -35,6 +46,16 @@ func GetAllUsers(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponsePagination(resp, pagination))
 }
 
+// GetUserById godoc
+//
+// @Summary Muestra un usuario
+// @Description Muestra un usuario con el ID especificado.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path int true "ID del usuario"
+// @Success 200 {object} response.BaseResponse[response.UserResponse] "Respuesta exitosa"
+// @Router /users/{id} [get]
 func GetUserById(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
@@ -51,6 +72,16 @@ func GetUserById(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// CreateUser godoc
+//
+// @Summary Crea un nuevo usuario
+// @Description Crea un nuevo usuario en la aplicación.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param userRequest body request.UserRequest true "Solicitud de creación de usuario"
+// @Success 200 {object} response.BaseResponse[response.UserResponse] "Respuesta exitosa"
+// @Router /users [post]
 func CreateUser(c *fiber.Ctx) error {
 	model := request.UserRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
@@ -76,6 +107,16 @@ func CreateUser(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// LoginUser godoc
+//
+// @Summary Inicia sesión de usuario
+// @Description Inicia sesión de usuario con credenciales proporcionadas.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param loginRequest body request.LoginRequest true "Solicitud de inicio de sesión"
+// @Success 200 {object} response.BaseResponse[response.LoginResponse] "Respuesta exitosa"
+// @Router /users/login [post]
 func LoginUser(c *fiber.Ctx) error {
 	model := request.LoginRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
@@ -117,6 +158,17 @@ func LoginUser(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(lgResp))
 }
 
+// UpdateUserImage godoc
+//
+// @Summary Actualiza la imagen de usuario
+// @Description Actualiza la imagen de usuario identificado por su ID.
+// @Tags users
+// @Accept multipart/form-data
+// @Produce json
+// @Param id path int true "ID del usuario"
+// @Param user_img formData file true "Imagen de usuario"
+// @Success 200 {object} response.BaseResponse[response.UserResponse] "Respuesta exitosa"
+// @Router /users/{id}/image [put]
 func UpdateUserImage(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
@@ -153,6 +205,16 @@ func UpdateUserImage(c *fiber.Ctx) error {
 	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }
 
+// RecoverPassword godoc
+//
+// @Summary Recupera la contraseña de usuario
+// @Description Envía un correo electrónico con una nueva contraseña generada.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param passwordResetRequest body request.PasswordResetRequest true "Solicitud de restablecimiento de contraseña"
+// @Success 200 {object} response.BaseResponse[response.UserResponse] "Respuesta exitosa"
+// @Router /users/recover [post]
 func RecoverPassword(c *fiber.Ctx) error {
 	req := request.PasswordResetRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &req); err != nil {
@@ -183,6 +245,17 @@ func RecoverPassword(c *fiber.Ctx) error {
 	return c.JSON(response.MessageResponse("check your email", resp))
 }
 
+// UpdateUser godoc
+//
+// @Summary Actualiza los detalles de usuario
+// @Description Actualiza los detalles de usuario identificado por su ID.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path int true "ID del usuario"
+// @Param updateUserRequest body request.UpdateUserRequest true "Solicitud de actualización de usuario"
+// @Success 200 {object} response.BaseResponse[response.UserResponse] "Respuesta exitosa"
+// @Router /users/{id} [put]
 func UpdateUser(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)

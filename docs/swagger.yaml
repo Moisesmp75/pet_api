@@ -15,6 +15,26 @@ definitions:
       total_pages:
         type: integer
     type: object
+  request.LoginRequest:
+    properties:
+      identity:
+        type: string
+      password:
+        type: string
+      role_id:
+        type: integer
+    required:
+    - identity
+    - password
+    - role_id
+    type: object
+  request.PasswordResetRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
   request.PetRequest:
     properties:
       born_date:
@@ -75,6 +95,67 @@ definitions:
       weight:
         type: number
     type: object
+  request.UpdateUserRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      dni:
+        type: string
+      last_name:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      user_name:
+        type: string
+    type: object
+  request.UserRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      dni:
+        type: string
+      email:
+        type: string
+      last_name:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      role_id:
+        type: integer
+      user_name:
+        type: string
+    required:
+    - dni
+    - email
+    - last_name
+    - name
+    - password
+    - phone_number
+    - role_id
+    type: object
+  response.BaseResponse-response_LoginResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.LoginResponse'
+      success:
+        type: boolean
+    type: object
   response.BaseResponse-response_PetResponse:
     properties:
       message:
@@ -83,6 +164,17 @@ definitions:
         type: array
       resource:
         $ref: '#/definitions/response.PetResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponse-response_UserResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.UserResponse'
       success:
         type: boolean
     type: object
@@ -98,6 +190,32 @@ definitions:
         $ref: '#/definitions/response.PetResponse'
       success:
         type: boolean
+    type: object
+  response.BaseResponsePag-response_UserResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        $ref: '#/definitions/response.UserResponse'
+      success:
+        type: boolean
+    type: object
+  response.LoginResponse:
+    properties:
+      email:
+        type: string
+      exp:
+        type: string
+      iat:
+        type: string
+      role:
+        type: string
+      token:
+        type: string
     type: object
   response.PetResponse:
     properties:
@@ -285,4 +403,166 @@ paths:
       summary: Actualiza las imágenes de una mascota
       tags:
       - pets
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Lista todos los usuarios de la aplicación.
+      parameters:
+      - description: Offset de paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-response_UserResponse'
+      summary: Lista todos los usuarios
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo usuario en la aplicación.
+      parameters:
+      - description: Solicitud de creación de usuario
+        in: body
+        name: userRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      summary: Crea un nuevo usuario
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Muestra un usuario con el ID especificado.
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      summary: Muestra un usuario
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los detalles de usuario identificado por su ID.
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Solicitud de actualización de usuario
+        in: body
+        name: updateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      summary: Actualiza los detalles de usuario
+      tags:
+      - users
+  /users/{id}/image:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Actualiza la imagen de usuario identificado por su ID.
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Imagen de usuario
+        in: formData
+        name: user_img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      summary: Actualiza la imagen de usuario
+      tags:
+      - users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Inicia sesión de usuario con credenciales proporcionadas.
+      parameters:
+      - description: Solicitud de inicio de sesión
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_LoginResponse'
+      summary: Inicia sesión de usuario
+      tags:
+      - users
+  /users/recover:
+    post:
+      consumes:
+      - application/json
+      description: Envía un correo electrónico con una nueva contraseña generada.
+      parameters:
+      - description: Solicitud de restablecimiento de contraseña
+        in: body
+        name: passwordResetRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.PasswordResetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      summary: Recupera la contraseña de usuario
+      tags:
+      - users
 swagger: "2.0"
