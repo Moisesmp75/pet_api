@@ -7,7 +7,7 @@ import (
 )
 
 func AdoptionController(api fiber.Router) {
-	adoptionRoute := api.Group("/adoption")
+	adoptionRoute := api.Group("/adoptions")
 
 	adoptionRoute.Get("/", services.GetAllAdoptions)
 	adoptionRoute.Post("/", services.CreateAdoption)

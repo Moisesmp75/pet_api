@@ -13,6 +13,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetAllReports godoc
+//
+// @Summary Lista todos los informes
+// @Description Obtiene una lista paginada de todos los informes.
+// @Tags reports
+// @Accept json
+// @Produce json
+// @Param offset query int false "Offset para paginación"
+// @Param limit query int false "Límite de resultados por página"
+// @Success 200 {object} response.BaseResponsePag[response.ReportResponse] "Respuesta exitosa"
+// @Router /reports [get]
 func GetAllReports(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
@@ -32,6 +43,16 @@ func GetAllReports(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponsePagination(resp, paguination))
 }
 
+// GetReportById godoc
+//
+// @Summary Obtiene un informe por ID
+// @Description Obtiene los detalles de un informe según su ID.
+// @Tags reports
+// @Accept json
+// @Produce json
+// @Param id path int true "ID del informe"
+// @Success 200 {object} response.BaseResponse[response.ReportResponse] "Respuesta exitosa"
+// @Router /reports/{id} [get]
 func GetReportById(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
@@ -48,6 +69,16 @@ func GetReportById(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// CreateReport godoc
+//
+// @Summary Crea un nuevo informe
+// @Description Crea un nuevo informe en la aplicación.
+// @Tags reports
+// @Accept json
+// @Produce json
+// @Param reportRequest body request.ReportRequest true "Solicitud de informe"
+// @Success 200 {object} response.BaseResponse[response.ReportResponse] "Respuesta exitosa"
+// @Router /reports [post]
 func CreateReport(c *fiber.Ctx) error {
 	model := request.ReportRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {

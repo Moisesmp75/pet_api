@@ -13,6 +13,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetAllAdoptions godoc
+//
+//	@Summary		Lista todas las adopciones
+//	@Description	Obtiene una lista paginada de todas las adopciones.
+//	@Tags			adoptions
+//	@Accept			json
+//	@Produce		json
+//	@Param			offset	query		int													false	"Offset para paginación"
+//	@Param			limit	query		int													false	"Límite de resultados por página"
+//	@Success		200		{object}	response.BaseResponsePag[response.AdoptionResponse]	"Respuesta exitosa"
+//	@Router			/adoptions [get]
 func GetAllAdoptions(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
@@ -32,6 +43,16 @@ func GetAllAdoptions(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponsePagination(resp, pagination))
 }
 
+// CreateAdoption godoc
+//
+//	@Summary		Crea una nueva adopción
+//	@Description	Crea una nueva adopción en la aplicación.
+//	@Tags			adoptions
+//	@Accept			json
+//	@Produce		json
+//	@Param			adoptionRequest	body		request.AdoptionRequest								true	"Solicitud de adopción"
+//	@Success		200				{object}	response.BaseResponse[response.AdoptionResponse]	"Respuesta exitosa"
+//	@Router			/adoptions [post]
 func CreateAdoption(c *fiber.Ctx) error {
 	model := request.AdoptionRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
@@ -75,6 +96,16 @@ func CreateAdoption(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// GetAdoptionById godoc
+//
+//	@Summary		Obtiene una adopción por ID
+//	@Description	Obtiene los detalles de una adopción según su ID.
+//	@Tags			adoptions
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int													true	"ID de la adopción"
+//	@Success		200	{object}	response.BaseResponse[response.AdoptionResponse]	"Respuesta exitosa"
+//	@Router			/adoptions/{id} [get]
 func GetAdoptionById(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)

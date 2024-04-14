@@ -7,7 +7,7 @@ import (
 )
 
 func UserController(api fiber.Router) {
-	usersRoute := api.Group("/user")
+	usersRoute := api.Group("/users")
 
 	usersRoute.Get("/", services.GetAllUsers)
 	usersRoute.Get("/:id", services.GetUserById)

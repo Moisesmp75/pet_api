@@ -13,6 +13,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetAllVisits godoc
+//
+// @Summary Lista todas las visitas
+// @Description Obtiene una lista paginada de todas las visitas.
+// @Tags visits
+// @Accept json
+// @Produce json
+// @Param offset query int false "Offset para paginación"
+// @Param limit query int false "Límite de resultados por página"
+// @Success 200 {object} response.BaseResponsePag[response.VisitResponse] "Respuesta exitosa"
+// @Router /visits [get]
 func GetAllVisits(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
 	if len(errors) > 0 {
@@ -33,6 +44,16 @@ func GetAllVisits(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponsePagination(resp, pagination))
 }
 
+// CreateVisit godoc
+//
+// @Summary Crea una nueva visita
+// @Description Crea una nueva visita en la aplicación.
+// @Tags visits
+// @Accept json
+// @Produce json
+// @Param visitRequest body request.VisitRequest true "Solicitud de visita"
+// @Success 200 {object} response.BaseResponse[response.VisitResponse] "Respuesta exitosa"
+// @Router /visits [post]
 func CreateVisit(c *fiber.Ctx) error {
 	model := request.VisitRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
@@ -71,6 +92,16 @@ func CreateVisit(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// GetVisitById godoc
+//
+// @Summary Obtiene una visita por ID
+// @Description Obtiene los detalles de una visita según su ID.
+// @Tags visits
+// @Accept json
+// @Produce json
+// @Param id path int true "ID de la visita"
+// @Success 200 {object} response.BaseResponse[response.VisitResponse] "Respuesta exitosa"
+// @Router /visits/{id} [get]
 func GetVisitById(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)

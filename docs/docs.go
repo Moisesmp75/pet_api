@@ -23,6 +23,107 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/adoptions": {
+            "get": {
+                "description": "Obtiene una lista paginada de todas las adopciones.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "adoptions"
+                ],
+                "summary": "Lista todas las adopciones",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset para paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponsePag-response_AdoptionResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Crea una nueva adopción en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "adoptions"
+                ],
+                "summary": "Crea una nueva adopción",
+                "parameters": [
+                    {
+                        "description": "Solicitud de adopción",
+                        "name": "adoptionRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AdoptionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_AdoptionResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/adoptions/{id}": {
+            "get": {
+                "description": "Obtiene los detalles de una adopción según su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "adoptions"
+                ],
+                "summary": "Obtiene una adopción por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la adopción",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_AdoptionResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/pets": {
             "get": {
                 "description": "Lista todas las mascotas de la aplicación.",
@@ -38,13 +139,28 @@ const docTemplate = `{
                 "summary": "Lista a todas las mascotas",
                 "parameters": [
                     {
-                        "description": "Pet request payload",
-                        "name": "petRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.PetRequest"
-                        }
+                        "type": "integer",
+                        "description": "Offset de paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filtrar mascota por raza",
+                        "name": "breed",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filtrar mascota por color",
+                        "name": "color",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -105,7 +221,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Pet ID",
+                        "description": "Pet id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -120,7 +236,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
+            "patch": {
                 "description": "Actualiza los detalles de una mascota identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -135,7 +251,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Pet ID",
+                        "description": "Pet id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -161,7 +277,7 @@ const docTemplate = `{
             }
         },
         "/pets/{id}/images": {
-            "put": {
+            "patch": {
                 "description": "Actualiza las imágenes de una mascota identificada por su ID.",
                 "consumes": [
                     "multipart/form-data"
@@ -176,7 +292,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Pet ID",
+                        "description": "Pet id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -187,6 +303,107 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.BaseResponse-response_PetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reports": {
+            "get": {
+                "description": "Obtiene una lista paginada de todos los informes.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Lista todos los informes",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset para paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponsePag-response_ReportResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Crea un nuevo informe en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Crea un nuevo informe",
+                "parameters": [
+                    {
+                        "description": "Solicitud de informe",
+                        "name": "reportRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ReportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_ReportResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reports/{id}": {
+            "get": {
+                "description": "Obtiene los detalles de un informe según su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Obtiene un informe por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del informe",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_ReportResponse"
                         }
                     }
                 }
@@ -360,7 +577,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
+            "patch": {
                 "description": "Actualiza los detalles de usuario identificado por su ID.",
                 "consumes": [
                     "application/json"
@@ -401,7 +618,7 @@ const docTemplate = `{
             }
         },
         "/users/{id}/image": {
-            "put": {
+            "patch": {
                 "description": "Actualiza la imagen de usuario identificado por su ID.",
                 "consumes": [
                     "multipart/form-data"
@@ -438,6 +655,107 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/visits": {
+            "get": {
+                "description": "Obtiene una lista paginada de todas las visitas.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visits"
+                ],
+                "summary": "Lista todas las visitas",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset para paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponsePag-response_VisitResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Crea una nueva visita en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visits"
+                ],
+                "summary": "Crea una nueva visita",
+                "parameters": [
+                    {
+                        "description": "Solicitud de visita",
+                        "name": "visitRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.VisitRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_VisitResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/visits/{id}": {
+            "get": {
+                "description": "Obtiene los detalles de una visita según su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visits"
+                ],
+                "summary": "Obtiene una visita por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la visita",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_VisitResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -460,6 +778,29 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.AdoptionRequest": {
+            "type": "object",
+            "required": [
+                "comment",
+                "date",
+                "pet_id",
+                "user_id"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "pet_id": {
+                    "type": "integer"
+                },
+                "user_id": {
                     "type": "integer"
                 }
             }
@@ -540,6 +881,25 @@ const docTemplate = `{
                 },
                 "weight": {
                     "type": "number"
+                }
+            }
+        },
+        "request.ReportRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "reported_user_id",
+                "reporter_user_id"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "reported_user_id": {
+                    "type": "integer"
+                },
+                "reporter_user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -654,6 +1014,65 @@ const docTemplate = `{
                 }
             }
         },
+        "request.VisitRequest": {
+            "type": "object",
+            "required": [
+                "date",
+                "pet_id",
+                "user_id"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "pet_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.AdoptionResponse": {
+            "type": "object",
+            "properties": {
+                "adoption_date": {
+                    "type": "string"
+                },
+                "application_date": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "pet": {
+                    "$ref": "#/definitions/response.PetResponse"
+                },
+                "user": {
+                    "$ref": "#/definitions/response.UserResponse"
+                }
+            }
+        },
+        "response.BaseResponse-response_AdoptionResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.AdoptionResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponse-response_LoginResponse": {
             "type": "object",
             "properties": {
@@ -688,6 +1107,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponse-response_ReportResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.ReportResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponse-response_UserResponse": {
             "type": "object",
             "properties": {
@@ -699,6 +1135,43 @@ const docTemplate = `{
                 },
                 "resource": {
                     "$ref": "#/definitions/response.UserResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.BaseResponse-response_VisitResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.VisitResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.BaseResponsePag-response_AdoptionResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/common.Pagination"
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.AdoptionResponse"
                 },
                 "success": {
                     "type": "boolean"
@@ -725,6 +1198,26 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponsePag-response_ReportResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/common.Pagination"
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.ReportResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponsePag-response_UserResponse": {
             "type": "object",
             "properties": {
@@ -739,6 +1232,26 @@ const docTemplate = `{
                 },
                 "resource": {
                     "$ref": "#/definitions/response.UserResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.BaseResponsePag-response_VisitResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/common.Pagination"
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.VisitResponse"
                 },
                 "success": {
                     "type": "boolean"
@@ -815,6 +1328,26 @@ const docTemplate = `{
                 }
             }
         },
+        "response.ReportResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "report_date": {
+                    "type": "string"
+                },
+                "reported_user": {
+                    "$ref": "#/definitions/response.UserResponse"
+                },
+                "reporter": {
+                    "$ref": "#/definitions/response.UserResponse"
+                }
+            }
+        },
         "response.UserResponse": {
             "type": "object",
             "properties": {
@@ -856,6 +1389,23 @@ const docTemplate = `{
                 },
                 "user_name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.VisitResponse": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "pet": {
+                    "$ref": "#/definitions/response.PetResponse"
+                },
+                "user": {
+                    "$ref": "#/definitions/response.UserResponse"
                 }
             }
         }

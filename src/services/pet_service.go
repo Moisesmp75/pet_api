@@ -20,8 +20,11 @@ import (
 //	@Tags			pets
 //	@Accept			json
 //	@Produce		json
-//	@Param			petRequest	body		request.PetRequest	true	"Pet request payload"
-//	@Success		200			{object}	response.BaseResponsePag[response.PetResponse]
+//	@Param			offset	query		int	false	"Offset de paginación"
+//	@Param			limit	query		int	false	"Límite de resultados por página"
+//	@Param			breed	query		int	false	"Filtrar mascota por raza"
+//	@Param			color	query		int	false	"Filtrar mascota por color"
+//	@Success		200		{object}	response.BaseResponsePag[response.PetResponse]
 //	@Router			/pets [get]
 func GetAllPets(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
@@ -54,7 +57,7 @@ func GetAllPets(c *fiber.Ctx) error {
 //	@Tags			pets
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		int	true	"Pet ID"
+//	@Param			id	path		int	true	"Pet id"
 //	@Success		200	{object}	response.BaseResponse[response.PetResponse]
 //	@Router			/pets/{id} [get]
 func GetPetById(c *fiber.Ctx) error {
@@ -123,9 +126,9 @@ func CreatePet(c *fiber.Ctx) error {
 //	@Tags			pets
 //	@Accept			multipart/form-data
 //	@Produce		json
-//	@Param			id	path		int	true	"Pet ID"
+//	@Param			id	path		int	true	"Pet id"
 //	@Success		200	{object}	response.BaseResponse[response.PetResponse]
-//	@Router			/pets/{id}/images [put]
+//	@Router			/pets/{id}/images [patch]
 func UpdatePetImages(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
@@ -161,10 +164,10 @@ func UpdatePetImages(c *fiber.Ctx) error {
 //	@Tags			pets
 //	@Accept			json
 //	@Produce		json
-//	@Param			id					path		int							true	"Pet ID"
+//	@Param			id					path		int							true	"Pet id"
 //	@Param			updatePetRequest	body		request.UpdatePetRequest	true	"Pet update request payload"
 //	@Success		200					{object}	response.BaseResponse[response.PetResponse]
-//	@Router			/pets/{id} [put]
+//	@Router			/pets/{id} [patch]
 func UpdatePet(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)

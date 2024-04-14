@@ -15,6 +15,22 @@ definitions:
       total_pages:
         type: integer
     type: object
+  request.AdoptionRequest:
+    properties:
+      comment:
+        type: string
+      date:
+        type: string
+      pet_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - comment
+    - date
+    - pet_id
+    - user_id
+    type: object
   request.LoginRequest:
     properties:
       identity:
@@ -69,6 +85,19 @@ definitions:
     - pet_type_id
     - user_id
     - weight
+    type: object
+  request.ReportRequest:
+    properties:
+      description:
+        type: string
+      reported_user_id:
+        type: integer
+      reporter_user_id:
+        type: integer
+    required:
+    - description
+    - reported_user_id
+    - reporter_user_id
     type: object
   request.UpdatePetRequest:
     properties:
@@ -145,6 +174,45 @@ definitions:
     - phone_number
     - role_id
     type: object
+  request.VisitRequest:
+    properties:
+      date:
+        type: string
+      pet_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - date
+    - pet_id
+    - user_id
+    type: object
+  response.AdoptionResponse:
+    properties:
+      adoption_date:
+        type: string
+      application_date:
+        type: string
+      comment:
+        type: string
+      id:
+        type: integer
+      pet:
+        $ref: '#/definitions/response.PetResponse'
+      user:
+        $ref: '#/definitions/response.UserResponse'
+    type: object
+  response.BaseResponse-response_AdoptionResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.AdoptionResponse'
+      success:
+        type: boolean
+    type: object
   response.BaseResponse-response_LoginResponse:
     properties:
       message:
@@ -167,6 +235,17 @@ definitions:
       success:
         type: boolean
     type: object
+  response.BaseResponse-response_ReportResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.ReportResponse'
+      success:
+        type: boolean
+    type: object
   response.BaseResponse-response_UserResponse:
     properties:
       message:
@@ -175,6 +254,30 @@ definitions:
         type: array
       resource:
         $ref: '#/definitions/response.UserResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponse-response_VisitResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.VisitResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponsePag-response_AdoptionResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        $ref: '#/definitions/response.AdoptionResponse'
       success:
         type: boolean
     type: object
@@ -191,6 +294,19 @@ definitions:
       success:
         type: boolean
     type: object
+  response.BaseResponsePag-response_ReportResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        $ref: '#/definitions/response.ReportResponse'
+      success:
+        type: boolean
+    type: object
   response.BaseResponsePag-response_UserResponse:
     properties:
       message:
@@ -201,6 +317,19 @@ definitions:
         $ref: '#/definitions/common.Pagination'
       resource:
         $ref: '#/definitions/response.UserResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponsePag-response_VisitResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        $ref: '#/definitions/response.VisitResponse'
       success:
         type: boolean
     type: object
@@ -250,6 +379,19 @@ definitions:
       weight:
         type: number
     type: object
+  response.ReportResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      report_date:
+        type: string
+      reported_user:
+        $ref: '#/definitions/response.UserResponse'
+      reporter:
+        $ref: '#/definitions/response.UserResponse'
+    type: object
   response.UserResponse:
     properties:
       address:
@@ -279,6 +421,17 @@ definitions:
       user_name:
         type: string
     type: object
+  response.VisitResponse:
+    properties:
+      date:
+        type: string
+      id:
+        type: integer
+      pet:
+        $ref: '#/definitions/response.PetResponse'
+      user:
+        $ref: '#/definitions/response.UserResponse'
+    type: object
 host: localhost:3000
 info:
   contact:
@@ -292,18 +445,94 @@ info:
   title: HairyPets API
   version: "1.0"
 paths:
+  /adoptions:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista paginada de todas las adopciones.
+      parameters:
+      - description: Offset para paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-response_AdoptionResponse'
+      summary: Lista todas las adopciones
+      tags:
+      - adoptions
+    post:
+      consumes:
+      - application/json
+      description: Crea una nueva adopción en la aplicación.
+      parameters:
+      - description: Solicitud de adopción
+        in: body
+        name: adoptionRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.AdoptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      summary: Crea una nueva adopción
+      tags:
+      - adoptions
+  /adoptions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los detalles de una adopción según su ID.
+      parameters:
+      - description: ID de la adopción
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      summary: Obtiene una adopción por ID
+      tags:
+      - adoptions
   /pets:
     get:
       consumes:
       - application/json
       description: Lista todas las mascotas de la aplicación.
       parameters:
-      - description: Pet request payload
-        in: body
-        name: petRequest
-        required: true
-        schema:
-          $ref: '#/definitions/request.PetRequest'
+      - description: Offset de paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      - description: Filtrar mascota por raza
+        in: query
+        name: breed
+        type: integer
+      - description: Filtrar mascota por color
+        in: query
+        name: color
+        type: integer
       produces:
       - application/json
       responses:
@@ -341,7 +570,7 @@ paths:
       - application/json
       description: Muestra una mascota con el id.
       parameters:
-      - description: Pet ID
+      - description: Pet id
         in: path
         name: id
         required: true
@@ -356,12 +585,12 @@ paths:
       summary: Mostrar a una mascota
       tags:
       - pets
-    put:
+    patch:
       consumes:
       - application/json
       description: Actualiza los detalles de una mascota identificada por su ID.
       parameters:
-      - description: Pet ID
+      - description: Pet id
         in: path
         name: id
         required: true
@@ -383,12 +612,12 @@ paths:
       tags:
       - pets
   /pets/{id}/images:
-    put:
+    patch:
       consumes:
       - multipart/form-data
       description: Actualiza las imágenes de una mascota identificada por su ID.
       parameters:
-      - description: Pet ID
+      - description: Pet id
         in: path
         name: id
         required: true
@@ -403,6 +632,72 @@ paths:
       summary: Actualiza las imágenes de una mascota
       tags:
       - pets
+  /reports:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista paginada de todos los informes.
+      parameters:
+      - description: Offset para paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-response_ReportResponse'
+      summary: Lista todos los informes
+      tags:
+      - reports
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo informe en la aplicación.
+      parameters:
+      - description: Solicitud de informe
+        in: body
+        name: reportRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.ReportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_ReportResponse'
+      summary: Crea un nuevo informe
+      tags:
+      - reports
+  /reports/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los detalles de un informe según su ID.
+      parameters:
+      - description: ID del informe
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_ReportResponse'
+      summary: Obtiene un informe por ID
+      tags:
+      - reports
   /users:
     get:
       consumes:
@@ -469,7 +764,7 @@ paths:
       summary: Muestra un usuario
       tags:
       - users
-    put:
+    patch:
       consumes:
       - application/json
       description: Actualiza los detalles de usuario identificado por su ID.
@@ -496,7 +791,7 @@ paths:
       tags:
       - users
   /users/{id}/image:
-    put:
+    patch:
       consumes:
       - multipart/form-data
       description: Actualiza la imagen de usuario identificado por su ID.
@@ -565,4 +860,70 @@ paths:
       summary: Recupera la contraseña de usuario
       tags:
       - users
+  /visits:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista paginada de todas las visitas.
+      parameters:
+      - description: Offset para paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-response_VisitResponse'
+      summary: Lista todas las visitas
+      tags:
+      - visits
+    post:
+      consumes:
+      - application/json
+      description: Crea una nueva visita en la aplicación.
+      parameters:
+      - description: Solicitud de visita
+        in: body
+        name: visitRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.VisitRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      summary: Crea una nueva visita
+      tags:
+      - visits
+  /visits/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los detalles de una visita según su ID.
+      parameters:
+      - description: ID de la visita
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      summary: Obtiene una visita por ID
+      tags:
+      - visits
 swagger: "2.0"

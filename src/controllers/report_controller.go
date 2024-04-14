@@ -7,7 +7,7 @@ import (
 )
 
 func ReportController(api fiber.Router) {
-	reportRoute := api.Group("/report")
+	reportRoute := api.Group("/reports")
 
 	reportRoute.Get("/", services.GetAllReports)
 	reportRoute.Post("/", services.CreateReport)

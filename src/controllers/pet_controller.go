@@ -7,7 +7,7 @@ import (
 )
 
 func PetController(api fiber.Router) {
-	petsRoute := api.Group("/pet")
+	petsRoute := api.Group("/pets")
 
 	petsRoute.Get("/", services.GetAllPets)
 	petsRoute.Get("/:id", services.GetPetById)

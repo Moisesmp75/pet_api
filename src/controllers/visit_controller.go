@@ -7,7 +7,7 @@ import (
 )
 
 func VisitController(api fiber.Router) {
-	visitRoute := api.Group("/visit")
+	visitRoute := api.Group("/visits")
 
 	visitRoute.Get("/", services.GetAllVisits)
 	visitRoute.Post("/", services.CreateVisit)
