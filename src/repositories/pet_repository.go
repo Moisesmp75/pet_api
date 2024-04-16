@@ -89,3 +89,14 @@ func DeletePet(id uint64) (models.Pet, error) {
 	}
 	return pet, nil
 }
+
+func DeletePets(pets []models.Pet) ([]models.Pet, error) {
+	if len(pets) == 0 {
+		return []models.Pet{}, nil
+	}
+	operation := database.DB.Select("Images").Delete(&pets)
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return []models.Pet{}, operation.Error
+	}
+	return pets, nil
+}

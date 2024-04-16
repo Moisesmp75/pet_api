@@ -83,7 +83,11 @@ func DeleteUser(id uint64) (models.User, error) {
 		return models.User{}, err
 	}
 
-	operation := database.DB.Select("Pets").Delete(&user)
+	if _, err := DeletePets(user.Pets); err != nil {
+		return models.User{}, err
+	}
+
+	operation := database.DB.Select("Pets").Select("Pets.Images").Delete(&user)
 
 	if operation.Error != nil || operation.RowsAffected == 0 {
 		return models.User{}, err
