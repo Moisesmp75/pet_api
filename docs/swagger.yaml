@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api/v1
 definitions:
   common.Pagination:
     properties:
@@ -565,6 +565,26 @@ paths:
       tags:
       - pets
   /pets/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina una mascota identificada por su ID.
+      parameters:
+      - description: Pet id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      summary: Elimina una mascota
+      tags:
+      - pets
     get:
       consumes:
       - application/json
@@ -611,7 +631,7 @@ paths:
       summary: Actualiza los detalles de una mascota
       tags:
       - pets
-  /pets/{id}/images:
+  /pets/{id}/img:
     patch:
       consumes:
       - multipart/form-data
@@ -622,6 +642,27 @@ paths:
         name: id
         required: true
         type: integer
+      - description: Imagen 1 de la mascota
+        in: formData
+        name: img_1
+        required: true
+        type: file
+      - description: Imagen 2 de la mascota
+        in: formData
+        name: img_2
+        type: file
+      - description: Imagen 3 de la mascota
+        in: formData
+        name: img_3
+        type: file
+      - description: Imagen 4 de la mascota
+        in: formData
+        name: img_4
+        type: file
+      - description: Imagen 5 de la mascota
+        in: formData
+        name: img_5
+        type: file
       produces:
       - application/json
       responses:
@@ -722,28 +763,27 @@ paths:
       summary: Lista todos los usuarios
       tags:
       - users
-    post:
+  /users/{id}:
+    delete:
       consumes:
       - application/json
-      description: Crea un nuevo usuario en la aplicación.
+      description: Elimina un usuario identificada por su ID.
       parameters:
-      - description: Solicitud de creación de usuario
-        in: body
-        name: userRequest
+      - description: User id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/request.UserRequest'
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: Respuesta exitosa
+          description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
-      summary: Crea un nuevo usuario
+      summary: Elimina un usuario
       tags:
       - users
-  /users/{id}:
     get:
       consumes:
       - application/json
@@ -858,6 +898,28 @@ paths:
           schema:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
       summary: Recupera la contraseña de usuario
+      tags:
+      - users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo usuario en la aplicación.
+      parameters:
+      - description: Solicitud de creación de usuario
+        in: body
+        name: userRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      summary: Crea un nuevo usuario
       tags:
       - users
   /visits:

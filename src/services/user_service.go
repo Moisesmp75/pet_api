@@ -81,7 +81,7 @@ func GetUserById(c *fiber.Ctx) error {
 //	@Produce		json
 //	@Param			userRequest	body		request.UserRequest								true	"Solicitud de creación de usuario"
 //	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
-//	@Router			/users [post]
+//	@Router			/users/register [post]
 func CreateUser(c *fiber.Ctx) error {
 	model := request.UserRequest{}
 	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
@@ -286,4 +286,30 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 	resp := mapper.OnlyUserModelToResponse(updateUser)
 	return c.JSON(response.MessageResponse("user updated successfully", resp))
+}
+
+// DeletePet godoc
+//
+//	@Summary		Elimina un usuario
+//	@Description	Elimina un usuario identificada por su ID.
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"User id"
+//	@Success		200	{object}	response.BaseResponse[response.UserResponse]
+//	@Router			/users/{id} [delete]
+func DeleteUser(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	user, err := repositories.DeleteUser(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.UserModelToResponse(user)
+	return c.JSON(response.MessageResponse("user eliminated successfully", resp))
 }

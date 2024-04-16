@@ -52,6 +52,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		Gender:      pet.Gender,
 		Color:       pet.Color,
 		Weight:      pet.Weight,
+		Adopted:     pet.Adopted,
 		User:        nil,
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,

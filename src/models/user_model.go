@@ -14,7 +14,7 @@ type User struct {
 	City        string `gorm:"size:25"`
 	Email       string `gorm:"unique; not null"`
 	Password    string `gorm:"not null"`
-	Pets        []Pet  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:UserID;references:ID"`
+	Pets        []Pet  `gorm:"constraint:OnDelete:CASCADE;foreignKey:UserID;references:ID"`
 	RoleID      uint64 `gorm:"not null"`
 	Role        Role   `gorm:"foreignKey:RoleID"`
 	ImageUrl    string `gorm:"type:LONGTEXT"`

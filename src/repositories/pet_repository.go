@@ -76,3 +76,16 @@ func UpdatePet(pet models.Pet) (models.Pet, error) {
 	}
 	return pet, nil
 }
+
+func DeletePet(id uint64) (models.Pet, error) {
+	pet, err := GetPetById(id)
+	if err != nil {
+		return models.Pet{}, err
+	}
+	operation := database.DB.Select("Images").Delete(&pet)
+
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return models.Pet{}, err
+	}
+	return pet, nil
+}

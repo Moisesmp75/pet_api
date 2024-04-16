@@ -236,6 +236,36 @@ const docTemplate = `{
                     }
                 }
             },
+            "delete": {
+                "description": "Elimina una mascota identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pets"
+                ],
+                "summary": "Elimina una mascota",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Pet id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_PetResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "description": "Actualiza los detalles de una mascota identificada por su ID.",
                 "consumes": [
@@ -276,7 +306,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/pets/{id}/images": {
+        "/pets/{id}/img": {
             "patch": {
                 "description": "Actualiza las imágenes de una mascota identificada por su ID.",
                 "consumes": [
@@ -296,6 +326,37 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen 1 de la mascota",
+                        "name": "img_1",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen 2 de la mascota",
+                        "name": "img_2",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen 3 de la mascota",
+                        "name": "img_3",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen 4 de la mascota",
+                        "name": "img_4",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen 5 de la mascota",
+                        "name": "img_5",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -444,38 +505,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Crea un nuevo usuario en la aplicación.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Crea un nuevo usuario",
-                "parameters": [
-                    {
-                        "description": "Solicitud de creación de usuario",
-                        "name": "userRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UserRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Respuesta exitosa",
-                        "schema": {
-                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
-                        }
-                    }
-                }
             }
         },
         "/users/login": {
@@ -546,6 +575,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/register": {
+            "post": {
+                "description": "Crea un nuevo usuario en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Crea un nuevo usuario",
+                "parameters": [
+                    {
+                        "description": "Solicitud de creación de usuario",
+                        "name": "userRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "get": {
                 "description": "Muestra un usuario con el ID especificado.",
@@ -571,6 +634,36 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Elimina un usuario identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Elimina un usuario",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
                         }
@@ -1416,7 +1509,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:3000",
-	BasePath:         "/",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "HairyPets API",
 	Description:      "This is a HairyPets API swagger",

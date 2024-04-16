@@ -75,3 +75,18 @@ func GetUserByEmail(email string) (models.User, error) {
 	}
 	return user, nil
 }
+
+func DeleteUser(id uint64) (models.User, error) {
+	user, err := GetUserById(id)
+
+	if err != nil {
+		return models.User{}, err
+	}
+
+	operation := database.DB.Select("Pets").Delete(&user)
+
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return models.User{}, err
+	}
+	return user, nil
+}

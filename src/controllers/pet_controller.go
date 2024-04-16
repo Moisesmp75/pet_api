@@ -14,4 +14,5 @@ func PetController(api fiber.Router) {
 	petsRoute.Post("/", services.CreatePet)
 	petsRoute.Patch("/:id/img", services.UpdatePetImages)
 	petsRoute.Patch("/:id", services.UpdatePet)
+	petsRoute.Delete("/:id", services.DeletePet)
 }

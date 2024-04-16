@@ -16,4 +16,5 @@ func UserController(api fiber.Router) {
 	usersRoute.Patch("/:id/img", services.UpdateUserImage)
 	usersRoute.Post("/recover_password", services.RecoverPassword)
 	usersRoute.Patch("/:id", services.UpdateUser)
+	usersRoute.Delete("/:id", services.DeleteUser)
 }

@@ -126,9 +126,16 @@ func CreatePet(c *fiber.Ctx) error {
 //	@Tags			pets
 //	@Accept			multipart/form-data
 //	@Produce		json
-//	@Param			id	path		int	true	"Pet id"
-//	@Success		200	{object}	response.BaseResponse[response.PetResponse]
-//	@Router			/pets/{id}/images [patch]
+//	@Param			id			path		int		true	"Pet id"
+//
+//	@Param			img_1	formData	file											true	"Imagen 1 de la mascota"
+//	@Param			img_2	formData	file											false	"Imagen 2 de la mascota"
+//	@Param			img_3	formData	file											false	"Imagen 3 de la mascota"
+//	@Param			img_4	formData	file											false	"Imagen 4 de la mascota"
+//	@Param			img_5	formData	file											false	"Imagen 5 de la mascota"
+//
+//	@Success		200			{object}	response.BaseResponse[response.PetResponse]
+//	@Router			/pets/{id}/img [patch]
 func UpdatePetImages(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
@@ -195,4 +202,30 @@ func UpdatePet(c *fiber.Ctx) error {
 	}
 	resp := mapper.OnlyPetModelToResponse(updatePet)
 	return c.JSON(response.MessageResponse("pet updated successfully", resp))
+}
+
+// DeletePet godoc
+//
+//	@Summary		Elimina una mascota
+//	@Description	Elimina una mascota identificada por su ID.
+//	@Tags			pets
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"Pet id"
+//	@Success		200	{object}	response.BaseResponse[response.PetResponse]
+//	@Router			/pets/{id} [delete]
+func DeletePet(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	pet, err := repositories.DeletePet(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.OnlyPetModelToResponse(pet)
+	return c.JSON(response.MessageResponse("pet eliminated successfully", resp))
 }
