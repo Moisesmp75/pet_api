@@ -491,6 +491,26 @@ paths:
       tags:
       - adoptions
   /adoptions/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina una adopcion identificada por su ID.
+      parameters:
+      - description: Adoption id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      summary: Elimina una adopcion programada
+      tags:
+      - adoptions
     get:
       consumes:
       - application/json
@@ -968,6 +988,26 @@ paths:
       tags:
       - visits
   /visits/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina una visita identificada por su ID.
+      parameters:
+      - description: Visit id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      summary: Elimina una visita programada
+      tags:
+      - visits
     get:
       consumes:
       - application/json

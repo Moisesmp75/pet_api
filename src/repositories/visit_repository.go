@@ -51,3 +51,17 @@ func CreateVisit(newVisit models.Visit) (models.Visit, error) {
 
 	return newVisit, nil
 }
+
+func DeleteVisit(id uint64) (models.Visit, error) {
+	visit, err := GetVisitById(id)
+	if err != nil {
+		return models.Visit{}, err
+	}
+	operation := database.DB.Model(&models.Visit{})
+	operation = operation.Delete(&visit)
+
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return models.Visit{}, operation.Error
+	}
+	return visit, nil
+}

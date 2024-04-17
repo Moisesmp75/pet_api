@@ -117,3 +117,29 @@ func GetVisitById(c *fiber.Ctx) error {
 	resp := mapper.VisitModelToResponse(visit)
 	return c.JSON(response.NewResponse(resp))
 }
+
+// DeleteVisit godoc
+//
+//	@Summary		Elimina una visita programada
+//	@Description	Elimina una visita identificada por su ID.
+//	@Tags			visits
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"Visit id"
+//	@Success		200	{object}	response.BaseResponse[response.VisitResponse]
+//	@Router			/visits/{id} [delete]
+func DeleteVisit(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	visit, err := repositories.DeleteVisit(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.VisitModelToResponse(visit)
+	return c.JSON(response.MessageResponse("visit eliminated successfuly", resp))
+}

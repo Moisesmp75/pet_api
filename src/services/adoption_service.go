@@ -121,3 +121,29 @@ func GetAdoptionById(c *fiber.Ctx) error {
 	resp := mapper.AdoptionModelToResponse(adoption)
 	return c.JSON(response.NewResponse(resp))
 }
+
+// DeleteAdoption godoc
+//
+//	@Summary		Elimina una adopcion programada
+//	@Description	Elimina una adopcion identificada por su ID.
+//	@Tags			adoptions
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"Adoption id"
+//	@Success		200	{object}	response.BaseResponse[response.AdoptionResponse]
+//	@Router			/adoptions/{id} [delete]
+func DeleteAdoption(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	adoption, err := repositories.DeleteAdoption(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.AdoptionModelToResponse(adoption)
+	return c.JSON(response.MessageResponse("adoption eliminated successfuly", resp))
+}

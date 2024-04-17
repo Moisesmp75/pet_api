@@ -12,4 +12,5 @@ func AdoptionController(api fiber.Router) {
 	adoptionRoute.Get("/", services.GetAllAdoptions)
 	adoptionRoute.Post("/", services.CreateAdoption)
 	adoptionRoute.Get("/:id", services.GetAdoptionById)
+	adoptionRoute.Delete("/:id", services.DeleteAdoption)
 }

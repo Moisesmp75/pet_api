@@ -122,6 +122,36 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Elimina una adopcion identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "adoptions"
+                ],
+                "summary": "Elimina una adopcion programada",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Adoption id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_AdoptionResponse"
+                        }
+                    }
+                }
             }
         },
         "/pets": {
@@ -843,6 +873,36 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_VisitResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Elimina una visita identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visits"
+                ],
+                "summary": "Elimina una visita programada",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Visit id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.BaseResponse-response_VisitResponse"
                         }

@@ -51,3 +51,17 @@ func CreateAdoption(newAdoption models.Adoption) (models.Adoption, error) {
 	}
 	return newAdoption, nil
 }
+
+func DeleteAdoption(id uint64) (models.Adoption, error) {
+	adoption, err := GetAdoptionById(id)
+	if err != nil {
+		return models.Adoption{}, err
+	}
+	operation := database.DB.Model(&models.Adoption{})
+	operation = operation.Delete(&adoption)
+
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return models.Adoption{}, operation.Error
+	}
+	return adoption, nil
+}

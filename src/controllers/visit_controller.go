@@ -12,4 +12,5 @@ func VisitController(api fiber.Router) {
 	visitRoute.Get("/", services.GetAllVisits)
 	visitRoute.Post("/", services.CreateVisit)
 	visitRoute.Get("/:id", services.GetVisitById)
+	visitRoute.Delete("/:id", services.DeleteVisit)
 }
