@@ -168,7 +168,7 @@ func LoginUser(c *fiber.Ctx) error {
 //	@Param			id			path		int												true	"ID del usuario"
 //	@Param			user_img	formData	file											true	"Imagen de usuario"
 //	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
-//	@Router			/users/{id}/image [patch]
+//	@Router			/users/{id}/img [patch]
 func UpdateUserImage(c *fiber.Ctx) error {
 	strid := c.Params("id")
 	id, err := strconv.ParseUint(strid, 10, 64)
