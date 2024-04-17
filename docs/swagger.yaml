@@ -850,7 +850,7 @@ paths:
       summary: Actualiza los detalles de usuario
       tags:
       - users
-  /users/{id}/image:
+  /users/{id}/img:
     patch:
       consumes:
       - multipart/form-data

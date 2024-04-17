@@ -740,7 +740,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{id}/image": {
+        "/users/{id}/img": {
             "patch": {
                 "description": "Actualiza la imagen de usuario identificado por su ID.",
                 "consumes": [
