@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"pet_api/src/auth"
 	"pet_api/src/services"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,10 +10,12 @@ import (
 func PetController(api fiber.Router) {
 	petsRoute := api.Group("/pets")
 
-	petsRoute.Get("/", services.GetAllPets)
-	petsRoute.Get("/:id", services.GetPetById)
-	petsRoute.Post("/", services.CreatePet)
-	petsRoute.Patch("/:id/img", services.UpdatePetImages)
-	petsRoute.Patch("/:id", services.UpdatePet)
-	petsRoute.Delete("/:id", services.DeletePet)
+	petsRoute.Use(auth.AuthMiddleware([]string{"ONG", "Adoptador"}))
+
+	petsRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.GetAllPets)
+	petsRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.GetPetById)
+	petsRoute.Post("/", auth.AuthMiddleware([]string{"ONG"}), services.CreatePet)
+	petsRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG"}), services.UpdatePetImages)
+	petsRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG"}), services.UpdatePet)
+	petsRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG"}), services.DeletePet)
 }

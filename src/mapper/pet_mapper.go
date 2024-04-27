@@ -17,7 +17,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 		Gender:      req.Gender,
 		Color:       req.Color,
 		Weight:      req.Weight,
-		UserID:      req.UserID,
+		UserID:      0,
 		Location:    req.Location,
 	}
 }

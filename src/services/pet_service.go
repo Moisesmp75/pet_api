@@ -102,12 +102,14 @@ func CreatePet(c *fiber.Ctx) error {
 	}
 	pet := mapper.PetRequestToModel(model)
 	pet.PetType = petType
-	user, err := repositories.GetUserById(model.UserID)
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 	pet.User = user
+	pet.UserID = user.ID
 	petCreated, err := repositories.CreatePet(pet)
 
 	if err != nil {
@@ -148,7 +150,11 @@ func UpdatePetImages(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-
+	userEmail := c.Locals("user_email").(string)
+	user, _ := repositories.GetUserByEmail(userEmail)
+	if user.ID != pet.UserID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this pet"))
+	}
 	form, err := c.MultipartForm()
 	if err != nil {
 		log.Println(err.Error())
@@ -194,6 +200,11 @@ func UpdatePet(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
+	userEmail := c.Locals("user_email").(string)
+	user, _ := repositories.GetUserByEmail(userEmail)
+	if user.ID != pet.UserID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this pet"))
+	}
 	updatePet := mapper.UpdatePetRequestToModel(model, pet)
 
 	if _, err := repositories.UpdatePet(updatePet); err != nil {
@@ -225,6 +236,11 @@ func DeletePet(c *fiber.Ctx) error {
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	userEmail := c.Locals("user_email").(string)
+	user, _ := repositories.GetUserByEmail(userEmail)
+	if user.ID != pet.UserID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't delete this pet"))
 	}
 	resp := mapper.OnlyPetModelToResponse(pet)
 	return c.JSON(response.MessageResponse("pet eliminated successfully", resp))
