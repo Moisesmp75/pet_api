@@ -34,19 +34,6 @@ func CreatePetImages(petID uint64, form *multipart.Form) ([]models.PetImage, err
 		}
 		petImages = append(petImages, createdImage)
 	}
-	// for _, base64Image := range images {
-	// 	petImage := models.PetImage{
-	// 		URL:   base64Image,
-	// 		PetID: petID,
-	// 	}
-
-	// 	createdImage, err := repositories.CreatePetImage(petImage)
-	// 	if err != nil {
-	// 		log.Println(err.Error())
-	// 		return nil, err
-	// 	}
-	// 	petImages = append(petImages, createdImage)
-	// }
 
 	return petImages, nil
 }

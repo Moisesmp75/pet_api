@@ -62,7 +62,8 @@ func RunMigration() {
 func SetupDefaultRoles() error {
 	roles := []models.Role{
 		{Name: "ONG", Description: "Organización No Gubernamental"},
-		{Name: "Adoptador", Description: "Usuario que puede adoptar, dar en adopción y hacer donaciones"},
+		{Name: "Adoptador", Description: "Usuario que puede adoptar y hacer donaciones"},
+		{Name: "Duenio", Description: "Usuario que puede dar en adopcion y hacer donaciones"},
 	}
 
 	for _, role := range roles {

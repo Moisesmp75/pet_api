@@ -176,10 +176,21 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
+	userEmail := c.Locals("user_email").(string)
+	userFromToken, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
 	user, err := repositories.GetUserById(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	if user.ID != userFromToken.ID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
 	}
 
 	file, err := c.FormFile("user_img")
@@ -270,11 +281,24 @@ func UpdateUser(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
+
+	userEmail := c.Locals("user_email").(string)
+	userFromToken, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
 	user, err := repositories.GetUserById(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
+
+	if user.ID != userFromToken.ID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
+	}
+
 	if model.Password != "" {
 		model.Password = auth.Encrypt_password(model.Password)
 	}
@@ -305,11 +329,29 @@ func DeleteUser(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	user, err := repositories.DeleteUser(id)
+
+	userEmail := c.Locals("user_email").(string)
+	userFromToken, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	user, err := repositories.GetUserById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	if user.ID != userFromToken.ID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to delete this user"))
+	}
+
+	deletedUser, err := repositories.DeleteUser(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.UserModelToResponse(user)
+	resp := mapper.UserModelToResponse(deletedUser)
 	return c.JSON(response.MessageResponse("user eliminated successfully", resp))
 }

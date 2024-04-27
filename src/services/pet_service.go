@@ -232,16 +232,21 @@ func DeletePet(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	pet, err := repositories.DeletePet(id)
+	pet, err := repositories.GetPetById(id)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 	userEmail := c.Locals("user_email").(string)
 	user, _ := repositories.GetUserByEmail(userEmail)
 	if user.ID != pet.UserID {
 		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't delete this pet"))
 	}
-	resp := mapper.OnlyPetModelToResponse(pet)
+	deletePet, err := repositories.DeletePet(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.OnlyPetModelToResponse(deletePet)
 	return c.JSON(response.MessageResponse("pet eliminated successfully", resp))
 }

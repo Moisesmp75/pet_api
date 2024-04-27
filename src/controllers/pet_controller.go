@@ -10,10 +10,10 @@ import (
 func PetController(api fiber.Router) {
 	petsRoute := api.Group("/pets")
 
-	petsRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.GetAllPets)
-	petsRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.GetPetById)
-	petsRoute.Post("/", auth.AuthMiddleware([]string{"ONG"}), services.CreatePet)
-	petsRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG"}), services.UpdatePetImages)
-	petsRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG"}), services.UpdatePet)
-	petsRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG"}), services.DeletePet)
+	petsRoute.Get("/", services.GetAllPets)
+	petsRoute.Get("/:id", services.GetPetById)
+	petsRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.CreatePet)
+	petsRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.UpdatePetImages)
+	petsRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.UpdatePet)
+	petsRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.DeletePet)
 }

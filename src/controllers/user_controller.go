@@ -13,10 +13,10 @@ func UserController(api fiber.Router) {
 	usersRoute.Post("/register", services.CreateUser)
 	usersRoute.Post("/login", services.LoginUser)
 
-	usersRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.GetAllUsers)
-	usersRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.GetUserById)
-	usersRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.UpdateUserImage)
-	usersRoute.Post("/recover_password", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.RecoverPassword)
-	usersRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.UpdateUser)
-	usersRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador"}), services.DeleteUser)
+	usersRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.GetAllUsers)
+	usersRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.GetUserById)
+	usersRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.UpdateUserImage)
+	usersRoute.Post("/recover_password", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.RecoverPassword)
+	usersRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.UpdateUser)
+	usersRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.DeleteUser)
 }
