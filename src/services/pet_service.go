@@ -80,6 +80,7 @@ func GetPetById(c *fiber.Ctx) error {
 // CreatePet godoc
 //
 //	@Summary		Crea una nueva mascota
+//	@Security		ApiKeyAuth
 //	@Description	Crea una nueva mascota en la aplicación.
 //	@Tags			pets
 //	@Accept			json
@@ -124,19 +125,20 @@ func CreatePet(c *fiber.Ctx) error {
 // UpdatePetImages godoc
 //
 //	@Summary		Actualiza las imágenes de una mascota
+//	@Security		ApiKeyAuth
 //	@Description	Actualiza las imágenes de una mascota identificada por su ID.
 //	@Tags			pets
 //	@Accept			multipart/form-data
 //	@Produce		json
-//	@Param			id			path		int		true	"Pet id"
+//	@Param			id		path		int		true	"Pet id"
 //
-//	@Param			img_1	formData	file											true	"Imagen 1 de la mascota"
-//	@Param			img_2	formData	file											false	"Imagen 2 de la mascota"
-//	@Param			img_3	formData	file											false	"Imagen 3 de la mascota"
-//	@Param			img_4	formData	file											false	"Imagen 4 de la mascota"
-//	@Param			img_5	formData	file											false	"Imagen 5 de la mascota"
+//	@Param			img_1	formData	file	true	"Imagen 1 de la mascota"
+//	@Param			img_2	formData	file	false	"Imagen 2 de la mascota"
+//	@Param			img_3	formData	file	false	"Imagen 3 de la mascota"
+//	@Param			img_4	formData	file	false	"Imagen 4 de la mascota"
+//	@Param			img_5	formData	file	false	"Imagen 5 de la mascota"
 //
-//	@Success		200			{object}	response.BaseResponse[response.PetResponse]
+//	@Success		200		{object}	response.BaseResponse[response.PetResponse]
 //	@Router			/pets/{id}/img [patch]
 func UpdatePetImages(c *fiber.Ctx) error {
 	strid := c.Params("id")
@@ -173,6 +175,7 @@ func UpdatePetImages(c *fiber.Ctx) error {
 // UpdatePet godoc
 //
 //	@Summary		Actualiza los detalles de una mascota
+//	@Security		ApiKeyAuth
 //	@Description	Actualiza los detalles de una mascota identificada por su ID.
 //	@Tags			pets
 //	@Accept			json
@@ -218,6 +221,7 @@ func UpdatePet(c *fiber.Ctx) error {
 // DeletePet godoc
 //
 //	@Summary		Elimina una mascota
+//	@Security		ApiKeyAuth
 //	@Description	Elimina una mascota identificada por su ID.
 //	@Tags			pets
 //	@Accept			json

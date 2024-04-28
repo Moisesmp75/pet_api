@@ -15,16 +15,20 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// @title			HairyPets API
-// @version		1.0
-// @description	This is a HairyPets API swagger
-// @termsOfService	http://swagger.io/terms/
-// @contact.name	API Support
-// @contact.email	fiber@swagger.io
-// @license.name	Apache 2.0
-// @license.url	http://www.apache.org/licenses/LICENSE-2.0.html
-// @host			localhost:3000
-// @BasePath		/api/v1
+//	@title						HairyPets API
+//	@version					1.0
+//	@description				This is a HairyPets API swagger
+//	@termsOfService				http://swagger.io/terms/
+//	@contact.name				API Support
+//	@contact.email				fiber@swagger.io
+//	@license.name				Apache 2.0
+//	@license.url				http://www.apache.org/licenses/LICENSE-2.0.html
+//	@host						localhost:3000
+//	@BasePath					/api/v1
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@In							header
+//	@Name						Authorization
+//	@Description				Enter Bearer {token}
 func main() {
 
 	if err := godotenv.Load(".env"); err != nil {

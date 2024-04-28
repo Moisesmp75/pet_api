@@ -71,8 +71,6 @@ definitions:
         type: string
       pet_type_id:
         type: integer
-      user_id:
-        type: integer
       weight:
         type: number
     required:
@@ -83,7 +81,6 @@ definitions:
     - location
     - name
     - pet_type_id
-    - user_id
     - weight
     type: object
   request.ReportRequest:
@@ -581,6 +578,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Crea una nueva mascota
       tags:
       - pets
@@ -602,6 +601,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Elimina una mascota
       tags:
       - pets
@@ -648,6 +649,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Actualiza los detalles de una mascota
       tags:
       - pets
@@ -690,6 +693,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Actualiza las imágenes de una mascota
       tags:
       - pets
@@ -780,6 +785,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponsePag-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Lista todos los usuarios
       tags:
       - users
@@ -801,6 +808,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Elimina un usuario
       tags:
       - users
@@ -821,6 +830,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Muestra un usuario
       tags:
       - users
@@ -847,6 +858,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Actualiza los detalles de usuario
       tags:
       - users
@@ -873,6 +886,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Actualiza la imagen de usuario
       tags:
       - users
@@ -1028,4 +1043,10 @@ paths:
       summary: Obtiene una visita por ID
       tags:
       - visits
+securityDefinitions:
+  ApiKeyAuth:
+    description: Enter Bearer {token}
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

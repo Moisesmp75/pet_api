@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"pet_api/src/dto/response"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +17,7 @@ func AuthMiddleware(allowedRoles []string) fiber.Handler {
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("Invalid Token"))
 		}
-		fmt.Println(claims)
+		// fmt.Println(claims)
 		userEmail, ok := claims["email"].(string)
 		if !ok {
 			return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("Error getting user_id from token"))

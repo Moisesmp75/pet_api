@@ -203,6 +203,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Crea una nueva mascota en la aplicación.",
                 "consumes": [
                     "application/json"
@@ -267,6 +272,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Elimina una mascota identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -297,6 +307,11 @@ const docTemplate = `{
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Actualiza los detalles de una mascota identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -338,6 +353,11 @@ const docTemplate = `{
         },
         "/pets/{id}/img": {
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Actualiza las imágenes de una mascota identificada por su ID.",
                 "consumes": [
                     "multipart/form-data"
@@ -502,6 +522,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Lista todos los usuarios de la aplicación.",
                 "consumes": [
                     "application/json"
@@ -641,6 +666,11 @@ const docTemplate = `{
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Muestra un usuario con el ID especificado.",
                 "consumes": [
                     "application/json"
@@ -671,6 +701,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Elimina un usuario identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -701,6 +736,11 @@ const docTemplate = `{
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Actualiza los detalles de usuario identificado por su ID.",
                 "consumes": [
                     "application/json"
@@ -742,6 +782,11 @@ const docTemplate = `{
         },
         "/users/{id}/img": {
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Actualiza la imagen de usuario identificado por su ID.",
                 "consumes": [
                     "multipart/form-data"
@@ -998,7 +1043,6 @@ const docTemplate = `{
                 "location",
                 "name",
                 "pet_type_id",
-                "user_id",
                 "weight"
             ],
             "properties": {
@@ -1027,9 +1071,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pet_type_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 },
                 "weight": {
@@ -1561,6 +1602,14 @@ const docTemplate = `{
                     "$ref": "#/definitions/response.UserResponse"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Enter Bearer {token}",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -17,6 +17,7 @@ import (
 // GetAllUsers godoc
 //
 //	@Summary		Lista todos los usuarios
+//	@Security		ApiKeyAuth
 //	@Description	Lista todos los usuarios de la aplicación.
 //	@Tags			users
 //	@Accept			json
@@ -49,6 +50,7 @@ func GetAllUsers(c *fiber.Ctx) error {
 // GetUserById godoc
 //
 //	@Summary		Muestra un usuario
+//	@Security		ApiKeyAuth
 //	@Description	Muestra un usuario con el ID especificado.
 //	@Tags			users
 //	@Accept			json
@@ -161,6 +163,7 @@ func LoginUser(c *fiber.Ctx) error {
 // UpdateUserImage godoc
 //
 //	@Summary		Actualiza la imagen de usuario
+//	@Security		ApiKeyAuth
 //	@Description	Actualiza la imagen de usuario identificado por su ID.
 //	@Tags			users
 //	@Accept			multipart/form-data
@@ -259,6 +262,7 @@ func RecoverPassword(c *fiber.Ctx) error {
 // UpdateUser godoc
 //
 //	@Summary		Actualiza los detalles de usuario
+//	@Security		ApiKeyAuth
 //	@Description	Actualiza los detalles de usuario identificado por su ID.
 //	@Tags			users
 //	@Accept			json
@@ -315,6 +319,7 @@ func UpdateUser(c *fiber.Ctx) error {
 // DeletePet godoc
 //
 //	@Summary		Elimina un usuario
+//	@Security		ApiKeyAuth
 //	@Description	Elimina un usuario identificada por su ID.
 //	@Tags			users
 //	@Accept			json
