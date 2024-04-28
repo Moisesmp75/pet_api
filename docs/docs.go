@@ -520,6 +520,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/roles": {
+            "get": {
+                "description": "Obtiene todos los roles.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Lista todos los roles",
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-array_response_RoleResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -1250,6 +1273,26 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponse-array_response_RoleResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.RoleResponse"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponse-response_AdoptionResponse": {
             "type": "object",
             "properties": {
@@ -1539,6 +1582,20 @@ const docTemplate = `{
                 },
                 "reporter": {
                     "$ref": "#/definitions/response.UserResponse"
+                }
+            }
+        },
+        "response.RoleResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },

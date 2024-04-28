@@ -199,6 +199,19 @@ definitions:
       user:
         $ref: '#/definitions/response.UserResponse'
     type: object
+  response.BaseResponse-array_response_RoleResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        items:
+          $ref: '#/definitions/response.RoleResponse'
+        type: array
+      success:
+        type: boolean
+    type: object
   response.BaseResponse-response_AdoptionResponse:
     properties:
       message:
@@ -388,6 +401,15 @@ definitions:
         $ref: '#/definitions/response.UserResponse'
       reporter:
         $ref: '#/definitions/response.UserResponse'
+    type: object
+  response.RoleResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
     type: object
   response.UserResponse:
     properties:
@@ -764,6 +786,21 @@ paths:
       summary: Obtiene un informe por ID
       tags:
       - reports
+  /roles:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene todos los roles.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-array_response_RoleResponse'
+      summary: Lista todos los roles
+      tags:
+      - roles
   /users:
     get:
       consumes:

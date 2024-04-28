@@ -15,3 +15,13 @@ func GetRoleById(id uint64) (models.Role, error) {
 	}
 	return role, nil
 }
+
+func GetAllRoles() ([]models.Role, error) {
+	var roles []models.Role
+	data := database.DB.Model(&models.Role{}).Find(&roles)
+
+	if data.Error != nil {
+		return []models.Role{}, data.Error
+	}
+	return roles, nil
+}

@@ -8,4 +8,5 @@ func AddControllers(api fiber.Router) {
 	VisitController(api)
 	ReportController(api)
 	AdoptionController(api)
+	RoleController(api)
 }
