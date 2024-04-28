@@ -16,6 +16,7 @@ import (
 // GetAllReports godoc
 //
 //	@Summary		Lista todos los informes
+//	@Security		ApiKeyAuth
 //	@Description	Obtiene una lista paginada de todos los informes.
 //	@Tags			reports
 //	@Accept			json
@@ -46,6 +47,7 @@ func GetAllReports(c *fiber.Ctx) error {
 // GetReportById godoc
 //
 //	@Summary		Obtiene un informe por ID
+//	@Security		ApiKeyAuth
 //	@Description	Obtiene los detalles de un informe según su ID.
 //	@Tags			reports
 //	@Accept			json
@@ -72,6 +74,7 @@ func GetReportById(c *fiber.Ctx) error {
 // CreateReport godoc
 //
 //	@Summary		Crea un nuevo informe
+//	@Security		ApiKeyAuth
 //	@Description	Crea un nuevo informe en la aplicación.
 //	@Tags			reports
 //	@Accept			json
@@ -87,11 +90,17 @@ func CreateReport(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
 	}
-	reporterUser, err := repositories.GetUserById(model.ReporterUserID)
+	userEmail := c.Locals("user_email").(string)
+	reporterUser, err := repositories.GetUserByEmail(userEmail)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
+	// reporterUser, err := repositories.GetUserById(model.ReporterUserID)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	// }
 	reportedUser, err := repositories.GetUserById(model.ReportedUserID)
 	if err != nil {
 		log.Println(err.Error())

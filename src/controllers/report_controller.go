@@ -10,7 +10,7 @@ import (
 func ReportController(api fiber.Router) {
 	reportRoute := api.Group("/reports")
 
-	reportRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.GetAllReports)
-	reportRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.CreateReport)
-	reportRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio"}), services.GetReportById)
+	reportRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.GetAllReports)
+	reportRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.CreateReport)
+	reportRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.GetReportById)
 }

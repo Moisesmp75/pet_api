@@ -261,9 +261,9 @@ func RecoverPassword(c *fiber.Ctx) error {
 
 // UpdateUser godoc
 //
-//	@Summary		Actualiza los detalles de usuario
+//	@Summary		Actualiza los detalles de usuario desde otro usuario con un rol superior
 //	@Security		ApiKeyAuth
-//	@Description	Actualiza los detalles de usuario identificado por su ID.
+//	@Description	Actualiza los detalles de usuario identificado por su ID. Solo los de un rol superior pueden utilizar esta endpoint
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
@@ -287,8 +287,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	userEmail := c.Locals("user_email").(string)
-	userFromToken, err := repositories.GetUserByEmail(userEmail)
-	if err != nil {
+	if _, err := repositories.GetUserByEmail(userEmail); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
@@ -296,12 +295,12 @@ func UpdateUser(c *fiber.Ctx) error {
 	user, err := repositories.GetUserById(id)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	if user.ID != userFromToken.ID {
-		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
-	}
+	// if user.ID != userFromToken.ID {
+	// 	return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
+	// }
 
 	if model.Password != "" {
 		model.Password = auth.Encrypt_password(model.Password)
@@ -318,9 +317,9 @@ func UpdateUser(c *fiber.Ctx) error {
 
 // DeletePet godoc
 //
-//	@Summary		Elimina un usuario
+//	@Summary		Elimina un usuario desde otro usuario con un rol superior
 //	@Security		ApiKeyAuth
-//	@Description	Elimina un usuario identificada por su ID.
+//	@Description	Elimina un usuario identificada por su ID. Solo los de un rol superior pueden utilizar este endpoint
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
@@ -336,20 +335,14 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 
 	userEmail := c.Locals("user_email").(string)
-	userFromToken, err := repositories.GetUserByEmail(userEmail)
-	if err != nil {
+	if _, err := repositories.GetUserByEmail(userEmail); err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	user, err := repositories.GetUserById(id)
-	if err != nil {
+	if _, err := repositories.GetUserById(id); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
-	}
-
-	if user.ID != userFromToken.ID {
-		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to delete this user"))
 	}
 
 	deletedUser, err := repositories.DeleteUser(id)
@@ -359,4 +352,71 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 	resp := mapper.UserModelToResponse(deletedUser)
 	return c.JSON(response.MessageResponse("user eliminated successfully", resp))
+}
+
+// DeletePet godoc
+//
+//	@Summary		Elimina un usuario
+//	@Security		ApiKeyAuth
+//	@Description	Elimina un usuario identificada por su ID.
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	response.BaseResponse[response.UserResponse]
+//	@Router			/users [delete]
+func DeleteSelfUser(c *fiber.Ctx) error {
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	deletedUser, err := repositories.DeleteUser(user.ID)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.UserModelToResponse(deletedUser)
+	return c.JSON(response.MessageResponse("user eliminated successfully", resp))
+}
+
+// UpdateUser godoc
+//
+//	@Summary		Actualiza los detalles de usuario
+//	@Security		ApiKeyAuth
+//	@Description	Actualiza los detalles de usuario identificado por su ID.
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			updateUserRequest	body		request.UpdateUserRequest						true	"Solicitud de actualización de usuario"
+//	@Success		200					{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
+//	@Router			/users [patch]
+func UpadteSelfUser(c *fiber.Ctx) error {
+	model := request.UpdateUserRequest{}
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	}
+
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	if model.Password != "" {
+		model.Password = auth.Encrypt_password(model.Password)
+	}
+	updateUser := mapper.UpdateUserRequestToModel(model, user)
+
+	if _, err := repositories.UpdateUser(updateUser); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.OnlyUserModelToResponse(updateUser)
+	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }

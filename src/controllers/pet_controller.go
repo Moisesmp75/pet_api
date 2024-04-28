@@ -12,8 +12,8 @@ func PetController(api fiber.Router) {
 
 	petsRoute.Get("/", services.GetAllPets)
 	petsRoute.Get("/:id", services.GetPetById)
-	petsRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.CreatePet)
-	petsRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.UpdatePetImages)
-	petsRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.UpdatePet)
-	petsRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Duenio"}), services.DeletePet)
+	petsRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Duenio", "Admin"}), services.CreatePet)
+	petsRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG", "Duenio", "Admin"}), services.UpdatePetImages)
+	petsRoute.Patch("/:id", auth.AuthMiddleware([]string{"ONG", "Duenio", "Admin"}), services.UpdatePet)
+	petsRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Duenio", "Admin"}), services.DeletePet)
 }

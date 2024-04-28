@@ -64,6 +64,7 @@ func SetupDefaultRoles() error {
 		{Name: "ONG", Description: "Organización No Gubernamental"},
 		{Name: "Adoptador", Description: "Usuario que puede adoptar y hacer donaciones"},
 		{Name: "Duenio", Description: "Usuario que puede dar en adopcion y hacer donaciones"},
+		{Name: "Admin", Description: "Super usuario con todos los permisos"},
 	}
 
 	for _, role := range roles {

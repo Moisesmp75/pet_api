@@ -421,6 +421,11 @@ const docTemplate = `{
         },
         "/reports": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene una lista paginada de todos los informes.",
                 "consumes": [
                     "application/json"
@@ -456,6 +461,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Crea un nuevo informe en la aplicación.",
                 "consumes": [
                     "application/json"
@@ -490,6 +500,11 @@ const docTemplate = `{
         },
         "/reports/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene los detalles de un informe según su ID.",
                 "consumes": [
                     "application/json"
@@ -580,6 +595,69 @@ const docTemplate = `{
                         "description": "Respuesta exitosa",
                         "schema": {
                             "$ref": "#/definitions/response.BaseResponsePag-response_UserResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Elimina un usuario identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Elimina un usuario",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza los detalles de usuario identificado por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Actualiza los detalles de usuario",
+                "parameters": [
+                    {
+                        "description": "Solicitud de actualización de usuario",
+                        "name": "updateUserRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
                         }
                     }
                 }
@@ -729,7 +807,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Elimina un usuario identificada por su ID.",
+                "description": "Elimina un usuario identificada por su ID. Solo los de un rol superior pueden utilizar este endpoint",
                 "consumes": [
                     "application/json"
                 ],
@@ -739,7 +817,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Elimina un usuario",
+                "summary": "Elimina un usuario desde otro usuario con un rol superior",
                 "parameters": [
                     {
                         "type": "integer",
@@ -764,7 +842,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Actualiza los detalles de usuario identificado por su ID.",
+                "description": "Actualiza los detalles de usuario identificado por su ID. Solo los de un rol superior pueden utilizar esta endpoint",
                 "consumes": [
                     "application/json"
                 ],
@@ -774,7 +852,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Actualiza los detalles de usuario",
+                "summary": "Actualiza los detalles de usuario desde otro usuario con un rol superior",
                 "parameters": [
                     {
                         "type": "integer",
