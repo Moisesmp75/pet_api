@@ -949,7 +949,7 @@ paths:
       summary: Actualiza los detalles de usuario desde otro usuario con un rol superior
       tags:
       - users
-  /users/{id}/img:
+  /users/img:
     patch:
       consumes:
       - multipart/form-data

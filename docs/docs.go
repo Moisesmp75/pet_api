@@ -683,6 +683,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/img": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza la imagen de usuario identificado por su ID.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Actualiza la imagen de usuario",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del usuario",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen de usuario",
+                        "name": "user_img",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users/login": {
             "post": {
                 "description": "Inicia sesión de usuario con credenciales proporcionadas.",
@@ -889,50 +933,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.UpdateUserRequest"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Respuesta exitosa",
-                        "schema": {
-                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}/img": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Actualiza la imagen de usuario identificado por su ID.",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Actualiza la imagen de usuario",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID del usuario",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Imagen de usuario",
-                        "name": "user_img",
-                        "in": "formData",
-                        "required": true
                     }
                 ],
                 "responses": {

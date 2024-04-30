@@ -171,30 +171,30 @@ func LoginUser(c *fiber.Ctx) error {
 //	@Param			id			path		int												true	"ID del usuario"
 //	@Param			user_img	formData	file											true	"Imagen de usuario"
 //	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
-//	@Router			/users/{id}/img [patch]
+//	@Router			/users/img [patch]
 func UpdateUserImage(c *fiber.Ctx) error {
-	strid := c.Params("id")
-	id, err := strconv.ParseUint(strid, 10, 64)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
-	}
+	// strid := c.Params("id")
+	// id, err := strconv.ParseUint(strid, 10, 64)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	// }
 	userEmail := c.Locals("user_email").(string)
-	userFromToken, err := repositories.GetUserByEmail(userEmail)
+	user, err := repositories.GetUserByEmail(userEmail)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	user, err := repositories.GetUserById(id)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
-	}
+	// user, err := repositories.GetUserById(id)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	// }
 
-	if user.ID != userFromToken.ID {
-		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
-	}
+	// if user.ID != userFromToken.ID {
+	// 	return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
+	// }
 
 	file, err := c.FormFile("user_img")
 	if err != nil {

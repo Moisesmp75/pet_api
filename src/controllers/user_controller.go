@@ -15,7 +15,7 @@ func UserController(api fiber.Router) {
 
 	usersRoute.Get("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.GetAllUsers)
 	usersRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.GetUserById)
-	usersRoute.Patch("/:id/img", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.UpdateUserImage)
+	usersRoute.Patch("/img", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.UpdateUserImage)
 	usersRoute.Post("/recover_password", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Post"}), services.RecoverPassword)
 	usersRoute.Patch("/:id", auth.AuthMiddleware([]string{"Admin"}), services.UpdateUser)
 	usersRoute.Delete("/:id", auth.AuthMiddleware([]string{"Admin"}), services.DeleteUser)
