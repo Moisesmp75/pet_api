@@ -25,6 +25,11 @@ const docTemplate = `{
     "paths": {
         "/adoptions": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene una lista paginada de todas las adopciones.",
                 "consumes": [
                     "application/json"
@@ -60,6 +65,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Crea una nueva adopción en la aplicación.",
                 "consumes": [
                     "application/json"
@@ -94,6 +104,11 @@ const docTemplate = `{
         },
         "/adoptions/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene los detalles de una adopción según su ID.",
                 "consumes": [
                     "application/json"
@@ -124,6 +139,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Elimina una adopcion identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -927,6 +947,11 @@ const docTemplate = `{
         },
         "/visits": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene una lista paginada de todas las visitas.",
                 "consumes": [
                     "application/json"
@@ -962,6 +987,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Crea una nueva visita en la aplicación.",
                 "consumes": [
                     "application/json"
@@ -996,6 +1026,11 @@ const docTemplate = `{
         },
         "/visits/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene los detalles de una visita según su ID.",
                 "consumes": [
                     "application/json"
@@ -1026,6 +1061,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Elimina una visita identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -1086,8 +1126,7 @@ const docTemplate = `{
             "required": [
                 "comment",
                 "date",
-                "pet_id",
-                "user_id"
+                "pet_id"
             ],
             "properties": {
                 "comment": {
@@ -1097,9 +1136,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "pet_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 }
             }
@@ -1313,17 +1349,13 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "date",
-                "pet_id",
-                "user_id"
+                "pet_id"
             ],
             "properties": {
                 "date": {
                     "type": "string"
                 },
                 "pet_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 }
             }

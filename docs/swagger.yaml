@@ -23,13 +23,10 @@ definitions:
         type: string
       pet_id:
         type: integer
-      user_id:
-        type: integer
     required:
     - comment
     - date
     - pet_id
-    - user_id
     type: object
   request.LoginRequest:
     properties:
@@ -177,12 +174,9 @@ definitions:
         type: string
       pet_id:
         type: integer
-      user_id:
-        type: integer
     required:
     - date
     - pet_id
-    - user_id
     type: object
   response.AdoptionResponse:
     properties:
@@ -485,6 +479,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponsePag-response_AdoptionResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Lista todas las adopciones
       tags:
       - adoptions
@@ -506,6 +502,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Crea una nueva adopción
       tags:
       - adoptions
@@ -527,6 +525,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Elimina una adopcion programada
       tags:
       - adoptions
@@ -547,6 +547,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Obtiene una adopción por ID
       tags:
       - adoptions
@@ -1062,6 +1064,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponsePag-response_VisitResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Lista todas las visitas
       tags:
       - visits
@@ -1083,6 +1087,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Crea una nueva visita
       tags:
       - visits
@@ -1104,6 +1110,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Elimina una visita programada
       tags:
       - visits
@@ -1124,6 +1132,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Obtiene una visita por ID
       tags:
       - visits

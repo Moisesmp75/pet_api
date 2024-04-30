@@ -17,6 +17,7 @@ import (
 // GetAllAdoptions godoc
 //
 //	@Summary		Lista todas las adopciones
+//	@Security		ApiKeyAuth
 //	@Description	Obtiene una lista paginada de todas las adopciones.
 //	@Tags			adoptions
 //	@Accept			json
@@ -47,6 +48,7 @@ func GetAllAdoptions(c *fiber.Ctx) error {
 // CreateAdoption godoc
 //
 //	@Summary		Crea una nueva adopción
+//	@Security		ApiKeyAuth
 //	@Description	Crea una nueva adopción en la aplicación.
 //	@Tags			adoptions
 //	@Accept			json
@@ -108,6 +110,7 @@ func CreateAdoption(c *fiber.Ctx) error {
 // GetAdoptionById godoc
 //
 //	@Summary		Obtiene una adopción por ID
+//	@Security		ApiKeyAuth
 //	@Description	Obtiene los detalles de una adopción según su ID.
 //	@Tags			adoptions
 //	@Accept			json
@@ -134,6 +137,7 @@ func GetAdoptionById(c *fiber.Ctx) error {
 // DeleteAdoption godoc
 //
 //	@Summary		Elimina una adopcion programada
+//	@Security		ApiKeyAuth
 //	@Description	Elimina una adopcion identificada por su ID.
 //	@Tags			adoptions
 //	@Accept			json

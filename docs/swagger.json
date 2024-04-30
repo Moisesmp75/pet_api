@@ -19,6 +19,11 @@
     "paths": {
         "/adoptions": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene una lista paginada de todas las adopciones.",
                 "consumes": [
                     "application/json"
@@ -54,6 +59,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Crea una nueva adopción en la aplicación.",
                 "consumes": [
                     "application/json"
@@ -88,6 +98,11 @@
         },
         "/adoptions/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene los detalles de una adopción según su ID.",
                 "consumes": [
                     "application/json"
@@ -118,6 +133,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Elimina una adopcion identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -921,6 +941,11 @@
         },
         "/visits": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene una lista paginada de todas las visitas.",
                 "consumes": [
                     "application/json"
@@ -956,6 +981,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Crea una nueva visita en la aplicación.",
                 "consumes": [
                     "application/json"
@@ -990,6 +1020,11 @@
         },
         "/visits/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene los detalles de una visita según su ID.",
                 "consumes": [
                     "application/json"
@@ -1020,6 +1055,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Elimina una visita identificada por su ID.",
                 "consumes": [
                     "application/json"
@@ -1080,8 +1120,7 @@
             "required": [
                 "comment",
                 "date",
-                "pet_id",
-                "user_id"
+                "pet_id"
             ],
             "properties": {
                 "comment": {
@@ -1091,9 +1130,6 @@
                     "type": "string"
                 },
                 "pet_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 }
             }
@@ -1307,17 +1343,13 @@
             "type": "object",
             "required": [
                 "date",
-                "pet_id",
-                "user_id"
+                "pet_id"
             ],
             "properties": {
                 "date": {
                     "type": "string"
                 },
                 "pet_id": {
-                    "type": "integer"
-                },
-                "user_id": {
                     "type": "integer"
                 }
             }

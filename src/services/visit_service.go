@@ -17,6 +17,7 @@ import (
 // GetAllVisits godoc
 //
 //	@Summary		Lista todas las visitas
+//	@Security		ApiKeyAuth
 //	@Description	Obtiene una lista paginada de todas las visitas.
 //	@Tags			visits
 //	@Accept			json
@@ -48,6 +49,7 @@ func GetAllVisits(c *fiber.Ctx) error {
 // CreateVisit godoc
 //
 //	@Summary		Crea una nueva visita
+//	@Security		ApiKeyAuth
 //	@Description	Crea una nueva visita en la aplicación.
 //	@Tags			visits
 //	@Accept			json
@@ -103,6 +105,7 @@ func CreateVisit(c *fiber.Ctx) error {
 // GetVisitById godoc
 //
 //	@Summary		Obtiene una visita por ID
+//	@Security		ApiKeyAuth
 //	@Description	Obtiene los detalles de una visita según su ID.
 //	@Tags			visits
 //	@Accept			json
@@ -129,6 +132,7 @@ func GetVisitById(c *fiber.Ctx) error {
 // DeleteVisit godoc
 //
 //	@Summary		Elimina una visita programada
+//	@Security		ApiKeyAuth
 //	@Description	Elimina una visita identificada por su ID.
 //	@Tags			visits
 //	@Accept			json
