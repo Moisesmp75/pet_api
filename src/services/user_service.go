@@ -168,7 +168,6 @@ func LoginUser(c *fiber.Ctx) error {
 //	@Tags			users
 //	@Accept			multipart/form-data
 //	@Produce		json
-//	@Param			id			path		int												true	"ID del usuario"
 //	@Param			user_img	formData	file											true	"Imagen de usuario"
 //	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
 //	@Router			/users/img [patch]
