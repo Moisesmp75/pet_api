@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"log"
 	"pet_api/src/common"
 	"pet_api/src/dto/request"
@@ -66,11 +67,18 @@ func CreateAdoption(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-	user, err := repositories.GetUserById(model.UserID)
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
 	}
+
+	// user, err := repositories.GetUserById(model.UserID)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	// }
 
 	if user.ID == pet.UserID {
 		log.Println("you can't adopt your own pet")
@@ -80,6 +88,7 @@ func CreateAdoption(c *fiber.Ctx) error {
 	newAdoption := mapper.AdoptionRequestToModel(model)
 	newAdoption.User = user
 	newAdoption.Pet = pet
+	newAdoption.UserID = user.ID
 
 	if helpers.IsFutureDate(newAdoption.AdoptionDate) {
 		log.Println("the adoptation must be a future date")
@@ -139,11 +148,26 @@ func DeleteAdoption(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	adoption, err := repositories.DeleteAdoption(id)
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
+	}
+	adoption, err := repositories.GetAdoptionById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	if adoption.UserID != user.ID && user.Role.Name != "Admin" {
+		log.Println("" + fmt.Sprintf("User with id '%v' can't delete this adoption", user.ID))
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't delete this adoption"))
+	}
+	deletedAdoption, err := repositories.DeleteAdoption(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.AdoptionModelToResponse(adoption)
+	resp := mapper.AdoptionModelToResponse(deletedAdoption)
 	return c.JSON(response.MessageResponse("adoption eliminated successfuly", resp))
 }

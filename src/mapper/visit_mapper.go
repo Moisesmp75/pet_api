@@ -10,15 +10,14 @@ import (
 func VisitRequestToModel(req request.VisitRequest) models.Visit {
 	return models.Visit{
 		PetID: req.PetID,
-		UserID: req.UserID,
-		Date: helpers.ParseDate(req.Date),
+		Date:  helpers.ParseDate(req.Date),
 	}
 }
 
 func VisitModelToResponse(visit models.Visit) response.VisitResponse {
 	return response.VisitResponse{
-		ID: 	visit.ID,
-		Pet: 	PetModelToResponse(visit.Pet),
+		ID:   visit.ID,
+		Pet:  PetModelToResponse(visit.Pet),
 		User: *OnlyUserModelToResponse(visit.User),
 		Date: visit.Date,
 	}

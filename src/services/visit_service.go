@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"log"
 	"pet_api/src/common"
 	"pet_api/src/dto/request"
@@ -67,11 +68,17 @@ func CreateVisit(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-	user, err := repositories.GetUserById(model.UserID)
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
 	if err != nil {
 		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
 	}
+	// user, err := repositories.GetUserById(model.UserID)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	// }
 	if user.ID == pet.UserID {
 		log.Println("you can't visit your own pet")
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse("you can't visit your own pet"))
@@ -83,6 +90,7 @@ func CreateVisit(c *fiber.Ctx) error {
 	}
 	newVisit.Pet = pet
 	newVisit.User = user
+	newVisit.UserID = user.ID
 	if _, err := repositories.CreateVisit(newVisit); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
@@ -135,11 +143,29 @@ func DeleteVisit(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	visit, err := repositories.DeleteVisit(id)
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	visit, err := repositories.GetVisitById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	if visit.UserID != user.ID && user.Role.Name != "Admin" {
+		log.Println("" + fmt.Sprintf("User with id '%v' can't delete this visit", user.ID))
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't delete this visit"))
+	}
+
+	deletedVisit, err := repositories.DeleteVisit(id)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.VisitModelToResponse(visit)
+	resp := mapper.VisitModelToResponse(deletedVisit)
 	return c.JSON(response.MessageResponse("visit eliminated successfuly", resp))
 }
