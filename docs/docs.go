@@ -703,13 +703,6 @@ const docTemplate = `{
                 "summary": "Actualiza la imagen de usuario",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "ID del usuario",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "type": "file",
                         "description": "Imagen de usuario",
                         "name": "user_img",

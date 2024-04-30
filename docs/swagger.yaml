@@ -955,11 +955,6 @@ paths:
       - multipart/form-data
       description: Actualiza la imagen de usuario identificado por su ID.
       parameters:
-      - description: ID del usuario
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: Imagen de usuario
         in: formData
         name: user_img
