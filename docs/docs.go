@@ -174,6 +174,120 @@ const docTemplate = `{
                 }
             }
         },
+        "/events": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene una lista paginada de todos los eventos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Lista todos los eventos",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset para paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponsePag-array_response_EventResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene los detalles de un Evento según su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Obtiene un Evento por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del Evento",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_EventResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Elimina un Evento identificado por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Elimina un Evento programado",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del Evento",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_EventResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/pets": {
             "get": {
                 "description": "Lista todas las mascotas de la aplicación.",
@@ -1413,6 +1527,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponse-response_EventResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.EventResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponse-response_LoginResponse": {
             "type": "object",
             "properties": {
@@ -1492,6 +1623,29 @@ const docTemplate = `{
                 },
                 "resource": {
                     "$ref": "#/definitions/response.VisitResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.BaseResponsePag-array_response_EventResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/common.Pagination"
+                },
+                "resource": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.EventResponse"
+                    }
                 },
                 "success": {
                     "type": "boolean"
@@ -1595,6 +1749,38 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "response.EventResponse": {
+            "type": "object",
+            "properties": {
+                "allowVolunteers": {
+                    "type": "boolean"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "ong": {
+                    "$ref": "#/definitions/response.UserResponse"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.UserResponse"
+                    }
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },

@@ -11,7 +11,7 @@ func UserRequestToModel(req request.UserRequest) models.User {
 	return models.User{
 		Name:        req.Name,
 		LastName:    req.LastName,
-		Username: 	 req.UserName,
+		Username:    req.UserName,
 		PhoneNumber: req.PhoneNumber,
 		Email:       req.Email,
 		Password:    req.Password,
@@ -26,7 +26,7 @@ func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 		ID:          user.ID,
 		Name:        user.Name,
 		LastName:    user.LastName,
-		UserName: 	 user.Username,
+		UserName:    user.Username,
 		PhoneNumber: user.PhoneNumber,
 		Dni:         user.Dni,
 		Address:     user.Address,
@@ -59,6 +59,16 @@ func UsersModelsToResponse(users []models.User) []response.UserResponse {
 
 	for i, v := range users {
 		resp[i] = UserModelToResponse(v)
+	}
+
+	return resp
+}
+
+func OnlyUserModelsToResponse(users []models.User) []response.UserResponse {
+	resp := make([]response.UserResponse, len(users))
+
+	for i, v := range users {
+		resp[i] = *OnlyUserModelToResponse(v)
 	}
 
 	return resp

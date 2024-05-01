@@ -57,6 +57,11 @@ func RunMigration() {
 	if errAdoption != nil {
 		log.Fatal(errAdoption.Error())
 	}
+
+	errEvents := database.DB.AutoMigrate(&models.Event{})
+	if errEvents != nil {
+		log.Fatal(errEvents.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

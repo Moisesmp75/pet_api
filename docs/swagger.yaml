@@ -217,6 +217,17 @@ definitions:
       success:
         type: boolean
     type: object
+  response.BaseResponse-response_EventResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.EventResponse'
+      success:
+        type: boolean
+    type: object
   response.BaseResponse-response_LoginResponse:
     properties:
       message:
@@ -269,6 +280,21 @@ definitions:
         type: array
       resource:
         $ref: '#/definitions/response.VisitResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponsePag-array_response_EventResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        items:
+          $ref: '#/definitions/response.EventResponse'
+        type: array
       success:
         type: boolean
     type: object
@@ -336,6 +362,27 @@ definitions:
         $ref: '#/definitions/response.VisitResponse'
       success:
         type: boolean
+    type: object
+  response.EventResponse:
+    properties:
+      allowVolunteers:
+        type: boolean
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      ong:
+        $ref: '#/definitions/response.UserResponse'
+      participants:
+        items:
+          $ref: '#/definitions/response.UserResponse'
+        type: array
+      title:
+        type: string
     type: object
   response.LoginResponse:
     properties:
@@ -552,6 +599,77 @@ paths:
       summary: Obtiene una adopción por ID
       tags:
       - adoptions
+  /events:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista paginada de todos los eventos
+      parameters:
+      - description: Offset para paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-array_response_EventResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Lista todos los eventos
+      tags:
+      - events
+  /events/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina un Evento identificado por su ID.
+      parameters:
+      - description: ID del Evento
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_EventResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Elimina un Evento programado
+      tags:
+      - events
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los detalles de un Evento según su ID.
+      parameters:
+      - description: ID del Evento
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_EventResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un Evento por ID
+      tags:
+      - events
   /pets:
     get:
       consumes:
