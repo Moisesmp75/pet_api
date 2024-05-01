@@ -32,15 +32,16 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 
 func GetPetById(id uint64) (models.Pet, error) {
 	var pet models.Pet
-	data := database.DB.Model(&models.Pet{}).Preload("PetType").Preload("User").Preload("Images").First(&pet, id)
+	data := database.DB.Model(&models.Pet{}).Preload("PetType").Preload("User").Preload("Images")
+	data = data.Preload("User.Role").First(&pet, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
 		return models.Pet{}, fmt.Errorf("pet with id '%d' not found", id)
 	}
 
-	if err := database.DB.Preload("Role").First(&pet.User, pet.UserID).Error; err != nil {
-		return models.Pet{}, err
-	}
+	// if err := database.DB.Preload("Role").First(&pet.User, pet.UserID).Error; err != nil {
+	// 	return models.Pet{}, err
+	// }
 	return pet, nil
 }
 
@@ -56,16 +57,13 @@ func GetAllPets(offset, limit int, breed, color string) ([]models.Pet, error) {
 		query = query.Where("color = ?", color)
 	}
 
-	data := query.Offset(offset).Limit(limit).Preload("User").Preload("Images").Find(&pets)
+	data := query.Offset(offset).Limit(limit).Preload("User").Preload("Images")
+
+	data = data.Preload("User.Role").Preload("PetType").Find(&pets)
 	if data.Error != nil {
 		return nil, data.Error
 	}
 
-	for i := range pets {
-		if err := database.DB.Preload("Role").First(&pets[i].User, pets[i].UserID).Error; err != nil {
-			return nil, err
-		}
-	}
 	return pets, nil
 }
 
