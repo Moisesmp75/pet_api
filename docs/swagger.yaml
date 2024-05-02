@@ -1156,6 +1156,23 @@ paths:
       summary: Crea un nuevo usuario
       tags:
       - users
+  /users/self:
+    get:
+      consumes:
+      - application/json
+      description: Muestra un usuario propio que esta logeado actualmente
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Muestra al mismo usuario que hizo la peticion
+      tags:
+      - users
   /visits:
     get:
       consumes:

@@ -74,6 +74,32 @@ func GetUserById(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// GetSelfUser godoc
+//
+//	@Summary		Muestra al mismo usuario que hizo la peticion
+//	@Security		ApiKeyAuth
+//	@Description	Muestra un usuario propio que esta logeado actualmente
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
+//	@Router			/users/self [get]
+func GetSelfUser(c *fiber.Ctx) error {
+	userEmail := c.Locals("user_email").(string)
+	user, err := repositories.GetUserByEmail(userEmail)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	if _, err := repositories.GetUserById(user.ID); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.UserModelToResponse(user)
+	return c.JSON(response.NewResponse(resp))
+}
+
 // CreateUser godoc
 //
 //	@Summary		Crea un nuevo usuario
@@ -172,28 +198,12 @@ func LoginUser(c *fiber.Ctx) error {
 //	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
 //	@Router			/users/img [patch]
 func UpdateUserImage(c *fiber.Ctx) error {
-	// strid := c.Params("id")
-	// id, err := strconv.ParseUint(strid, 10, 64)
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
-	// }
 	userEmail := c.Locals("user_email").(string)
 	user, err := repositories.GetUserByEmail(userEmail)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	// user, err := repositories.GetUserById(id)
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
-	// }
-
-	// if user.ID != userFromToken.ID {
-	// 	return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
-	// }
 
 	file, err := c.FormFile("user_img")
 	if err != nil {
@@ -296,10 +306,6 @@ func UpdateUser(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	// if user.ID != userFromToken.ID {
-	// 	return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You don't have permission to update this user"))
-	// }
 
 	if model.Password != "" {
 		model.Password = auth.Encrypt_password(model.Password)
