@@ -127,6 +127,9 @@ func CreateUser(c *fiber.Ctx) error {
 	user.Role = rol
 	user.Password = auth.Encrypt_password(user.Password)
 	userCreated, err := repositories.CreateUser(user)
+	if rol.Name == "ONG" {
+		user.IsONG = true
+	}
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))

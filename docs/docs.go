@@ -1416,7 +1416,7 @@ const docTemplate = `{
                 "city": {
                     "type": "string"
                 },
-                "dni": {
+                "email": {
                     "type": "string"
                 },
                 "last_name": {

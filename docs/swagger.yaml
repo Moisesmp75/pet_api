@@ -124,7 +124,7 @@ definitions:
         type: string
       city:
         type: string
-      dni:
+      email:
         type: string
       last_name:
         type: string

@@ -6,7 +6,7 @@ type UpdateUserRequest struct {
 	PhoneNumber string `json:"phone_number"`
 	UserName    string `json:"user_name"`
 	Password    string `json:"password"`
-	Dni         string `json:"dni"`
+	Email       string `json:"email" validate:"omitempty,email"`
 	Address     string `json:"address"`
 	City        string `json:"city"`
 }

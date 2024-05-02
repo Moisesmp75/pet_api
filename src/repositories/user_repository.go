@@ -27,15 +27,34 @@ func GetAllUsers(offset, limit int) ([]models.User, error) {
 }
 
 func CreateUser(newUser models.User) (models.User, error) {
-	if err := database.DB.Model(&models.User{}).Create(&newUser).Preload("Role").Error; err != nil {
+	tx := database.DB.Begin()
+
+	if err := tx.Model(&models.User{}).Create(&newUser).Preload("Role").Error; err != nil {
+		tx.Rollback()
 		return models.User{}, err
 	}
+
+	newOngInfo := models.ONGInfo{UserID: newUser.ID}
+
+	if err := tx.Model(&models.ONGInfo{}).Create(&newOngInfo).Preload("BankAccounts").Error; err != nil {
+		tx.Rollback()
+		return models.User{}, err
+	}
+
+	tx.Commit()
+	// if err := database.DB.Model(&models.User{}).Create(&newUser).Preload("Role").Error; err != nil {
+	// 	return models.User{}, err
+	// }
 	return newUser, nil
 }
 
 func GetUserByEmailOrPhone(identity string) (models.User, error) {
 	var user models.User
-	data := database.DB.Model(&models.User{}).Where("email = ? OR phone_number = ?", identity, identity).Preload("Role").First(&user)
+	data := database.DB.Model(&models.User{}).Where("email = ? OR phone_number = ?", identity, identity)
+	data = data.Preload("Role")
+	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Images")
+	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
+	data = data.First(&user)
 	if data.Error != nil {
 		if errors.Is(data.Error, gorm.ErrRecordNotFound) {
 			return models.User{}, fmt.Errorf("user with email or phone number '%s' not found", identity)
@@ -49,7 +68,9 @@ func GetUserById(id uint64) (models.User, error) {
 	var user models.User
 	data := database.DB.Model(&models.User{})
 	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Images")
-	data = data.Preload("Role").First(&user, id)
+	data = data.Preload("Role")
+	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
+	data = data.First(&user, id)
 	if data.RowsAffected == 0 || data.Error != nil {
 		return models.User{}, fmt.Errorf("user with id '%d' not found", id)
 	}
@@ -66,7 +87,11 @@ func UpdateUser(user models.User) (models.User, error) {
 
 func GetUserByEmail(email string) (models.User, error) {
 	var user models.User
-	data := database.DB.Model(&models.User{}).Where("email = ?", email).Preload("Role").First(&user)
+	data := database.DB.Model(&models.User{}).Where("email = ?", email)
+	data = data.Preload("Role")
+	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Images")
+	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
+	data = data.First(&user)
 	if data.Error != nil {
 		if errors.Is(data.Error, gorm.ErrRecordNotFound) {
 			return models.User{}, fmt.Errorf("user with email '%s' not found", email)
@@ -87,7 +112,9 @@ func DeleteUser(id uint64) (models.User, error) {
 		return models.User{}, err
 	}
 
-	operation := database.DB.Select("Pets").Select("Pets.Images").Delete(&user)
+	operation := database.DB.Select("Pets").Select("Pets.Images")
+	operation = operation.Select("ONGInfo").Select("ONGInfo.BankAccounts")
+	operation = operation.Delete(&user)
 
 	if operation.Error != nil || operation.RowsAffected == 0 {
 		return models.User{}, err

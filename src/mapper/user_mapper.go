@@ -100,8 +100,8 @@ func UpdateUserRequestToModel(req request.UpdateUserRequest, user models.User) m
 	if req.Password != "" {
 		user.Password = req.Password
 	}
-	if req.Dni != "" {
-		user.Dni = req.Dni
+	if req.Email != "" {
+		user.Email = req.Email
 	}
 	if req.Address != "" {
 		user.Address = req.Address

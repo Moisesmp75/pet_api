@@ -18,4 +18,7 @@ type User struct {
 	RoleID      uint64 `gorm:"not null"`
 	Role        Role   `gorm:"foreignKey:RoleID"`
 	ImageUrl    string `gorm:"type:LONGTEXT"`
+	IsONG       bool   `gorm:"default:false"`
+	ONGInfoID   uint64
+	ONGInfo     ONGInfo `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }

@@ -62,6 +62,16 @@ func RunMigration() {
 	if errEvents != nil {
 		log.Fatal(errEvents.Error())
 	}
+
+	errBankAccount := database.DB.AutoMigrate(&models.BankAccount{})
+	if errBankAccount != nil {
+		log.Fatal(errBankAccount.Error())
+	}
+
+	errONGInfo := database.DB.AutoMigrate(&models.ONGInfo{})
+	if errONGInfo != nil {
+		log.Fatal(errONGInfo.Error())
+	}
 }
 
 func SetupDefaultRoles() error {
