@@ -214,6 +214,62 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Crea un nuevo evento con los datos proporcionados en el formulario multipartes.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Crea un nuevo evento",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Título del evento",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Descripción del evento",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Permitir voluntarios (true/false)",
+                        "name": "allow_volunteers",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen del evento",
+                        "name": "event_img",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_EventResponse"
+                        }
+                    }
+                }
             }
         },
         "/events/{id}": {
@@ -1783,11 +1839,8 @@ const docTemplate = `{
         "response.EventResponse": {
             "type": "object",
             "properties": {
-                "allowVolunteers": {
+                "allow_volunteers": {
                     "type": "boolean"
-                },
-                "date": {
-                    "type": "string"
                 },
                 "description": {
                     "type": "string"
@@ -1795,7 +1848,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "imageUrl": {
+                "image_url": {
                     "type": "string"
                 },
                 "ong": {
@@ -1806,6 +1859,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/response.UserResponse"
                     }
+                },
+                "publication_date": {
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"

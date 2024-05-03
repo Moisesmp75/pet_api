@@ -1,9 +1,18 @@
 package mapper
 
 import (
+	"pet_api/src/dto/request"
 	"pet_api/src/dto/response"
 	"pet_api/src/models"
 )
+
+func EventRequestToModel(req request.EventRequest) models.Event {
+	return models.Event{
+		Title:           req.Title,
+		Description:     req.Description,
+		AllowVolunteers: req.AllowVolunteers,
+	}
+}
 
 func EventModelToResponse(event models.Event) response.EventResponse {
 	return response.EventResponse{
@@ -11,7 +20,7 @@ func EventModelToResponse(event models.Event) response.EventResponse {
 		Title:           event.Title,
 		Description:     event.Description,
 		ImageUrl:        event.ImageUrl,
-		Date:            event.CreatedAt,
+		PublicationDate: event.CreatedAt,
 		ONG:             *OnlyUserModelToResponse(event.ONG),
 		AllowVolunteers: event.AllowVolunteers,
 		Participants:    OnlyUserModelsToResponse(event.Participants),

@@ -5,12 +5,12 @@ import (
 )
 
 type EventResponse struct {
-	ID              uint64
-	Title           string
-	Description     string
-	ImageUrl        string
-	Date            time.Time
-	ONG             UserResponse
-	AllowVolunteers bool
-	Participants    []UserResponse
+	ID              uint64         `json:"id"`
+	Title           string         `json:"title"`
+	Description     string         `json:"description"`
+	ImageUrl        string         `json:"image_url"`
+	PublicationDate time.Time      `json:"publication_date"`
+	ONG             UserResponse   `json:"ong"`
+	AllowVolunteers bool           `json:"allow_volunteers"`
+	Participants    []UserResponse `json:"participants"`
 }

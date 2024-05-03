@@ -42,9 +42,7 @@ func CreateUser(newUser models.User) (models.User, error) {
 	}
 
 	tx.Commit()
-	// if err := database.DB.Model(&models.User{}).Create(&newUser).Preload("Role").Error; err != nil {
-	// 	return models.User{}, err
-	// }
+
 	return newUser, nil
 }
 

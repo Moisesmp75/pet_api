@@ -365,15 +365,13 @@ definitions:
     type: object
   response.EventResponse:
     properties:
-      allowVolunteers:
+      allow_volunteers:
         type: boolean
-      date:
-        type: string
       description:
         type: string
       id:
         type: integer
-      imageUrl:
+      image_url:
         type: string
       ong:
         $ref: '#/definitions/response.UserResponse'
@@ -381,6 +379,8 @@ definitions:
         items:
           $ref: '#/definitions/response.UserResponse'
         type: array
+      publication_date:
+        type: string
       title:
         type: string
     type: object
@@ -623,6 +623,44 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Lista todos los eventos
+      tags:
+      - events
+    post:
+      consumes:
+      - multipart/form-data
+      description: Crea un nuevo evento con los datos proporcionados en el formulario
+        multipartes.
+      parameters:
+      - description: Título del evento
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Descripción del evento
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Permitir voluntarios (true/false)
+        in: formData
+        name: allow_volunteers
+        required: true
+        type: boolean
+      - description: Imagen del evento
+        in: formData
+        name: event_img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_EventResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Crea un nuevo evento
       tags:
       - events
   /events/{id}:
