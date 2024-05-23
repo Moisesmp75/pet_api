@@ -442,6 +442,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/pets/types": {
+            "get": {
+                "description": "Obtiene todos los tipos de mascotas.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pets"
+                ],
+                "summary": "Lista todos los tipos de mascotas",
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-array_models_PetType"
+                        }
+                    }
+                }
+            }
+        },
         "/pets/{id}": {
             "get": {
                 "description": "Muestra una mascota con el id.",
@@ -1256,6 +1279,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.PetType": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "request.AdoptionRequest": {
             "type": "object",
             "required": [
@@ -1515,6 +1549,26 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/response.UserResponse"
+                }
+            }
+        },
+        "response.BaseResponse-array_models_PetType": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PetType"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },

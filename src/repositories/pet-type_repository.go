@@ -6,6 +6,14 @@ import (
 	"pet_api/src/models"
 )
 
+func CountPetTypes() int64 {
+	var total_items int64
+	if err := database.DB.Model(&models.PetType{}).Count(&total_items).Error; err != nil {
+		return 0
+	}
+	return total_items
+}
+
 func GetPetTypeById(id uint64) (models.PetType, error) {
 	var petType models.PetType
 	data := database.DB.Model(&models.PetType{}).First(&petType, id)

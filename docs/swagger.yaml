@@ -15,6 +15,13 @@ definitions:
       total_pages:
         type: integer
     type: object
+  models.PetType:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   request.AdoptionRequest:
     properties:
       comment:
@@ -192,6 +199,19 @@ definitions:
         $ref: '#/definitions/response.PetResponse'
       user:
         $ref: '#/definitions/response.UserResponse'
+    type: object
+  response.BaseResponse-array_models_PetType:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        items:
+          $ref: '#/definitions/models.PetType'
+        type: array
+      success:
+        type: boolean
     type: object
   response.BaseResponse-array_response_RoleResponse:
     properties:
@@ -838,6 +858,21 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Actualiza los detalles de una mascota
+      tags:
+      - pets
+  /pets/types:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene todos los tipos de mascotas.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-array_models_PetType'
+      summary: Lista todos los tipos de mascotas
       tags:
       - pets
   /reports:
