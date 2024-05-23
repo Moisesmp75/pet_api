@@ -20,11 +20,13 @@ import (
 //	@Tags			pets
 //	@Accept			json
 //	@Produce		json
-//	@Param			offset	query		int	false	"Offset de paginación"
-//	@Param			limit	query		int	false	"Límite de resultados por página"
-//	@Param			breed	query		int	false	"Filtrar mascota por raza"
-//	@Param			color	query		int	false	"Filtrar mascota por color"
-//	@Success		200		{object}	response.BaseResponsePag[response.PetResponse]
+//	@Param			offset		query		int		false	"Offset de paginación"
+//	@Param			limit		query		int		false	"Límite de resultados por página"
+//	@Param			breed		query		string	false	"Filtrar mascotas por raza"
+//	@Param			color		query		string	false	"Filtrar mascotas por color"
+//	@Param			gender		query		string	false	"Filtrar mascotas por genero"
+//	@Param			pet_type	query		string	false	"Filtrar mascotas por tipo"
+//	@Success		200			{object}	response.BaseResponsePag[response.PetResponse]
 //	@Router			/pets [get]
 func GetAllPets(c *fiber.Ctx) error {
 	offset, limit, errors := helpers.ValidatePaginationParams(c.Query("offset", "0"), c.Query("limit", "10"))
@@ -36,8 +38,10 @@ func GetAllPets(c *fiber.Ctx) error {
 	}
 	breed := c.Query("breed", "")
 	color := c.Query("color", "")
-	totalItems := repositories.CountPets(breed, color)
-	pets, err := repositories.GetAllPets(offset, limit, breed, color)
+	gender := c.Query("gender", "")
+	petType := c.Query("pet_type", "")
+	totalItems := repositories.CountPets(breed, color, gender, petType)
+	pets, err := repositories.GetAllPets(offset, limit, breed, color, gender, petType)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
@@ -120,56 +124,6 @@ func CreatePet(c *fiber.Ctx) error {
 
 	resp := mapper.PetModelToResponse(petCreated)
 	return c.JSON(response.NewResponse(resp))
-}
-
-// UpdatePetImages godoc
-//
-//	@Summary		Actualiza las imágenes de una mascota
-//	@Security		ApiKeyAuth
-//	@Description	Actualiza las imágenes de una mascota identificada por su ID.
-//	@Tags			pets
-//	@Accept			multipart/form-data
-//	@Produce		json
-//	@Param			id		path		int		true	"Pet id"
-//
-//	@Param			img_1	formData	file	true	"Imagen 1 de la mascota"
-//	@Param			img_2	formData	file	false	"Imagen 2 de la mascota"
-//	@Param			img_3	formData	file	false	"Imagen 3 de la mascota"
-//	@Param			img_4	formData	file	false	"Imagen 4 de la mascota"
-//	@Param			img_5	formData	file	false	"Imagen 5 de la mascota"
-//
-//	@Success		200		{object}	response.BaseResponse[response.PetResponse]
-//	@Router			/pets/{id}/img [patch]
-func UpdatePetImages(c *fiber.Ctx) error {
-	strid := c.Params("id")
-	id, err := strconv.ParseUint(strid, 10, 64)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
-	}
-	pet, err := repositories.GetPetById(id)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
-	}
-	userEmail := c.Locals("user_email").(string)
-	user, _ := repositories.GetUserByEmail(userEmail)
-	if user.ID != pet.UserID {
-		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this pet"))
-	}
-	form, err := c.MultipartForm()
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
-	}
-	images, err := CreatePetImages(pet.ID, form)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
-	}
-	pet.Images = images
-	resp := mapper.OnlyPetModelToResponse(pet)
-	return c.JSON(response.MessageResponse("images created successfully", resp))
 }
 
 // UpdatePet godoc

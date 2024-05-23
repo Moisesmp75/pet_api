@@ -6,15 +6,23 @@ import (
 	"pet_api/src/models"
 )
 
-func CountPets(breed, color string) int64 {
+func CountPets(breed, color, gender, petType string) int64 {
 	var total_items int64
-	query := database.DB.Model(&models.Pet{})
+	query := database.DB.Model(&models.Pet{}).Joins("INNER JOIN pet_types ON pets.pet_type_id = pet_types.id")
 
 	if breed != "" {
 		query = query.Where("breed = ?", breed)
 	}
 	if color != "" {
 		query = query.Where("color = ?", color)
+	}
+
+	if gender != "" {
+		query = query.Where("gender = ?", gender)
+	}
+
+	if petType != "" {
+		query = query.Where("pet_types.name = ?", petType)
 	}
 
 	if err := query.Count(&total_items).Error; err != nil {
@@ -39,15 +47,12 @@ func GetPetById(id uint64) (models.Pet, error) {
 		return models.Pet{}, fmt.Errorf("pet with id '%d' not found", id)
 	}
 
-	// if err := database.DB.Preload("Role").First(&pet.User, pet.UserID).Error; err != nil {
-	// 	return models.Pet{}, err
-	// }
 	return pet, nil
 }
 
-func GetAllPets(offset, limit int, breed, color string) ([]models.Pet, error) {
+func GetAllPets(offset, limit int, breed, color, gender, petType string) ([]models.Pet, error) {
 	var pets []models.Pet
-	query := database.DB.Model(&models.Pet{})
+	query := database.DB.Model(&models.Pet{}).Joins("INNER JOIN pet_types ON pets.pet_type_id = pet_types.id")
 
 	if breed != "" {
 		query = query.Where("breed = ?", breed)
@@ -55,6 +60,14 @@ func GetAllPets(offset, limit int, breed, color string) ([]models.Pet, error) {
 
 	if color != "" {
 		query = query.Where("color = ?", color)
+	}
+
+	if gender != "" {
+		query = query.Where("gender = ?", gender)
+	}
+
+	if petType != "" {
+		query = query.Where("pet_types.name = ?", petType)
 	}
 
 	data := query.Offset(offset).Limit(limit).Preload("User").Preload("Images")

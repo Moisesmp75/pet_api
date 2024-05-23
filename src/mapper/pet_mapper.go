@@ -37,7 +37,7 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		User:        OnlyUserModelToResponse(pet.User),
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
-		Images:      PetImagesModelToResponse(pet.Images),
+		Images:      PetImageModelToResponse(pet.Image),
 	}
 }
 
@@ -56,7 +56,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		User:        nil,
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
-		Images:      PetImagesModelToResponse(pet.Images),
+		Images:      PetImageModelToResponse(pet.Image),
 	}
 }
 

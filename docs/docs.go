@@ -371,15 +371,27 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "Filtrar mascota por raza",
+                        "type": "string",
+                        "description": "Filtrar mascotas por raza",
                         "name": "breed",
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "Filtrar mascota por color",
+                        "type": "string",
+                        "description": "Filtrar mascotas por color",
                         "name": "color",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtrar mascotas por genero",
+                        "name": "gender",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtrar mascotas por tipo",
+                        "name": "pet_type",
                         "in": "query"
                     }
                 ],
@@ -529,74 +541,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.UpdatePetRequest"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.BaseResponse-response_PetResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/pets/{id}/img": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Actualiza las imágenes de una mascota identificada por su ID.",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "pets"
-                ],
-                "summary": "Actualiza las imágenes de una mascota",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Pet id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Imagen 1 de la mascota",
-                        "name": "img_1",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Imagen 2 de la mascota",
-                        "name": "img_2",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "Imagen 3 de la mascota",
-                        "name": "img_3",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "Imagen 4 de la mascota",
-                        "name": "img_4",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "Imagen 5 de la mascota",
-                        "name": "img_5",
-                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1916,10 +1860,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "images": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "location": {
                     "type": "string"

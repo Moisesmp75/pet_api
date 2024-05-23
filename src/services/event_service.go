@@ -76,18 +76,18 @@ func GetEventById(c *fiber.Ctx) error {
 
 // CreateEvent godoc
 //
-// @Summary Crea un nuevo evento
-// @Security ApiKeyAuth
-// @Description Crea un nuevo evento con los datos proporcionados en el formulario multipartes.
-// @Tags events
-// @Accept multipart/form-data
-// @Produce json
-// @Param title formData string true "Título del evento"
-// @Param description formData string true "Descripción del evento"
-// @Param allow_volunteers formData boolean true "Permitir voluntarios (true/false)"
-// @Param event_img formData file true "Imagen del evento"
-// @Success 200 {object} response.BaseResponse[response.EventResponse] "Respuesta exitosa"
-// @Router /events [post]
+//	@Summary		Crea un nuevo evento
+//	@Security		ApiKeyAuth
+//	@Description	Crea un nuevo evento con los datos proporcionados en el formulario multipartes.
+//	@Tags			events
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			title				formData	string											true	"Título del evento"
+//	@Param			description			formData	string											true	"Descripción del evento"
+//	@Param			allow_volunteers	formData	boolean											true	"Permitir voluntarios (true/false)"
+//	@Param			event_img			formData	file											true	"Imagen del evento"
+//	@Success		200					{object}	response.BaseResponse[response.EventResponse]	"Respuesta exitosa"
+//	@Router			/events [post]
 func CreateEvent(c *fiber.Ctx) error {
 	userEmail := c.Locals("user_email").(string)
 	user, err := repositories.GetUserByEmail(userEmail)

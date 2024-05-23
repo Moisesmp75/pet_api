@@ -16,7 +16,7 @@ import (
 //	@Tags			roles
 //	@Accept			json
 //	@Produce		json
-//	@Success		200		{object}	response.BaseResponse[[]response.RoleResponse]	"Respuesta exitosa"
+//	@Success		200	{object}	response.BaseResponse[[]response.RoleResponse]	"Respuesta exitosa"
 //	@Router			/roles [get]
 func GetAllRoles(c *fiber.Ctx) error {
 	roles, err := repositories.GetAllRoles()

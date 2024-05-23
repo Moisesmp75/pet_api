@@ -14,5 +14,5 @@ type PetResponse struct {
 	User        *UserResponse `json:"user,omitempty"`
 	Location    string        `json:"location"`
 	PetType     string        `json:"pet_type"`
-	Images      []string      `json:"images"`
+	Images      string        `json:"images"`
 }

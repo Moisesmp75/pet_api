@@ -416,9 +416,7 @@ definitions:
       id:
         type: integer
       images:
-        items:
-          type: string
-        type: array
+        type: string
       location:
         type: string
       name:
@@ -722,14 +720,22 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: Filtrar mascota por raza
+      - description: Filtrar mascotas por raza
         in: query
         name: breed
-        type: integer
-      - description: Filtrar mascota por color
+        type: string
+      - description: Filtrar mascotas por color
         in: query
         name: color
-        type: integer
+        type: string
+      - description: Filtrar mascotas por genero
+        in: query
+        name: gender
+        type: string
+      - description: Filtrar mascotas por tipo
+        in: query
+        name: pet_type
+        type: string
       produces:
       - application/json
       responses:
@@ -832,50 +838,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Actualiza los detalles de una mascota
-      tags:
-      - pets
-  /pets/{id}/img:
-    patch:
-      consumes:
-      - multipart/form-data
-      description: Actualiza las imágenes de una mascota identificada por su ID.
-      parameters:
-      - description: Pet id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Imagen 1 de la mascota
-        in: formData
-        name: img_1
-        required: true
-        type: file
-      - description: Imagen 2 de la mascota
-        in: formData
-        name: img_2
-        type: file
-      - description: Imagen 3 de la mascota
-        in: formData
-        name: img_3
-        type: file
-      - description: Imagen 4 de la mascota
-        in: formData
-        name: img_4
-        type: file
-      - description: Imagen 5 de la mascota
-        in: formData
-        name: img_5
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Actualiza las imágenes de una mascota
       tags:
       - pets
   /reports:

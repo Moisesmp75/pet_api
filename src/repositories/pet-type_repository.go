@@ -16,3 +16,14 @@ func GetPetTypeById(id uint64) (models.PetType, error) {
 
 	return petType, nil
 }
+
+func GetAllPetTypes() ([]models.PetType, error) {
+	var petTypes []models.PetType
+
+	data := database.DB.Model(&models.PetType{}).Find(&petTypes)
+	if data.Error != nil {
+		return nil, data.Error
+	}
+
+	return petTypes, nil
+}
