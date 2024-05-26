@@ -266,16 +266,19 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
-
+	password := c.FormValue("password", "")
 	model := request.UpdateUserRequest{
 		Name:        c.FormValue("name", user.Name),
 		LastName:    c.FormValue("last_name", user.LastName),
 		PhoneNumber: c.FormValue("phone_number", user.PhoneNumber),
 		UserName:    c.FormValue("user_name", user.Username),
-		Password:    c.FormValue("password", user.Password),
 		Email:       c.FormValue("email", user.Email),
 		Address:     c.FormValue("address", user.Address),
 		City:        c.FormValue("city", user.City),
+	}
+
+	if password != "" {
+		model.Password = auth.Encrypt_password(password)
 	}
 
 	file, err := c.FormFile("user_img")
