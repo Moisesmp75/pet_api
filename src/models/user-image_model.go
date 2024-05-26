@@ -2,10 +2,10 @@ package models
 
 import "gorm.io/gorm"
 
-type PetImage struct {
+type UserImage struct {
 	gorm.Model
 	ID       uint64 `gorm:"primaryKey;autoIncrement"`
-	URL      string `gorm:"not null"`
+	URL      string `gorm:"not null;type:LONGTEXT"`
 	Filename string `gorm:"not null"`
-	PetID    uint64 `gorm:"not null"`
+	UserID   uint64 `gorm:"not null"`
 }

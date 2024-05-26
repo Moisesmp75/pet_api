@@ -788,46 +788,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Actualiza los detalles de usuario identificado por su ID.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Actualiza los detalles de usuario",
-                "parameters": [
-                    {
-                        "description": "Solicitud de actualización de usuario",
-                        "name": "updateUserRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UpdateUserRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Respuesta exitosa",
-                        "schema": {
-                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/img": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Actualiza la imagen de usuario identificado por su ID.",
+                "description": "Actualiza los datos del usuario identificado por su ID.",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -837,14 +798,61 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Actualiza la imagen de usuario",
+                "summary": "Actualiza los datos del usuario",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Name of the user",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last name of the user",
+                        "name": "last_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Phone number of the user",
+                        "name": "phone_number",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User name",
+                        "name": "user_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Address",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "City",
+                        "name": "city",
+                        "in": "formData"
+                    },
+                    {
                         "type": "file",
-                        "description": "Imagen de usuario",
+                        "description": "User image",
                         "name": "user_img",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     }
                 ],
                 "responses": {

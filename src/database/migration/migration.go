@@ -72,6 +72,11 @@ func RunMigration() {
 	if errONGInfo != nil {
 		log.Fatal(errONGInfo.Error())
 	}
+
+	errUserImage := database.DB.AutoMigrate(&models.UserImage{})
+	if errUserImage != nil {
+		log.Fatal(errUserImage.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

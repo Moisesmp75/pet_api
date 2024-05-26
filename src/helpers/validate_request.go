@@ -12,6 +12,13 @@ var (
 	validate = validator.New()
 )
 
+func ValidateStruct[T any](modelReq *T) error {
+	if err := validate.Struct(modelReq); err != nil {
+		return err
+	}
+	return nil
+}
+
 func ValidateRequest[T any](body []byte, modelReq *T) (*T, []string) {
 
 	dataMap, err := BytesToMap(body)

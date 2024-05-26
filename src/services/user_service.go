@@ -107,17 +107,51 @@ func GetSelfUser(c *fiber.Ctx) error {
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			userRequest	body		request.UserRequest								true	"Solicitud de creación de usuario"
+//	@Accept			multipart/form-data
+//	@Param			user_name		formData	string	false	"User name"
+//	@Param			name			formData	string	true	"Name of the user"
+//	@Param			last_name		formData	string	true	"Last name of the user"
+//	@Param			phone_number	formData	string	true	"Phone number of the user"
+//	@Param			dni	formData	string	true	"Document number"
+//	@Param			address			formData	string	false	"Address"
+//	@Param			city			formData	string	false	"City"
+//	@Param			email			formData	string	true	"Email"
+//	@Param			password		formData	string	true	"Password"
+//	@Param			role_id		formData	int	false	"Role id"
+//	@Param			user_img		formData	file	false	"User image"
 //	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
 //	@Router			/users/register [post]
 func CreateUser(c *fiber.Ctx) error {
-	model := request.UserRequest{}
-	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
-		for _, v := range err {
-			log.Println(v)
-		}
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+
+	role_id, err := strconv.Atoi(c.FormValue("role_id", "0"))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
+
+	model := request.UserRequest{
+		UserName:    c.FormValue("user_name", ""),
+		Name:        c.FormValue("name", ""),
+		LastName:    c.FormValue("last_name", ""),
+		PhoneNumber: c.FormValue("phone_number", ""),
+		Dni:         c.FormValue("dni", ""),
+		Password:    c.FormValue("password", ""),
+		Email:       c.FormValue("email", ""),
+		Address:     c.FormValue("address", ""),
+		City:        c.FormValue("city", ""),
+		RoleID:      uint64(role_id),
+	}
+
+	if err := helpers.ValidateStruct(&model); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	// model := request.UserRequest{}
+	// if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
+	// 	for _, v := range err {
+	// 		log.Println(v)
+	// 	}
+	// 	return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	// }
 	rol, err := repositories.GetRoleById(model.RoleID)
 	if err != nil {
 		log.Println(err.Error())
@@ -126,10 +160,27 @@ func CreateUser(c *fiber.Ctx) error {
 	user := mapper.UserRequestToModel(model)
 	user.Role = rol
 	user.Password = auth.Encrypt_password(user.Password)
-	userCreated, err := repositories.CreateUser(user)
+
 	if rol.Name == "ONG" {
 		user.IsONG = true
 	}
+
+	file, err := c.FormFile("user_img")
+	if err != nil && err.Error() != "there is no uploaded file associated with the given key" {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	} else {
+		file.Filename = "user_" + user.Role.Name + "_" + "image_" + strconv.FormatUint(user.ID, 10)
+		url_img, _, err := helpers.UploadFile(file, "user_images/", false)
+		if err != nil {
+			log.Println(err.Error())
+			return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+		}
+		user.Image.URL = url_img
+		user.Image.Filename = file.Filename
+	}
+
+	userCreated, err := repositories.CreateUser(user)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
@@ -189,17 +240,25 @@ func LoginUser(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(lgResp))
 }
 
-// UpdateUserImage godoc
+// UpdateUser godoc
 //
-//	@Summary		Actualiza la imagen de usuario
+//	@Summary		Actualiza los datos del usuario
 //	@Security		ApiKeyAuth
-//	@Description	Actualiza la imagen de usuario identificado por su ID.
+//	@Description	Actualiza los datos del usuario identificado por su ID.
 //	@Tags			users
 //	@Accept			multipart/form-data
 //	@Produce		json
-//	@Param			user_img	formData	file											true	"Imagen de usuario"
-//	@Success		200			{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
-//	@Router			/users/img [patch]
+//	@Param			name			formData	string	false	"Name of the user"
+//	@Param			last_name		formData	string	false	"Last name of the user"
+//	@Param			phone_number	formData	string	false	"Phone number of the user"
+//	@Param			user_name		formData	string	false	"User name"
+//	@Param			password		formData	string	false	"Password"
+//	@Param			email			formData	string	false	"Email"
+//	@Param			address			formData	string	false	"Address"
+//	@Param			city			formData	string	false	"City"
+//	@Param			user_img		formData	file	false	"User image"
+//	@Success		200				{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
+//	@Router			/users [patch]
 func UpdateUserImage(c *fiber.Ctx) error {
 	userEmail := c.Locals("user_email").(string)
 	user, err := repositories.GetUserByEmail(userEmail)
@@ -208,26 +267,40 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
 	}
 
+	model := request.UpdateUserRequest{
+		Name:        c.FormValue("name", user.Name),
+		LastName:    c.FormValue("last_name", user.LastName),
+		PhoneNumber: c.FormValue("phone_number", user.PhoneNumber),
+		UserName:    c.FormValue("user_name", user.Username),
+		Password:    c.FormValue("password", user.Password),
+		Email:       c.FormValue("email", user.Email),
+		Address:     c.FormValue("address", user.Address),
+		City:        c.FormValue("city", user.City),
+	}
+
 	file, err := c.FormFile("user_img")
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
-	}
-	file.Filename = "user_" + user.Role.Name + "_" + "image_" + strconv.FormatUint(user.ID, 10)
-	url_img, _, err := helpers.UploadFile(file, "user_images/", false)
-	if err != nil {
+	if err != nil && err.Error() != "there is no uploaded file associated with the given key" {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	user.ImageUrl = url_img
+	updateUser := mapper.UpdateUserRequestToModel(model, user)
+	if err == nil {
+		file.Filename = "user_" + user.Role.Name + "_" + "image_" + strconv.FormatUint(user.ID, 10)
+		url_img, _, err := helpers.UploadFile(file, "user_images/", false)
+		if err != nil {
+			log.Println(err.Error())
+			return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+		}
+		updateUser.Image.URL = url_img
+	}
 
-	if _, err := repositories.UpdateUser(user); err != nil {
+	if _, err := repositories.UpdateUser(updateUser); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	resp := mapper.OnlyUserModelToResponse(user)
+	resp := mapper.OnlyUserModelToResponse(updateUser)
 	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }
 
@@ -271,7 +344,7 @@ func RecoverPassword(c *fiber.Ctx) error {
 	return c.JSON(response.MessageResponse("check your email", resp))
 }
 
-// UpdateUser godoc
+// UpdateUserFromAdmin godoc
 //
 //	@Summary		Actualiza los detalles de usuario desde otro usuario con un rol superior
 //	@Security		ApiKeyAuth
@@ -323,7 +396,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }
 
-// DeletePet godoc
+// DeleteUserFromAdmin godoc
 //
 //	@Summary		Elimina un usuario desde otro usuario con un rol superior
 //	@Security		ApiKeyAuth
@@ -362,7 +435,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	return c.JSON(response.MessageResponse("user eliminated successfully", resp))
 }
 
-// DeletePet godoc
+// DeleteUser godoc
 //
 //	@Summary		Elimina un usuario
 //	@Security		ApiKeyAuth
@@ -387,44 +460,4 @@ func DeleteSelfUser(c *fiber.Ctx) error {
 	}
 	resp := mapper.UserModelToResponse(deletedUser)
 	return c.JSON(response.MessageResponse("user eliminated successfully", resp))
-}
-
-// UpdateUser godoc
-//
-//	@Summary		Actualiza los detalles de usuario
-//	@Security		ApiKeyAuth
-//	@Description	Actualiza los detalles de usuario identificado por su ID.
-//	@Tags			users
-//	@Accept			json
-//	@Produce		json
-//	@Param			updateUserRequest	body		request.UpdateUserRequest						true	"Solicitud de actualización de usuario"
-//	@Success		200					{object}	response.BaseResponse[response.UserResponse]	"Respuesta exitosa"
-//	@Router			/users [patch]
-func UpadteSelfUser(c *fiber.Ctx) error {
-	model := request.UpdateUserRequest{}
-	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
-		for _, v := range err {
-			log.Println(v)
-		}
-		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
-	}
-
-	userEmail := c.Locals("user_email").(string)
-	user, err := repositories.GetUserByEmail(userEmail)
-	if err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
-	}
-
-	if model.Password != "" {
-		model.Password = auth.Encrypt_password(model.Password)
-	}
-	updateUser := mapper.UpdateUserRequestToModel(model, user)
-
-	if _, err := repositories.UpdateUser(updateUser); err != nil {
-		log.Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
-	}
-	resp := mapper.OnlyUserModelToResponse(updateUser)
-	return c.JSON(response.MessageResponse("user updated successfully", resp))
 }

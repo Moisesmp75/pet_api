@@ -1006,15 +1006,45 @@ paths:
       - users
     patch:
       consumes:
-      - application/json
-      description: Actualiza los detalles de usuario identificado por su ID.
+      - multipart/form-data
+      description: Actualiza los datos del usuario identificado por su ID.
       parameters:
-      - description: Solicitud de actualización de usuario
-        in: body
-        name: updateUserRequest
-        required: true
-        schema:
-          $ref: '#/definitions/request.UpdateUserRequest'
+      - description: Name of the user
+        in: formData
+        name: name
+        type: string
+      - description: Last name of the user
+        in: formData
+        name: last_name
+        type: string
+      - description: Phone number of the user
+        in: formData
+        name: phone_number
+        type: string
+      - description: User name
+        in: formData
+        name: user_name
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        type: string
+      - description: Address
+        in: formData
+        name: address
+        type: string
+      - description: City
+        in: formData
+        name: city
+        type: string
+      - description: User image
+        in: formData
+        name: user_img
+        type: file
       produces:
       - application/json
       responses:
@@ -1024,7 +1054,7 @@ paths:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
       security:
       - ApiKeyAuth: []
-      summary: Actualiza los detalles de usuario
+      summary: Actualiza los datos del usuario
       tags:
       - users
   /users/{id}:
@@ -1100,29 +1130,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Actualiza los detalles de usuario desde otro usuario con un rol superior
-      tags:
-      - users
-  /users/img:
-    patch:
-      consumes:
-      - multipart/form-data
-      description: Actualiza la imagen de usuario identificado por su ID.
-      parameters:
-      - description: Imagen de usuario
-        in: formData
-        name: user_img
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Respuesta exitosa
-          schema:
-            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Actualiza la imagen de usuario
       tags:
       - users
   /users/login:

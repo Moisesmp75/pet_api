@@ -19,7 +19,7 @@ func CountUsers() int64 {
 
 func GetAllUsers(offset, limit int) ([]models.User, error) {
 	var users []models.User
-	data := database.DB.Model(&models.User{}).Offset(offset).Limit(limit).Preload("Role").Find(&users)
+	data := database.DB.Model(&models.User{}).Offset(offset).Limit(limit).Preload("Role").Preload("Image").Find(&users)
 	if data.Error != nil {
 		return nil, data.Error
 	}
@@ -29,7 +29,7 @@ func GetAllUsers(offset, limit int) ([]models.User, error) {
 func CreateUser(newUser models.User) (models.User, error) {
 	tx := database.DB.Begin()
 
-	if err := tx.Model(&models.User{}).Create(&newUser).Preload("Role").Error; err != nil {
+	if err := tx.Model(&models.User{}).Create(&newUser).Preload("Role").Preload("Image").Error; err != nil {
 		tx.Rollback()
 		return models.User{}, err
 	}
@@ -67,6 +67,7 @@ func GetUserById(id uint64) (models.User, error) {
 	data := database.DB.Model(&models.User{})
 	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image")
 	data = data.Preload("Role")
+	data = data.Preload("Image")
 	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
 	data = data.First(&user, id)
 	if data.RowsAffected == 0 || data.Error != nil {
@@ -112,6 +113,7 @@ func DeleteUser(id uint64) (models.User, error) {
 
 	operation := database.DB.Select("Pets").Select("Pets.Image")
 	operation = operation.Select("ONGInfo").Select("ONGInfo.BankAccounts")
+	operation = operation.Select("Image")
 	operation = operation.Delete(&user)
 
 	if operation.Error != nil || operation.RowsAffected == 0 {

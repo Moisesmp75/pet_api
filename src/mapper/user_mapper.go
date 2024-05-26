@@ -33,7 +33,7 @@ func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 		City:        user.City,
 		Email:       user.Email,
 		Role:        user.Role.Name,
-		ImageUrl:    user.ImageUrl,
+		ImageUrl:    user.Image.URL,
 	}
 }
 
@@ -50,7 +50,7 @@ func UserModelToResponse(user models.User) response.UserResponse {
 		Email:       user.Email,
 		Pets:        OnlyPetsModelsToResponse(user.Pets),
 		Role:        user.Role.Name,
-		ImageUrl:    user.ImageUrl,
+		ImageUrl:    user.Image.URL,
 	}
 }
 
