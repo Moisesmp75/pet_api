@@ -745,6 +745,12 @@ const docTemplate = `{
                         "description": "Límite de resultados por página",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtrar usuarios por role",
+                        "name": "role",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -937,7 +943,7 @@ const docTemplate = `{
             "post": {
                 "description": "Crea un nuevo usuario en la aplicación.",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -948,13 +954,76 @@ const docTemplate = `{
                 "summary": "Crea un nuevo usuario",
                 "parameters": [
                     {
-                        "description": "Solicitud de creación de usuario",
-                        "name": "userRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UserRequest"
-                        }
+                        "type": "string",
+                        "description": "User name",
+                        "name": "user_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Name of the user",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last name of the user",
+                        "name": "last_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Phone number of the user",
+                        "name": "phone_number",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Document number",
+                        "name": "dni",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Address",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "City",
+                        "name": "city",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Role id",
+                        "name": "role_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "User image",
+                        "name": "user_img",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1472,50 +1541,6 @@ const docTemplate = `{
                 },
                 "phone_number": {
                     "type": "string"
-                },
-                "user_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.UserRequest": {
-            "type": "object",
-            "required": [
-                "dni",
-                "email",
-                "last_name",
-                "name",
-                "password",
-                "phone_number",
-                "role_id"
-            ],
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "city": {
-                    "type": "string"
-                },
-                "dni": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "role_id": {
-                    "type": "integer"
                 },
                 "user_name": {
                     "type": "string"

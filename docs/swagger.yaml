@@ -144,37 +144,6 @@ definitions:
       user_name:
         type: string
     type: object
-  request.UserRequest:
-    properties:
-      address:
-        type: string
-      city:
-        type: string
-      dni:
-        type: string
-      email:
-        type: string
-      last_name:
-        type: string
-      name:
-        type: string
-      password:
-        type: string
-      phone_number:
-        type: string
-      role_id:
-        type: integer
-      user_name:
-        type: string
-    required:
-    - dni
-    - email
-    - last_name
-    - name
-    - password
-    - phone_number
-    - role_id
-    type: object
   request.VisitRequest:
     properties:
       date:
@@ -992,6 +961,10 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Filtrar usuarios por role
+        in: query
+        name: role
+        type: string
       produces:
       - application/json
       responses:
@@ -1179,15 +1152,59 @@ paths:
   /users/register:
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Crea un nuevo usuario en la aplicación.
       parameters:
-      - description: Solicitud de creación de usuario
-        in: body
-        name: userRequest
+      - description: User name
+        in: formData
+        name: user_name
+        type: string
+      - description: Name of the user
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/request.UserRequest'
+        type: string
+      - description: Last name of the user
+        in: formData
+        name: last_name
+        required: true
+        type: string
+      - description: Phone number of the user
+        in: formData
+        name: phone_number
+        required: true
+        type: string
+      - description: Document number
+        in: formData
+        name: dni
+        required: true
+        type: string
+      - description: Address
+        in: formData
+        name: address
+        type: string
+      - description: City
+        in: formData
+        name: city
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Role id
+        in: formData
+        name: role_id
+        type: integer
+      - description: User image
+        in: formData
+        name: user_img
+        type: file
       produces:
       - application/json
       responses:

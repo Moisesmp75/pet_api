@@ -9,17 +9,31 @@ import (
 	"gorm.io/gorm"
 )
 
-func CountUsers() int64 {
+func CountUsers(role string) int64 {
 	var total_items int64
-	if err := database.DB.Model(&models.User{}).Count(&total_items).Error; err != nil {
+	query := database.DB.Model(&models.User{}).Joins("INNER JOIN roles ON users.role_id = roles.id")
+
+	if role != "" {
+		query = query.Where("roles.name = ?", role)
+	}
+
+	if err := query.Count(&total_items).Error; err != nil {
 		return 0
 	}
 	return total_items
 }
 
-func GetAllUsers(offset, limit int) ([]models.User, error) {
+func GetAllUsers(offset, limit int, role string) ([]models.User, error) {
 	var users []models.User
-	data := database.DB.Model(&models.User{}).Offset(offset).Limit(limit).Preload("Role").Preload("Image").Find(&users)
+	query := database.DB.Model(&models.User{}).Joins("INNER JOIN roles ON users.role_id = roles.id")
+
+	if role != "" {
+		query = query.Where("roles.name = ?", role)
+	}
+
+	query = query.Offset(offset).Limit(limit)
+	data := query.Preload("Role").Preload("Image").Find(&users)
+
 	if data.Error != nil {
 		return nil, data.Error
 	}

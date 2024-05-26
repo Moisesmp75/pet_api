@@ -24,6 +24,7 @@ import (
 //	@Produce		json
 //	@Param			offset	query		int												false	"Offset de paginación"
 //	@Param			limit	query		int												false	"Límite de resultados por página"
+//	@Param			role	query		string												false	"Filtrar usuarios por role"
 //	@Success		200		{object}	response.BaseResponsePag[response.UserResponse]	"Respuesta exitosa"
 //	@Router			/users [get]
 func GetAllUsers(c *fiber.Ctx) error {
@@ -34,9 +35,9 @@ func GetAllUsers(c *fiber.Ctx) error {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(errors))
 	}
-
-	totalItems := repositories.CountUsers()
-	users, err := repositories.GetAllUsers(offset, limit)
+	role := c.Query("role", "")
+	totalItems := repositories.CountUsers(role)
+	users, err := repositories.GetAllUsers(offset, limit, role)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
@@ -105,9 +106,8 @@ func GetSelfUser(c *fiber.Ctx) error {
 //	@Summary		Crea un nuevo usuario
 //	@Description	Crea un nuevo usuario en la aplicación.
 //	@Tags			users
-//	@Accept			json
-//	@Produce		json
 //	@Accept			multipart/form-data
+//	@Produce		json
 //	@Param			user_name		formData	string	false	"User name"
 //	@Param			name			formData	string	true	"Name of the user"
 //	@Param			last_name		formData	string	true	"Last name of the user"
