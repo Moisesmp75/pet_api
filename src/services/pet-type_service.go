@@ -12,6 +12,7 @@ import (
 //
 //	@Summary		Lista todos los tipos de mascotas
 //	@Description	Obtiene todos los tipos de mascotas.
+//	@Security		ApiKeyAuth
 //	@Tags			pets
 //	@Accept			json
 //	@Produce		json

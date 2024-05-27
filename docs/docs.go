@@ -444,6 +444,11 @@ const docTemplate = `{
         },
         "/pets/types": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Obtiene todos los tipos de mascotas.",
                 "consumes": [
                     "application/json"

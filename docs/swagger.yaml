@@ -900,6 +900,8 @@ paths:
           description: Respuesta exitosa
           schema:
             $ref: '#/definitions/response.BaseResponse-array_models_PetType'
+      security:
+      - ApiKeyAuth: []
       summary: Lista todos los tipos de mascotas
       tags:
       - pets
