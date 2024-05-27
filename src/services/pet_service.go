@@ -115,7 +115,7 @@ func CreatePet(c *fiber.Ctx) error {
 	}
 	pet.User = user
 	pet.UserID = user.ID
-	pet.Image.Filename = ""
+	pet.Image.Filename = helpers.GenerateUniqueFileName("user_" + strconv.FormatUint(user.ID, 10) + "_pet-image")
 	pet.Image.URL = "https://firebasestorage.googleapis.com/v0/b/hairypets.appspot.com/o/user_images%2Fdefault_user.png?alt=media&token=0f3e72a8-cf48-4e4c-8e27-7555f9de4bee"
 	petCreated, err := repositories.CreatePet(pet)
 
@@ -204,12 +204,12 @@ func UpdatePetImage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this pet"))
 	}
 
-	file, err := c.FormFile("user_img")
+	file, err := c.FormFile("pet_img")
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	url_img, _, err := helpers.UploadFile(file, "user_images/", false)
+	url_img, _, err := helpers.UploadFile(file, "pet_images/", false)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))

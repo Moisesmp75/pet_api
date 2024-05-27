@@ -222,7 +222,7 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-
+	user.Image.Filename = file.Filename
 	user.Image.URL = url_img
 
 	if _, err := repositories.UpdateUser(user); err != nil {
