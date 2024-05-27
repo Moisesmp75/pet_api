@@ -570,6 +570,50 @@
                 }
             }
         },
+        "/pets/{id}/img": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza la imagen de una mascota identificada por su ID.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pets"
+                ],
+                "summary": "Actualiza las imágenes de una mascota",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Pet id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen de la mascota",
+                        "name": "pet_img",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_PetResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/reports": {
             "get": {
                 "security": [
@@ -742,7 +786,7 @@
                     },
                     {
                         "type": "string",
-                        "description": "Filtrar usuarios por role",
+                        "description": "Filtrar usuarios por rol",
                         "name": "role",
                         "in": "query"
                     }
@@ -788,7 +832,46 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Actualiza los datos del usuario identificado por su ID.",
+                "description": "Actualiza los detalles de usuario identificado por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Actualiza los detalles de usuario",
+                "parameters": [
+                    {
+                        "description": "Solicitud de actualización de usuario",
+                        "name": "updateUserRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_UserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/img": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza la imagen de usuario identificado por su ID.",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -798,61 +881,14 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Actualiza los datos del usuario",
+                "summary": "Actualiza la imagen de usuario",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Name of the user",
-                        "name": "name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Last name of the user",
-                        "name": "last_name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Phone number of the user",
-                        "name": "phone_number",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "User name",
-                        "name": "user_name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Password",
-                        "name": "password",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Address",
-                        "name": "address",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "City",
-                        "name": "city",
-                        "in": "formData"
-                    },
-                    {
                         "type": "file",
-                        "description": "User image",
+                        "description": "Imagen de usuario",
                         "name": "user_img",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -937,7 +973,7 @@
             "post": {
                 "description": "Crea un nuevo usuario en la aplicación.",
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -948,76 +984,13 @@
                 "summary": "Crea un nuevo usuario",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "User name",
-                        "name": "user_name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Name of the user",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Last name of the user",
-                        "name": "last_name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Phone number of the user",
-                        "name": "phone_number",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Document number",
-                        "name": "dni",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Address",
-                        "name": "address",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "City",
-                        "name": "city",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Password",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Role id",
-                        "name": "role_id",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "file",
-                        "description": "User image",
-                        "name": "user_img",
-                        "in": "formData"
+                        "description": "Solicitud de creación de usuario",
+                        "name": "userRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UserRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -1535,6 +1508,50 @@
                 },
                 "phone_number": {
                     "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UserRequest": {
+            "type": "object",
+            "required": [
+                "dni",
+                "email",
+                "last_name",
+                "name",
+                "password",
+                "phone_number",
+                "role_id"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "dni": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "role_id": {
+                    "type": "integer"
                 },
                 "user_name": {
                     "type": "string"

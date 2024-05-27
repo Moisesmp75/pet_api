@@ -115,6 +115,8 @@ func CreatePet(c *fiber.Ctx) error {
 	}
 	pet.User = user
 	pet.UserID = user.ID
+	pet.Image.Filename = ""
+	pet.Image.URL = "https://firebasestorage.googleapis.com/v0/b/hairypets.appspot.com/o/user_images%2Fdefault_user.png?alt=media&token=0f3e72a8-cf48-4e4c-8e27-7555f9de4bee"
 	petCreated, err := repositories.CreatePet(pet)
 
 	if err != nil {
@@ -170,6 +172,57 @@ func UpdatePet(c *fiber.Ctx) error {
 	}
 	resp := mapper.OnlyPetModelToResponse(updatePet)
 	return c.JSON(response.MessageResponse("pet updated successfully", resp))
+}
+
+// UpdatePetImages godoc
+//
+//	@Summary		Actualiza las imágenes de una mascota
+//	@Security		ApiKeyAuth
+//	@Description	Actualiza la imagen de una mascota identificada por su ID.
+//	@Tags			pets
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			id		path		int		true	"Pet id"
+//	@Param			pet_img	formData	file	true	"Imagen de la mascota"
+//	@Success		200		{object}	response.BaseResponse[response.PetResponse]
+//	@Router			/pets/{id}/img [patch]
+func UpdatePetImage(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	pet, err := repositories.GetPetById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	userEmail := c.Locals("user_email").(string)
+	user, _ := repositories.GetUserByEmail(userEmail)
+	if user.ID != pet.UserID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this pet"))
+	}
+
+	file, err := c.FormFile("user_img")
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	url_img, _, err := helpers.UploadFile(file, "user_images/", false)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+
+	pet.Image.URL = url_img
+
+	if _, err := repositories.UpdatePet(pet); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.OnlyPetModelToResponse(pet)
+	return c.JSON(response.MessageResponse("images created successfully", resp))
 }
 
 // DeletePet godoc

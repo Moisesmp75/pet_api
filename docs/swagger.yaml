@@ -144,6 +144,37 @@ definitions:
       user_name:
         type: string
     type: object
+  request.UserRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      dni:
+        type: string
+      email:
+        type: string
+      last_name:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      role_id:
+        type: integer
+      user_name:
+        type: string
+    required:
+    - dni
+    - email
+    - last_name
+    - name
+    - password
+    - phone_number
+    - role_id
+    type: object
   request.VisitRequest:
     properties:
       date:
@@ -829,6 +860,34 @@ paths:
       summary: Actualiza los detalles de una mascota
       tags:
       - pets
+  /pets/{id}/img:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Actualiza la imagen de una mascota identificada por su ID.
+      parameters:
+      - description: Pet id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Imagen de la mascota
+        in: formData
+        name: pet_img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_PetResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza las imágenes de una mascota
+      tags:
+      - pets
   /pets/types:
     get:
       consumes:
@@ -961,7 +1020,7 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: Filtrar usuarios por role
+      - description: Filtrar usuarios por rol
         in: query
         name: role
         type: string
@@ -979,45 +1038,15 @@ paths:
       - users
     patch:
       consumes:
-      - multipart/form-data
-      description: Actualiza los datos del usuario identificado por su ID.
+      - application/json
+      description: Actualiza los detalles de usuario identificado por su ID.
       parameters:
-      - description: Name of the user
-        in: formData
-        name: name
-        type: string
-      - description: Last name of the user
-        in: formData
-        name: last_name
-        type: string
-      - description: Phone number of the user
-        in: formData
-        name: phone_number
-        type: string
-      - description: User name
-        in: formData
-        name: user_name
-        type: string
-      - description: Password
-        in: formData
-        name: password
-        type: string
-      - description: Email
-        in: formData
-        name: email
-        type: string
-      - description: Address
-        in: formData
-        name: address
-        type: string
-      - description: City
-        in: formData
-        name: city
-        type: string
-      - description: User image
-        in: formData
-        name: user_img
-        type: file
+      - description: Solicitud de actualización de usuario
+        in: body
+        name: updateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
       produces:
       - application/json
       responses:
@@ -1027,7 +1056,7 @@ paths:
             $ref: '#/definitions/response.BaseResponse-response_UserResponse'
       security:
       - ApiKeyAuth: []
-      summary: Actualiza los datos del usuario
+      summary: Actualiza los detalles de usuario
       tags:
       - users
   /users/{id}:
@@ -1105,6 +1134,29 @@ paths:
       summary: Actualiza los detalles de usuario desde otro usuario con un rol superior
       tags:
       - users
+  /users/img:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Actualiza la imagen de usuario identificado por su ID.
+      parameters:
+      - description: Imagen de usuario
+        in: formData
+        name: user_img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_UserResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza la imagen de usuario
+      tags:
+      - users
   /users/login:
     post:
       consumes:
@@ -1152,59 +1204,15 @@ paths:
   /users/register:
     post:
       consumes:
-      - multipart/form-data
+      - application/json
       description: Crea un nuevo usuario en la aplicación.
       parameters:
-      - description: User name
-        in: formData
-        name: user_name
-        type: string
-      - description: Name of the user
-        in: formData
-        name: name
+      - description: Solicitud de creación de usuario
+        in: body
+        name: userRequest
         required: true
-        type: string
-      - description: Last name of the user
-        in: formData
-        name: last_name
-        required: true
-        type: string
-      - description: Phone number of the user
-        in: formData
-        name: phone_number
-        required: true
-        type: string
-      - description: Document number
-        in: formData
-        name: dni
-        required: true
-        type: string
-      - description: Address
-        in: formData
-        name: address
-        type: string
-      - description: City
-        in: formData
-        name: city
-        type: string
-      - description: Email
-        in: formData
-        name: email
-        required: true
-        type: string
-      - description: Password
-        in: formData
-        name: password
-        required: true
-        type: string
-      - description: Role id
-        in: formData
-        name: role_id
-        type: integer
-      - description: User image
-        in: formData
-        name: user_img
-        type: file
+        schema:
+          $ref: '#/definitions/request.UserRequest'
       produces:
       - application/json
       responses:
