@@ -15,13 +15,6 @@ definitions:
       total_pages:
         type: integer
     type: object
-  models.PetType:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
   request.AdoptionRequest:
     properties:
       comment:
@@ -200,7 +193,7 @@ definitions:
       user:
         $ref: '#/definitions/response.UserResponse'
     type: object
-  response.BaseResponse-array_models_PetType:
+  response.BaseResponse-array_response_PetTypeResponse:
     properties:
       message:
         items:
@@ -208,7 +201,7 @@ definitions:
         type: array
       resource:
         items:
-          $ref: '#/definitions/models.PetType'
+          $ref: '#/definitions/response.PetTypeResponse'
         type: array
       success:
         type: boolean
@@ -447,6 +440,13 @@ definitions:
         $ref: '#/definitions/response.UserResponse'
       weight:
         type: number
+    type: object
+  response.PetTypeResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
     type: object
   response.ReportResponse:
     properties:
@@ -899,7 +899,7 @@ paths:
         "200":
           description: Respuesta exitosa
           schema:
-            $ref: '#/definitions/response.BaseResponse-array_models_PetType'
+            $ref: '#/definitions/response.BaseResponse-array_response_PetTypeResponse'
       security:
       - ApiKeyAuth: []
       summary: Lista todos los tipos de mascotas

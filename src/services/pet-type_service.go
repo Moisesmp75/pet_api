@@ -3,6 +3,7 @@ package services
 import (
 	"log"
 	"pet_api/src/dto/response"
+	"pet_api/src/mapper"
 	"pet_api/src/repositories"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,7 +17,7 @@ import (
 //	@Tags			pets
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	response.BaseResponse[[]models.PetType]	"Respuesta exitosa"
+//	@Success		200	{object}	response.BaseResponse[[]response.PetTypeResponse]	"Respuesta exitosa"
 //	@Router			/pets/types [get]
 func GetAllPetTypes(c *fiber.Ctx) error {
 	petTypes, err := repositories.GetAllPetTypes()
@@ -24,6 +25,6 @@ func GetAllPetTypes(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-
-	return c.JSON(response.NewResponse(petTypes))
+	resp := mapper.PetTypeModelsToResponse(petTypes)
+	return c.JSON(response.NewResponse(resp))
 }

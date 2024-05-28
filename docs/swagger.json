@@ -458,7 +458,7 @@
                     "200": {
                         "description": "Respuesta exitosa",
                         "schema": {
-                            "$ref": "#/definitions/response.BaseResponse-array_models_PetType"
+                            "$ref": "#/definitions/response.BaseResponse-array_response_PetTypeResponse"
                         }
                     }
                 }
@@ -1328,17 +1328,6 @@
                 }
             }
         },
-        "models.PetType": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "request.AdoptionRequest": {
             "type": "object",
             "required": [
@@ -1601,7 +1590,7 @@
                 }
             }
         },
-        "response.BaseResponse-array_models_PetType": {
+        "response.BaseResponse-array_response_PetTypeResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -1613,7 +1602,7 @@
                 "resource": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.PetType"
+                        "$ref": "#/definitions/response.PetTypeResponse"
                     }
                 },
                 "success": {
@@ -1979,6 +1968,17 @@
                 },
                 "weight": {
                     "type": "number"
+                }
+            }
+        },
+        "response.PetTypeResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
