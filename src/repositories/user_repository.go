@@ -66,6 +66,7 @@ func GetUserByEmailOrPhone(identity string) (models.User, error) {
 	data = data.Preload("Role")
 	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image")
 	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
+	data = data.Preload("Image")
 	data = data.First(&user)
 	if data.Error != nil {
 		if errors.Is(data.Error, gorm.ErrRecordNotFound) {
@@ -104,6 +105,7 @@ func GetUserByEmail(email string) (models.User, error) {
 	data = data.Preload("Role")
 	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image")
 	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
+	data = data.Preload("Image")
 	data = data.First(&user)
 	if data.Error != nil {
 		if errors.Is(data.Error, gorm.ErrRecordNotFound) {

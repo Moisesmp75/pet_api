@@ -18,3 +18,11 @@ func CreatePetImages(newPetImage []models.PetImage) ([]models.PetImage, error) {
 	}
 	return newPetImage, nil
 }
+
+func UpdatePetImage(petImage models.PetImage) (models.PetImage, error) {
+	data := database.DB.Model(&models.PetImage{}).Where("id = ?", petImage.ID).Updates(petImage)
+	if data.RowsAffected == 0 || data.Error != nil {
+		return models.PetImage{}, data.Error
+	}
+	return petImage, nil
+}

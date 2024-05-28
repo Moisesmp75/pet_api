@@ -222,13 +222,16 @@ func UpdateUserImage(c *fiber.Ctx) error {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
-	user.Image.Filename = file.Filename
-	user.Image.URL = url_img
 
-	if _, err := repositories.UpdateUser(user); err != nil {
+	user_img := user.Image
+	user_img.URL = url_img
+	user_img.Filename = file.Filename
+	if _, err := repositories.UpdateUserImage(user_img); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
+	user.Image.Filename = file.Filename
+	user.Image.URL = url_img
 
 	resp := mapper.OnlyUserModelToResponse(user)
 	return c.JSON(response.MessageResponse("user updated successfully", resp))

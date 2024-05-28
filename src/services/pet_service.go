@@ -215,12 +215,14 @@ func UpdatePetImage(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
 	}
 
-	pet.Image.URL = url_img
+	pet_img := pet.Image
+	pet_img.URL = url_img
 
-	if _, err := repositories.UpdatePet(pet); err != nil {
+	if _, err := repositories.UpdatePetImage(pet_img); err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
+	pet.Image.URL = url_img
 	resp := mapper.OnlyPetModelToResponse(pet)
 	return c.JSON(response.MessageResponse("images created successfully", resp))
 }
