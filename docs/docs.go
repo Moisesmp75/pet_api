@@ -1596,6 +1596,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BankAccountResponse": {
+            "type": "object",
+            "properties": {
+                "account_number": {
+                    "type": "string"
+                },
+                "bank_name": {
+                    "type": "string"
+                },
+                "cci": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.BaseResponse-array_response_PetTypeResponse": {
             "type": "object",
             "properties": {
@@ -1930,6 +1947,20 @@ const docTemplate = `{
                 }
             }
         },
+        "response.ONGInfoResponse": {
+            "type": "object",
+            "properties": {
+                "bank_accounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.BankAccountResponse"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
         "response.PetResponse": {
             "type": "object",
             "properties": {
@@ -2048,6 +2079,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "ong_info": {
+                    "$ref": "#/definitions/response.ONGInfoResponse"
                 },
                 "pets": {
                     "type": "array",

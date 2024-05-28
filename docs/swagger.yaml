@@ -193,6 +193,17 @@ definitions:
       user:
         $ref: '#/definitions/response.UserResponse'
     type: object
+  response.BankAccountResponse:
+    properties:
+      account_number:
+        type: string
+      bank_name:
+        type: string
+      cci:
+        type: string
+      id:
+        type: integer
+    type: object
   response.BaseResponse-array_response_PetTypeResponse:
     properties:
       message:
@@ -410,6 +421,15 @@ definitions:
       token:
         type: string
     type: object
+  response.ONGInfoResponse:
+    properties:
+      bank_accounts:
+        items:
+          $ref: '#/definitions/response.BankAccountResponse'
+        type: array
+      description:
+        type: string
+    type: object
   response.PetResponse:
     properties:
       adppted:
@@ -488,6 +508,8 @@ definitions:
         type: string
       name:
         type: string
+      ong_info:
+        $ref: '#/definitions/response.ONGInfoResponse'
       pets:
         items:
           $ref: '#/definitions/response.PetResponse'
