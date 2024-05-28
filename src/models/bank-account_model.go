@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type BankAccount struct {
 	gorm.Model
-	ONGInfoID    uint64 `gorm:"not null"`
-	BankName     string `gorm:"not null; size:25"`
-	AccountNumer string `gorm:"not null; size:25"`
-	CCI          string `gorm:"not null; size:35"`
+	ID            uint64 `gorm:"primaryKey;autoIncrement"`
+	ONGInfoID     uint64 `gorm:"not null"`
+	BankName      string `gorm:"not null; size:25"`
+	AccountNumber string `gorm:"not null; size:25"`
+	CCI           string `gorm:"not null; size:35"`
 }
