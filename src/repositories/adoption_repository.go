@@ -20,7 +20,7 @@ func GetAllAdoptions(offset, limit int) ([]models.Adoption, error) {
 	data := database.DB.Model(&models.Adoption{})
 	data = data.Offset(offset).Limit(limit)
 	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role")
-	data = data.Preload("User").Preload("User.Role")
+	data = data.Preload("User").Preload("User.Role").Preload("User.Image")
 	data = data.Find(&adoptions)
 
 	if data.Error != nil {
@@ -35,7 +35,7 @@ func GetAdoptionById(id uint64) (models.Adoption, error) {
 
 	data := database.DB.Model(&models.Adoption{})
 	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role")
-	data = data.Preload("User").Preload("User.Role")
+	data = data.Preload("User").Preload("User.Role").Preload("User.Image")
 	data = data.First(&adoption, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
