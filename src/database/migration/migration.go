@@ -77,6 +77,11 @@ func RunMigration() {
 	if errUserImage != nil {
 		log.Fatal(errUserImage.Error())
 	}
+
+	errPetBehavior := database.DB.AutoMigrate(&models.PetBehavior{})
+	if errPetBehavior != nil {
+		log.Fatal(errPetBehavior.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

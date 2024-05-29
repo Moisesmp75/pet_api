@@ -64,7 +64,7 @@ func GetUserByEmailOrPhone(identity string) (models.User, error) {
 	var user models.User
 	data := database.DB.Model(&models.User{}).Where("email = ? OR phone_number = ?", identity, identity)
 	data = data.Preload("Role")
-	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image")
+	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image").Preload("Pets.PetBehavior")
 	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
 	data = data.Preload("Image")
 	data = data.First(&user)
@@ -80,7 +80,7 @@ func GetUserByEmailOrPhone(identity string) (models.User, error) {
 func GetUserById(id uint64) (models.User, error) {
 	var user models.User
 	data := database.DB.Model(&models.User{})
-	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image")
+	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image").Preload("Pets.PetBehavior")
 	data = data.Preload("Role")
 	data = data.Preload("Image")
 	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
@@ -103,7 +103,7 @@ func GetUserByEmail(email string) (models.User, error) {
 	var user models.User
 	data := database.DB.Model(&models.User{}).Where("email = ?", email)
 	data = data.Preload("Role")
-	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image")
+	data = data.Preload("Pets").Preload("Pets.PetType").Preload("Pets.Image").Preload("Pets.PetBehavior")
 	data = data.Preload("ONGInfo").Preload("ONGInfo.BankAccounts")
 	data = data.Preload("Image")
 	data = data.First(&user)
@@ -127,7 +127,7 @@ func DeleteUser(id uint64) (models.User, error) {
 		return models.User{}, err
 	}
 
-	operation := database.DB.Select("Pets").Select("Pets.Image")
+	operation := database.DB.Select("Pets").Select("Pets.Image").Select("Pets.PetBehavior")
 	operation = operation.Select("ONGInfo").Select("ONGInfo.BankAccounts")
 	operation = operation.Select("Image")
 	operation = operation.Delete(&user)

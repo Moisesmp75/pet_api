@@ -40,7 +40,7 @@ func CreatePet(newPet models.Pet) (models.Pet, error) {
 
 func GetPetById(id uint64) (models.Pet, error) {
 	var pet models.Pet
-	data := database.DB.Model(&models.Pet{}).Preload("PetType").Preload("Image")
+	data := database.DB.Model(&models.Pet{}).Preload("PetType").Preload("Image").Preload("PetBehavior")
 	data = data.Preload("User").Preload("User.Image").Preload("User.Role")
 	data = data.First(&pet, id)
 
@@ -71,7 +71,7 @@ func GetAllPets(offset, limit int, breed, color, gender, petType string) ([]mode
 		query = query.Where("pet_types.name = ?", petType)
 	}
 
-	data := query.Offset(offset).Limit(limit).Preload("User").Preload("Image")
+	data := query.Offset(offset).Limit(limit).Preload("User").Preload("Image").Preload("PetBehavior")
 	data = data.Preload("User.Image")
 
 	data = data.Preload("User.Role").Preload("PetType").Find(&pets)
@@ -95,7 +95,7 @@ func DeletePet(id uint64) (models.Pet, error) {
 	if err != nil {
 		return models.Pet{}, err
 	}
-	operation := database.DB.Select("Image").Delete(&pet)
+	operation := database.DB.Select("Image").Select("PetBehavior").Delete(&pet)
 
 	if operation.Error != nil || operation.RowsAffected == 0 {
 		return models.Pet{}, err
@@ -107,7 +107,7 @@ func DeletePets(pets []models.Pet) ([]models.Pet, error) {
 	if len(pets) == 0 {
 		return []models.Pet{}, nil
 	}
-	operation := database.DB.Select("Image").Delete(&pets)
+	operation := database.DB.Select("Image").Select("PetBehavior").Delete(&pets)
 	if operation.Error != nil || operation.RowsAffected == 0 {
 		return []models.Pet{}, operation.Error
 	}
