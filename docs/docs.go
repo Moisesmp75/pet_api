@@ -1383,9 +1383,24 @@ const docTemplate = `{
                 }
             }
         },
+        "request.PetBehaviorRequest": {
+            "type": "object",
+            "properties": {
+                "habit": {
+                    "type": "string"
+                },
+                "personality": {
+                    "type": "string"
+                },
+                "temper": {
+                    "type": "string"
+                }
+            }
+        },
         "request.PetRequest": {
             "type": "object",
             "required": [
+                "behavior",
                 "born_date",
                 "breed",
                 "color",
@@ -1396,6 +1411,9 @@ const docTemplate = `{
                 "weight"
             ],
             "properties": {
+                "behavior": {
+                    "$ref": "#/definitions/request.PetBehaviorRequest"
+                },
                 "born_date": {
                     "type": "string"
                 },
@@ -1961,6 +1979,20 @@ const docTemplate = `{
                 }
             }
         },
+        "response.PetBehaviorResponse": {
+            "type": "object",
+            "properties": {
+                "habit": {
+                    "type": "string"
+                },
+                "personality": {
+                    "type": "string"
+                },
+                "temper": {
+                    "type": "string"
+                }
+            }
+        },
         "response.PetResponse": {
             "type": "object",
             "properties": {
@@ -1969,6 +2001,9 @@ const docTemplate = `{
                 },
                 "age": {
                     "type": "integer"
+                },
+                "behavior": {
+                    "$ref": "#/definitions/response.PetBehaviorResponse"
                 },
                 "breed": {
                     "type": "string"

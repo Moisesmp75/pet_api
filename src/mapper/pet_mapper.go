@@ -19,6 +19,7 @@ func PetRequestToModel(req request.PetRequest) models.Pet {
 		Weight:      req.Weight,
 		UserID:      0,
 		Location:    req.Location,
+		Behavior:    PetBehaviorRequestToModel(req.Behavior),
 	}
 }
 
@@ -38,6 +39,7 @@ func PetModelToResponse(pet models.Pet) response.PetResponse {
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
 		Images:      PetImageModelToResponse(pet.Image),
+		Behavior:    PetBehaviorModelToResponse(pet.Behavior),
 	}
 }
 
@@ -57,6 +59,7 @@ func OnlyPetModelToResponse(pet models.Pet) response.PetResponse {
 		Location:    pet.Location,
 		PetType:     pet.PetType.Name,
 		Images:      PetImageModelToResponse(pet.Image),
+		Behavior:    PetBehaviorModelToResponse(pet.Behavior),
 	}
 }
 

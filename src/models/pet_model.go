@@ -25,5 +25,5 @@ type Pet struct {
 	PetTypeId     uint64      `gorm:"not null"`
 	PetType       PetType     `gorm:"foreignKey:PetTypeId"`
 	PetBehaviorID uint64      `gorm:"not null"`
-	PetBehavior   PetBehavior `gorm:"foreignKey:PetBehaviorID"`
+	Behavior      PetBehavior `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:PetID"`
 }

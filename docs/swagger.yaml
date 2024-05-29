@@ -48,8 +48,19 @@ definitions:
     required:
     - email
     type: object
+  request.PetBehaviorRequest:
+    properties:
+      habit:
+        type: string
+      personality:
+        type: string
+      temper:
+        type: string
+    type: object
   request.PetRequest:
     properties:
+      behavior:
+        $ref: '#/definitions/request.PetBehaviorRequest'
       born_date:
         type: string
       breed:
@@ -71,6 +82,7 @@ definitions:
       weight:
         type: number
     required:
+    - behavior
     - born_date
     - breed
     - color
@@ -430,12 +442,23 @@ definitions:
       description:
         type: string
     type: object
+  response.PetBehaviorResponse:
+    properties:
+      habit:
+        type: string
+      personality:
+        type: string
+      temper:
+        type: string
+    type: object
   response.PetResponse:
     properties:
       adppted:
         type: boolean
       age:
         type: integer
+      behavior:
+        $ref: '#/definitions/response.PetBehaviorResponse'
       breed:
         type: string
       color:

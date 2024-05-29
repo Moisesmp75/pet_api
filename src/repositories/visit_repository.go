@@ -20,7 +20,7 @@ func GetAllVisits(offset, limit int) ([]models.Visit, error) {
 	data := database.DB.Model(&models.Visit{})
 	data = data.Offset(offset).Limit(limit)
 	data = data.Preload("User").Preload("User.Role")
-	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.PetBehavior")
+	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.Behavior")
 	data = data.Find(&visits)
 
 	if data.Error != nil {
@@ -34,7 +34,7 @@ func GetVisitById(id uint64) (models.Visit, error) {
 	var visit models.Visit
 	data := database.DB.Model(&models.Visit{})
 	data = data.Preload("User").Preload("User.Role")
-	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.PetBehavior")
+	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.Behavior")
 	data = data.First(&visit, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
