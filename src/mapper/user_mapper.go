@@ -9,48 +9,54 @@ import (
 
 func UserRequestToModel(req request.UserRequest) models.User {
 	return models.User{
-		Name:        req.Name,
-		LastName:    req.LastName,
-		Username:    req.UserName,
-		PhoneNumber: req.PhoneNumber,
-		Email:       req.Email,
-		Password:    req.Password,
-		Dni:         req.Dni,
-		Address:     req.Address,
-		City:        req.City,
+		Name:           req.Name,
+		LastName:       req.LastName,
+		Username:       req.UserName,
+		PhoneNumber:    req.PhoneNumber,
+		Email:          req.Email,
+		Password:       req.Password,
+		Dni:            req.Dni,
+		Address:        req.Address,
+		City:           req.City,
+		MotherLastName: req.MotherLastName,
+		About:          req.About,
 	}
 }
 
 func OnlyUserModelToResponse(user models.User) *response.UserResponse {
 	return &response.UserResponse{
-		ID:          user.ID,
-		Name:        user.Name,
-		LastName:    user.LastName,
-		UserName:    user.Username,
-		PhoneNumber: user.PhoneNumber,
-		Dni:         user.Dni,
-		Address:     user.Address,
-		City:        user.City,
-		Email:       user.Email,
-		Role:        user.Role.Name,
-		ImageUrl:    user.Image.URL,
+		ID:             user.ID,
+		Name:           user.Name,
+		LastName:       user.LastName,
+		MotherLastName: user.MotherLastName,
+		UserName:       user.Username,
+		PhoneNumber:    user.PhoneNumber,
+		Dni:            user.Dni,
+		Address:        user.Address,
+		City:           user.City,
+		Email:          user.Email,
+		Role:           user.Role.Name,
+		ImageUrl:       user.Image.URL,
+		About:          user.About,
 	}
 }
 
 func UserModelToResponse(user models.User) response.UserResponse {
 	return response.UserResponse{
-		ID:          user.ID,
-		Name:        user.Name,
-		LastName:    user.LastName,
-		UserName:    user.Username,
-		PhoneNumber: user.PhoneNumber,
-		Dni:         user.Dni,
-		Address:     user.Address,
-		City:        user.City,
-		Email:       user.Email,
-		Pets:        OnlyPetsModelsToResponse(user.Pets),
-		Role:        user.Role.Name,
-		ImageUrl:    user.Image.URL,
+		ID:             user.ID,
+		Name:           user.Name,
+		LastName:       user.LastName,
+		MotherLastName: user.MotherLastName,
+		UserName:       user.Username,
+		PhoneNumber:    user.PhoneNumber,
+		Dni:            user.Dni,
+		Address:        user.Address,
+		City:           user.City,
+		Email:          user.Email,
+		Pets:           OnlyPetsModelsToResponse(user.Pets),
+		Role:           user.Role.Name,
+		ImageUrl:       user.Image.URL,
+		About:          user.About,
 	}
 }
 
@@ -108,6 +114,12 @@ func UpdateUserRequestToModel(req request.UpdateUserRequest, user models.User) m
 	}
 	if req.City != "" {
 		user.City = req.City
+	}
+	if req.MotherLastName != "" {
+		user.MotherLastName = req.MotherLastName
+	}
+	if req.About != "" {
+		user.About = req.About
 	}
 	return user
 }

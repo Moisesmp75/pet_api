@@ -56,6 +56,10 @@ definitions:
         type: string
       temper:
         type: string
+    required:
+    - habit
+    - personality
+    - temper
     type: object
   request.PetRequest:
     properties:
@@ -132,6 +136,8 @@ definitions:
     type: object
   request.UpdateUserRequest:
     properties:
+      about:
+        type: string
       address:
         type: string
       city:
@@ -139,6 +145,8 @@ definitions:
       email:
         type: string
       last_name:
+        type: string
+      mother_last_name:
         type: string
       name:
         type: string
@@ -151,6 +159,8 @@ definitions:
     type: object
   request.UserRequest:
     properties:
+      about:
+        type: string
       address:
         type: string
       city:
@@ -160,6 +170,8 @@ definitions:
       email:
         type: string
       last_name:
+        type: string
+      mother_last_name:
         type: string
       name:
         type: string
@@ -175,6 +187,7 @@ definitions:
     - dni
     - email
     - last_name
+    - mother_last_name
     - name
     - password
     - phone_number
@@ -515,6 +528,8 @@ definitions:
     type: object
   response.UserResponse:
     properties:
+      about:
+        type: string
       address:
         type: string
       city:
@@ -528,6 +543,8 @@ definitions:
       image_url:
         type: string
       last_name:
+        type: string
+      mother_last_name:
         type: string
       name:
         type: string

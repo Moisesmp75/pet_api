@@ -1385,6 +1385,11 @@ const docTemplate = `{
         },
         "request.PetBehaviorRequest": {
             "type": "object",
+            "required": [
+                "habit",
+                "personality",
+                "temper"
+            ],
             "properties": {
                 "habit": {
                     "type": "string"
@@ -1506,6 +1511,9 @@ const docTemplate = `{
         "request.UpdateUserRequest": {
             "type": "object",
             "properties": {
+                "about": {
+                    "type": "string"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -1516,6 +1524,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "mother_last_name": {
                     "type": "string"
                 },
                 "name": {
@@ -1538,12 +1549,16 @@ const docTemplate = `{
                 "dni",
                 "email",
                 "last_name",
+                "mother_last_name",
                 "name",
                 "password",
                 "phone_number",
                 "role_id"
             ],
             "properties": {
+                "about": {
+                    "type": "string"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -1557,6 +1572,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "mother_last_name": {
                     "type": "string"
                 },
                 "name": {
@@ -2091,6 +2109,9 @@ const docTemplate = `{
         "response.UserResponse": {
             "type": "object",
             "properties": {
+                "about": {
+                    "type": "string"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -2110,6 +2131,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "mother_last_name": {
                     "type": "string"
                 },
                 "name": {

@@ -1379,6 +1379,11 @@
         },
         "request.PetBehaviorRequest": {
             "type": "object",
+            "required": [
+                "habit",
+                "personality",
+                "temper"
+            ],
             "properties": {
                 "habit": {
                     "type": "string"
@@ -1500,6 +1505,9 @@
         "request.UpdateUserRequest": {
             "type": "object",
             "properties": {
+                "about": {
+                    "type": "string"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -1510,6 +1518,9 @@
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "mother_last_name": {
                     "type": "string"
                 },
                 "name": {
@@ -1532,12 +1543,16 @@
                 "dni",
                 "email",
                 "last_name",
+                "mother_last_name",
                 "name",
                 "password",
                 "phone_number",
                 "role_id"
             ],
             "properties": {
+                "about": {
+                    "type": "string"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -1551,6 +1566,9 @@
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "mother_last_name": {
                     "type": "string"
                 },
                 "name": {
@@ -2085,6 +2103,9 @@
         "response.UserResponse": {
             "type": "object",
             "properties": {
+                "about": {
+                    "type": "string"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -2104,6 +2125,9 @@
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "mother_last_name": {
                     "type": "string"
                 },
                 "name": {
