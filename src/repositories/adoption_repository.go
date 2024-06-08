@@ -8,7 +8,7 @@ import (
 
 func CountAdoptions() int64 {
 	var total_items int64
-	if err := database.DB.Model(&models.Adoption{}).Count(&total_items).Error; err != nil {
+	if err := database.DB.Model(&models.Adoption{}).Count(&total_items).Where("deleted_at = ?", nil).Error; err != nil {
 		return 0
 	}
 	return int64(total_items)

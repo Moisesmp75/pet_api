@@ -10,7 +10,7 @@ import (
 func VisitRequestToModel(req request.VisitRequest) models.Visit {
 	return models.Visit{
 		PetID: req.PetID,
-		Date:  helpers.ParseDate(req.Date),
+		Date:  helpers.ParseDateTime(req.Date),
 	}
 }
 

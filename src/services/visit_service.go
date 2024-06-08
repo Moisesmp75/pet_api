@@ -93,11 +93,12 @@ func CreateVisit(c *fiber.Ctx) error {
 	newVisit.Pet = pet
 	newVisit.User = user
 	newVisit.UserID = user.ID
-	if _, err := repositories.CreateVisit(newVisit); err != nil {
+	visitResp, err := repositories.CreateVisit(newVisit)
+	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
-	resp := mapper.VisitModelToResponse(newVisit)
+	resp := mapper.VisitModelToResponse(visitResp)
 
 	return c.JSON(response.NewResponse(resp))
 }

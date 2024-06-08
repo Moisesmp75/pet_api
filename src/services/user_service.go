@@ -129,10 +129,10 @@ func CreateUser(c *fiber.Ctx) error {
 	user.Password = auth.Encrypt_password(user.Password)
 	user.Image.Filename = "user_" + user.Role.Name + "_" + "image_" + strconv.FormatUint(user.ID, 10)
 	user.Image.URL = "https://firebasestorage.googleapis.com/v0/b/hairypets.appspot.com/o/user_images%2Fdefault_user.png?alt=media&token=0f3e72a8-cf48-4e4c-8e27-7555f9de4bee"
-	userCreated, err := repositories.CreateUser(user)
 	if rol.Name == "ONG" {
 		user.IsONG = true
 	}
+	userCreated, err := repositories.CreateUser(user)
 	if err != nil {
 		log.Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))

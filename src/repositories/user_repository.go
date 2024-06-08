@@ -17,6 +17,8 @@ func CountUsers(role string) int64 {
 		query = query.Where("roles.name = ?", role)
 	}
 
+	query = query.Where("deleted_at = ?", nil)
+
 	if err := query.Count(&total_items).Error; err != nil {
 		return 0
 	}
@@ -117,8 +119,26 @@ func GetUserByEmail(email string) (models.User, error) {
 }
 
 func DeleteUser(id uint64) (models.User, error) {
-	user, err := GetUserById(id)
+	// user, err := GetUserById(id)
 
+	// if err != nil {
+	// 	return models.User{}, err
+	// }
+
+	// if _, err := DeletePets(user.Pets); err != nil {
+	// 	return models.User{}, err
+	// }
+
+	// operation := database.DB.Select("Pets").Select("Pets.Image").Select("Pets.Behavior")
+	// operation = operation.Select("ONGInfo").Select("ONGInfo.BankAccounts")
+	// operation = operation.Select("Image")
+	// operation = operation.Delete(&user)
+
+	// if operation.Error != nil || operation.RowsAffected == 0 {
+	// 	return models.User{}, err
+	// }
+	// return user, nil
+	user, err := GetUserById(id)
 	if err != nil {
 		return models.User{}, err
 	}
@@ -127,13 +147,17 @@ func DeleteUser(id uint64) (models.User, error) {
 		return models.User{}, err
 	}
 
-	operation := database.DB.Select("Pets").Select("Pets.Image").Select("Pets.Behavior")
-	operation = operation.Select("ONGInfo").Select("ONGInfo.BankAccounts")
-	operation = operation.Select("Image")
-	operation = operation.Delete(&user)
-
-	if operation.Error != nil || operation.RowsAffected == 0 {
+	if err := database.DB.Unscoped().Where("user_id = ?", user.ID).Delete(&models.ONGInfo{}).Error; err != nil {
 		return models.User{}, err
+	}
+
+	if err := database.DB.Unscoped().Where("user_id = ?", user.ID).Delete(&models.UserImage{}).Error; err != nil {
+		return models.User{}, err
+	}
+
+	operation := database.DB.Unscoped().Delete(&user)
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return models.User{}, operation.Error
 	}
 	return user, nil
 }
