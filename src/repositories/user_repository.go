@@ -17,8 +17,6 @@ func CountUsers(role string) int64 {
 		query = query.Where("roles.name = ?", role)
 	}
 
-	query = query.Where("deleted_at = ?", nil)
-
 	if err := query.Count(&total_items).Error; err != nil {
 		return 0
 	}
