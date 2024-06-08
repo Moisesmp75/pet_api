@@ -117,6 +117,7 @@ func CreatePet(c *fiber.Ctx) error {
 	pet.UserID = user.ID
 	pet.Image.Filename = helpers.GenerateUniqueFileName("user_" + strconv.FormatUint(user.ID, 10) + "_pet-image")
 	pet.Image.URL = "https://firebasestorage.googleapis.com/v0/b/hairypets.appspot.com/o/pet_images%2Fdefault_pet.png?alt=media&token=a13e363e-e8bf-4eda-90f6-828e8b628050"
+	pet.Adopted = false
 	petCreated, err := repositories.CreatePet(pet)
 
 	if err != nil {
