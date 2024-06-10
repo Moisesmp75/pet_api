@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"fmt"
-	"log"
 	"pet_api/src/database"
 	"pet_api/src/models"
 )
@@ -33,9 +32,6 @@ func CountPets(breed, color, gender, petType string) int64 {
 }
 
 func CreatePet(newPet models.Pet) (models.Pet, error) {
-	log.Println(newPet.Behavior.Habit)
-	log.Println(newPet.Behavior.Temper)
-	log.Println(newPet.Behavior.Personality)
 	if err := database.DB.Model(&models.Pet{}).Create(&newPet).Error; err != nil {
 		return models.Pet{}, err
 	}

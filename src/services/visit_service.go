@@ -172,7 +172,13 @@ func UpdateVisit(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 	resp := mapper.VisitModelToResponse(updateVisit)
-	return c.JSON(response.MessageResponse("pet visit successfully", resp))
+	if updateVisit.State == "Rejected" {
+		_, err := repositories.DeleteVisit(updateVisit.ID)
+		if err != nil {
+			c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		}
+	}
+	return c.JSON(response.MessageResponse("update visit successfully", resp))
 }
 
 // DeleteVisit godoc

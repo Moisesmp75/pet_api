@@ -28,6 +28,18 @@ definitions:
     - comment
     - pet_id
     type: object
+  request.DonationProductRequest:
+    properties:
+      ong_id:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/request.ProductRequest'
+        type: array
+    required:
+    - ong_id
+    - products
+    type: object
   request.LoginRequest:
     properties:
       identity:
@@ -95,6 +107,19 @@ definitions:
     - name
     - pet_type_id
     - weight
+    type: object
+  request.ProductRequest:
+    properties:
+      name:
+        type: string
+      quantity:
+        type: integer
+      unit:
+        type: number
+    required:
+    - name
+    - quantity
+    - unit
     type: object
   request.ReportRequest:
     properties:
@@ -271,6 +296,17 @@ definitions:
       success:
         type: boolean
     type: object
+  response.BaseResponse-request_DonationProductRequest:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/request.DonationProductRequest'
+      success:
+        type: boolean
+    type: object
   response.BaseResponse-response_AdoptionResponse:
     properties:
       message:
@@ -279,6 +315,17 @@ definitions:
         type: array
       resource:
         $ref: '#/definitions/response.AdoptionResponse'
+      success:
+        type: boolean
+    type: object
+  response.BaseResponse-response_DonationProductResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      resource:
+        $ref: '#/definitions/response.DonationProductResponse'
       success:
         type: boolean
     type: object
@@ -376,6 +423,19 @@ definitions:
       success:
         type: boolean
     type: object
+  response.BaseResponsePag-response_DonationProductResponse:
+    properties:
+      message:
+        items:
+          type: string
+        type: array
+      meta:
+        $ref: '#/definitions/common.Pagination'
+      resource:
+        $ref: '#/definitions/response.DonationProductResponse'
+      success:
+        type: boolean
+    type: object
   response.BaseResponsePag-response_PetResponse:
     properties:
       message:
@@ -427,6 +487,21 @@ definitions:
         $ref: '#/definitions/response.VisitResponse'
       success:
         type: boolean
+    type: object
+  response.DonationProductResponse:
+    properties:
+      donation_date:
+        type: string
+      id:
+        type: integer
+      ong:
+        $ref: '#/definitions/response.UserResponse'
+      products:
+        items:
+          $ref: '#/definitions/response.ProductResponse'
+        type: array
+      user:
+        $ref: '#/definitions/response.UserResponse'
     type: object
   response.EventResponse:
     properties:
@@ -519,6 +594,15 @@ definitions:
         type: integer
       name:
         type: string
+    type: object
+  response.ProductResponse:
+    properties:
+      name:
+        type: string
+      quantity:
+        type: integer
+      unit:
+        type: number
     type: object
   response.ReportResponse:
     properties:
@@ -725,6 +809,82 @@ paths:
       summary: Actualizar una adopcion programada
       tags:
       - adoptions
+  /donations/products:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista paginada de todas las donaciones.
+      parameters:
+      - description: Offset para paginación
+        in: query
+        name: offset
+        type: integer
+      - description: Límite de resultados por página
+        in: query
+        name: limit
+        type: integer
+      - description: Filtrar donaciones por ong
+        in: query
+        name: ong_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponsePag-response_DonationProductResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Lista todas las donaciones de productos
+      tags:
+      - donations
+    post:
+      consumes:
+      - application/json
+      description: Crea una nueva donacion en la aplicación.
+      parameters:
+      - description: Donacion
+        in: body
+        name: donationProductRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.DonationProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-request_DonationProductRequest'
+      security:
+      - ApiKeyAuth: []
+      summary: Crea una nueva donacion
+      tags:
+      - donations
+  /donations/products/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los detalles de una donación de producto según su ID.
+      parameters:
+      - description: ID de la donación de productos
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_DonationProductResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene una donación de producto por ID
+      tags:
+      - donations
   /events:
     get:
       consumes:

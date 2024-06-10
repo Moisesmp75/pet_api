@@ -10,4 +10,5 @@ func AddControllers(api fiber.Router) {
 	AdoptionController(api)
 	RoleController(api)
 	EventController(api)
+	DonationController(api)
 }

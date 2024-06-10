@@ -218,6 +218,128 @@ const docTemplate = `{
                 }
             }
         },
+        "/donations/products": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene una lista paginada de todas las donaciones.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Lista todas las donaciones de productos",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset para paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filtrar donaciones por ong",
+                        "name": "ong_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponsePag-response_DonationProductResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Crea una nueva donacion en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Crea una nueva donacion",
+                "parameters": [
+                    {
+                        "description": "Donacion",
+                        "name": "donationProductRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DonationProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-request_DonationProductRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/donations/products/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene los detalles de una donación de producto según su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Obtiene una donación de producto por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la donación de productos",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_DonationProductResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/events": {
             "get": {
                 "security": [
@@ -1441,6 +1563,24 @@ const docTemplate = `{
                 }
             }
         },
+        "request.DonationProductRequest": {
+            "type": "object",
+            "required": [
+                "ong_id",
+                "products"
+            ],
+            "properties": {
+                "ong_id": {
+                    "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.ProductRequest"
+                    }
+                }
+            }
+        },
         "request.LoginRequest": {
             "type": "object",
             "required": [
@@ -1535,6 +1675,25 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "weight": {
+                    "type": "number"
+                }
+            }
+        },
+        "request.ProductRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "quantity",
+                "unit"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "unit": {
                     "type": "number"
                 }
             }
@@ -1802,6 +1961,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponse-request_DonationProductRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/request.DonationProductRequest"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponse-response_AdoptionResponse": {
             "type": "object",
             "properties": {
@@ -1813,6 +1989,23 @@ const docTemplate = `{
                 },
                 "resource": {
                     "$ref": "#/definitions/response.AdoptionResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.BaseResponse-response_DonationProductResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.DonationProductResponse"
                 },
                 "success": {
                     "type": "boolean"
@@ -1964,6 +2157,26 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponsePag-response_DonationProductResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/common.Pagination"
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.DonationProductResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponsePag-response_PetResponse": {
             "type": "object",
             "properties": {
@@ -2041,6 +2254,29 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "response.DonationProductResponse": {
+            "type": "object",
+            "properties": {
+                "donation_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ong": {
+                    "$ref": "#/definitions/response.UserResponse"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.ProductResponse"
+                    }
+                },
+                "user": {
+                    "$ref": "#/definitions/response.UserResponse"
                 }
             }
         },
@@ -2182,6 +2418,20 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.ProductResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "unit": {
+                    "type": "number"
                 }
             }
         },

@@ -82,6 +82,16 @@ func RunMigration() {
 	if errPetBehavior != nil {
 		log.Fatal(errPetBehavior.Error())
 	}
+
+	errProduct := database.DB.AutoMigrate(&models.Product{})
+	if errProduct != nil {
+		log.Fatal(errProduct.Error())
+	}
+
+	errDonationProd := database.DB.AutoMigrate(&models.DonationProduct{})
+	if errDonationProd != nil {
+		log.Fatal(errDonationProd.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

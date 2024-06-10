@@ -176,7 +176,13 @@ func UpdateAdoption(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 	}
 	resp := mapper.AdoptionModelToResponse(updateAdoption)
-	return c.JSON(response.MessageResponse("pet visit successfully", resp))
+	if updateAdoption.State == "Rejected" {
+		_, err := repositories.DeleteAdoption(updateAdoption.ID)
+		if err != nil {
+			c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+		}
+	}
+	return c.JSON(response.MessageResponse("update adoption successfully", resp))
 }
 
 // DeleteAdoption godoc
