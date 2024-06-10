@@ -14,4 +14,5 @@ func AdoptionController(api fiber.Router) {
 	adoptionRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.CreateAdoption)
 	adoptionRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.GetAdoptionById)
 	adoptionRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.DeleteAdoption)
+	adoptionRoute.Patch("/:id", auth.AuthMiddleware([]string{"Duenio", "Admin", "ONG"}), services.UpdateAdoption)
 }

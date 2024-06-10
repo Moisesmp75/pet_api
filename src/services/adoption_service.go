@@ -134,6 +134,51 @@ func GetAdoptionById(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// UpdateAdoption godoc
+//
+//	@Summary		Actualizar una adopcion programada
+//	@Security		ApiKeyAuth
+//	@Description	Actualiza una adopcion identificada por su ID.
+//	@Tags			adoptions
+//	@Accept			json
+//	@Produce		json
+//	@Param			id						path		int								true	"Adoption id"
+//	@Param			UpdateAdoptionRequest	body		request.UpdateAdoptionRequest	true	"Adoption update request payload"
+//	@Success		200						{object}	response.BaseResponse[response.AdoptionResponse]
+//	@Router			/adoptions/{id} [patch]
+func UpdateAdoption(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	model := request.UpdateAdoptionRequest{}
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	}
+	adoption, err := repositories.GetAdoptionById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	userEmail := c.Locals("user_email").(string)
+	user, _ := repositories.GetUserByEmail(userEmail)
+	if adoption.Pet.UserID != user.ID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this adoption"))
+	}
+	updateAdoption := mapper.UpdateAdoptionRequestToModel(model, adoption)
+	if _, err := repositories.UpdateAdoption(updateAdoption); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.AdoptionModelToResponse(updateAdoption)
+	return c.JSON(response.MessageResponse("pet visit successfully", resp))
+}
+
 // DeleteAdoption godoc
 //
 //	@Summary		Elimina una adopcion programada

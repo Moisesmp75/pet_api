@@ -20,7 +20,7 @@ func GetAllVisits(offset, limit int) ([]models.Visit, error) {
 	data := database.DB.Model(&models.Visit{})
 	data = data.Offset(offset).Limit(limit)
 	data = data.Preload("User").Preload("User.Role")
-	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.Behavior")
+	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.Behavior").Preload("Pet.Image")
 	data = data.Find(&visits)
 
 	if data.Error != nil {
@@ -34,7 +34,7 @@ func GetVisitById(id uint64) (models.Visit, error) {
 	var visit models.Visit
 	data := database.DB.Model(&models.Visit{})
 	data = data.Preload("User").Preload("User.Role")
-	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.Behavior")
+	data = data.Preload("Pet").Preload("Pet.User").Preload("Pet.User.Role").Preload("Pet.Behavior").Preload("Pet.Image")
 	data = data.First(&visit, id)
 
 	if data.Error != nil || data.RowsAffected == 0 {
@@ -63,5 +63,15 @@ func DeleteVisit(id uint64) (models.Visit, error) {
 	if operation.Error != nil || operation.RowsAffected == 0 {
 		return models.Visit{}, operation.Error
 	}
+	return visit, nil
+}
+
+func UpdateVisit(visit models.Visit) (models.Visit, error) {
+
+	data := database.DB.Model(&models.Visit{}).Where("id = ?", visit.ID).Updates(visit)
+	if data.RowsAffected == 0 || data.Error != nil {
+		return models.Visit{}, data.Error
+	}
+
 	return visit, nil
 }

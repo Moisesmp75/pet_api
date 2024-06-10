@@ -130,6 +130,51 @@ func GetVisitById(c *fiber.Ctx) error {
 	return c.JSON(response.NewResponse(resp))
 }
 
+// UpdateVisit godoc
+//
+//	@Summary		Actualizar una visita programada
+//	@Security		ApiKeyAuth
+//	@Description	Actualiza una visita identificada por su ID.
+//	@Tags			visits
+//	@Accept			json
+//	@Produce		json
+//	@Param			id					path		int							true	"Visit id"
+//	@Param			updateVisitRequest	body		request.UpdateVisitRequest true	"Visit update request payload"
+//	@Success		200					{object}	response.BaseResponse[response.VisitResponse]
+//	@Router			/visits/{id} [patch]
+func UpdateVisit(c *fiber.Ctx) error {
+	strid := c.Params("id")
+	id, err := strconv.ParseUint(strid, 10, 64)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse(err.Error()))
+	}
+	model := request.UpdateVisitRequest{}
+	if _, err := helpers.ValidateRequest(c.Body(), &model); err != nil {
+		for _, v := range err {
+			log.Println(v)
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(response.ErrorsResponse(err))
+	}
+	visit, err := repositories.GetVisitById(id)
+	if err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(response.ErrorResponse(err.Error()))
+	}
+	userEmail := c.Locals("user_email").(string)
+	user, _ := repositories.GetUserByEmail(userEmail)
+	if visit.Pet.UserID != user.ID {
+		return c.Status(fiber.StatusUnauthorized).JSON(response.ErrorResponse("You can't update this visit"))
+	}
+	updateVisit := mapper.UpdateVisitRequestToModel(model, visit)
+	if _, err := repositories.UpdateVisit(updateVisit); err != nil {
+		log.Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
+	}
+	resp := mapper.VisitModelToResponse(updateVisit)
+	return c.JSON(response.MessageResponse("pet visit successfully", resp))
+}
+
 // DeleteVisit godoc
 //
 //	@Summary		Elimina una visita programada

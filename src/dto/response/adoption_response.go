@@ -9,4 +9,5 @@ type AdoptionResponse struct {
 	ApplicationDate time.Time    `json:"application_date"`
 	AdoptionDate    time.Time    `json:"adoption_date"`
 	Comment         string       `json:"comment"`
+	State           string       `json:"state"`
 }

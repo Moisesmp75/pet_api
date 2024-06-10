@@ -15,4 +15,5 @@ type Adoption struct {
 	User         User      `gorm:"foreignKey:UserID"`
 	AdoptionDate time.Time `gorm:"not null"`
 	Comment      string    `gorm:"size:150"`
+	State        string    `gorm:"size:10"`
 }

@@ -12,6 +12,7 @@ func AdoptionRequestToModel(req request.AdoptionRequest) models.Adoption {
 		PetID:        req.PetID,
 		AdoptionDate: helpers.ParseDate(req.AdoptionDate),
 		Comment:      req.Comment,
+		State:        "Pending",
 	}
 }
 
@@ -23,6 +24,7 @@ func AdoptionModelToResponse(adoption models.Adoption) response.AdoptionResponse
 		ApplicationDate: adoption.CreatedAt,
 		AdoptionDate:    adoption.AdoptionDate,
 		Comment:         adoption.Comment,
+		State:           adoption.State,
 	}
 }
 
@@ -34,4 +36,11 @@ func AdoptionModelsToResponse(adoptions []models.Adoption) []response.AdoptionRe
 	}
 
 	return resp
+}
+
+func UpdateAdoptionRequestToModel(req request.UpdateAdoptionRequest, adoption models.Adoption) models.Adoption {
+	if req.State != "" {
+		adoption.State = req.State
+	}
+	return adoption
 }

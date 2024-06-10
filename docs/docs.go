@@ -172,6 +172,50 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza una adopcion identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "adoptions"
+                ],
+                "summary": "Actualizar una adopcion programada",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Adoption id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Adoption update request payload",
+                        "name": "UpdateAdoptionRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateAdoptionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_AdoptionResponse"
+                        }
+                    }
+                }
             }
         },
         "/events": {
@@ -1307,6 +1351,50 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza una visita identificada por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "visits"
+                ],
+                "summary": "Actualizar una visita programada",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Visit id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Visit update request payload",
+                        "name": "updateVisitRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateVisitRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_VisitResponse"
+                        }
+                    }
+                }
             }
         }
     },
@@ -1337,15 +1425,15 @@ const docTemplate = `{
         "request.AdoptionRequest": {
             "type": "object",
             "required": [
+                "adoption_date",
                 "comment",
-                "date",
                 "pet_id"
             ],
             "properties": {
-                "comment": {
+                "adoption_date": {
                     "type": "string"
                 },
-                "date": {
+                "comment": {
                     "type": "string"
                 },
                 "pet_id": {
@@ -1470,6 +1558,17 @@ const docTemplate = `{
                 }
             }
         },
+        "request.UpdateAdoptionRequest": {
+            "type": "object",
+            "required": [
+                "state"
+            ],
+            "properties": {
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
         "request.UpdatePetRequest": {
             "type": "object",
             "properties": {
@@ -1539,6 +1638,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UpdateVisitRequest": {
+            "type": "object",
+            "required": [
+                "state"
+            ],
+            "properties": {
+                "state": {
                     "type": "string"
                 }
             }
@@ -1626,6 +1736,9 @@ const docTemplate = `{
                 },
                 "pet": {
                     "$ref": "#/definitions/response.PetResponse"
+                },
+                "state": {
+                    "type": "string"
                 },
                 "user": {
                     "$ref": "#/definitions/response.UserResponse"
@@ -2170,6 +2283,9 @@ const docTemplate = `{
                 },
                 "pet": {
                     "$ref": "#/definitions/response.PetResponse"
+                },
+                "state": {
+                    "type": "string"
                 },
                 "user": {
                     "$ref": "#/definitions/response.UserResponse"

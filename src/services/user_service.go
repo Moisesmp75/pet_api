@@ -24,7 +24,7 @@ import (
 //	@Produce		json
 //	@Param			offset	query		int												false	"Offset de paginación"
 //	@Param			limit	query		int												false	"Límite de resultados por página"
-//	@Param			role	query		string												false	"Filtrar usuarios por rol"
+//	@Param			role	query		string											false	"Filtrar usuarios por rol"
 //	@Success		200		{object}	response.BaseResponsePag[response.UserResponse]	"Respuesta exitosa"
 //	@Router			/users [get]
 func GetAllUsers(c *fiber.Ctx) error {

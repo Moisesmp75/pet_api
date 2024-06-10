@@ -17,15 +17,15 @@ definitions:
     type: object
   request.AdoptionRequest:
     properties:
-      comment:
+      adoption_date:
         type: string
-      date:
+      comment:
         type: string
       pet_id:
         type: integer
     required:
+    - adoption_date
     - comment
-    - date
     - pet_id
     type: object
   request.LoginRequest:
@@ -109,6 +109,13 @@ definitions:
     - reported_user_id
     - reporter_user_id
     type: object
+  request.UpdateAdoptionRequest:
+    properties:
+      state:
+        type: string
+    required:
+    - state
+    type: object
   request.UpdatePetRequest:
     properties:
       adopted:
@@ -156,6 +163,13 @@ definitions:
         type: string
       user_name:
         type: string
+    type: object
+  request.UpdateVisitRequest:
+    properties:
+      state:
+        type: string
+    required:
+    - state
     type: object
   request.UserRequest:
     properties:
@@ -215,6 +229,8 @@ definitions:
         type: integer
       pet:
         $ref: '#/definitions/response.PetResponse'
+      state:
+        type: string
       user:
         $ref: '#/definitions/response.UserResponse'
     type: object
@@ -569,6 +585,8 @@ definitions:
         type: integer
       pet:
         $ref: '#/definitions/response.PetResponse'
+      state:
+        type: string
       user:
         $ref: '#/definitions/response.UserResponse'
     type: object
@@ -677,6 +695,34 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Obtiene una adopción por ID
+      tags:
+      - adoptions
+    patch:
+      consumes:
+      - application/json
+      description: Actualiza una adopcion identificada por su ID.
+      parameters:
+      - description: Adoption id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Adoption update request payload
+        in: body
+        name: UpdateAdoptionRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateAdoptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_AdoptionResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualizar una adopcion programada
       tags:
       - adoptions
   /events:
@@ -1396,6 +1442,34 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Obtiene una visita por ID
+      tags:
+      - visits
+    patch:
+      consumes:
+      - application/json
+      description: Actualiza una visita identificada por su ID.
+      parameters:
+      - description: Visit id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Visit update request payload
+        in: body
+        name: updateVisitRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateVisitRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse-response_VisitResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualizar una visita programada
       tags:
       - visits
 securityDefinitions:

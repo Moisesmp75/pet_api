@@ -14,4 +14,5 @@ func VisitController(api fiber.Router) {
 	visitRoute.Post("/", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.CreateVisit)
 	visitRoute.Get("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.GetVisitById)
 	visitRoute.Delete("/:id", auth.AuthMiddleware([]string{"ONG", "Adoptador", "Duenio", "Admin"}), services.DeleteVisit)
+	visitRoute.Patch("/:id", auth.AuthMiddleware([]string{"Duenio", "Admin", "ONG"}), services.UpdateVisit)
 }
