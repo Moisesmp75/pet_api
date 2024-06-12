@@ -10,6 +10,7 @@ func DonationProductRequestToModel(req request.DonationProductRequest) models.Do
 	return models.DonationProduct{
 		OngID:    req.OngId,
 		Products: ProductRequestsToModels(req.Products),
+		Received: false,
 	}
 }
 
@@ -20,6 +21,7 @@ func DonationProductModelToResponse(donation models.DonationProduct) response.Do
 		Ong:          *OnlyUserModelToResponse(donation.Ong),
 		Products:     ProductModelsToResponse(donation.Products),
 		DonationDate: donation.CreatedAt,
+		Received:     donation.Received,
 	}
 }
 
@@ -30,4 +32,9 @@ func DonationProductModelsToResponse(donations []models.DonationProduct) []respo
 		resp[i] = DonationProductModelToResponse(v)
 	}
 	return resp
+}
+
+func UpdateDonationRequestToModel(req request.UpdateDonationRequest, donation models.DonationProduct) models.DonationProduct {
+	donation.Received = req.Received
+	return donation
 }

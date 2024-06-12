@@ -10,7 +10,7 @@ import (
 func AdoptionRequestToModel(req request.AdoptionRequest) models.Adoption {
 	return models.Adoption{
 		PetID:        req.PetID,
-		AdoptionDate: helpers.ParseDate(req.AdoptionDate),
+		AdoptionDate: helpers.ParseDateTime(req.AdoptionDate),
 		Comment:      req.Comment,
 		State:        "Pending",
 	}

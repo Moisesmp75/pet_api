@@ -57,3 +57,28 @@ func GetDonationProductById(id uint64) (models.DonationProduct, error) {
 
 	return donation, nil
 }
+
+func UpdateDonationProduct(donation models.DonationProduct) (models.DonationProduct, error) {
+	data := database.DB.Model(&models.DonationProduct{}).Where("id = ?", donation.ID).Updates(donation)
+	if data.RowsAffected == 0 || data.Error != nil {
+		return models.DonationProduct{}, data.Error
+	}
+
+	return donation, nil
+}
+
+func DeleteDonationProduct(id uint64) (models.DonationProduct, error) {
+	donation, err := GetDonationProductById(id)
+	if err != nil {
+		return models.DonationProduct{}, err
+	}
+
+	operation := database.DB.Model(&models.DonationProduct{})
+	operation = operation.Delete(&donation)
+
+	if operation.Error != nil || operation.RowsAffected == 0 {
+		return models.DonationProduct{}, operation.Error
+	}
+
+	return donation, nil
+}

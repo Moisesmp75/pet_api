@@ -92,6 +92,11 @@ func RunMigration() {
 	if errDonationProd != nil {
 		log.Fatal(errDonationProd.Error())
 	}
+
+	errDonationMoney := database.DB.AutoMigrate(&models.DonationMoney{})
+	if errDonationMoney != nil {
+		log.Fatal(errDonationMoney.Error())
+	}
 }
 
 func SetupDefaultRoles() error {

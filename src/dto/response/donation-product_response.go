@@ -8,4 +8,5 @@ type DonationProductResponse struct {
 	Ong          UserResponse      `json:"ong"`
 	Products     []ProductResponse `json:"products"`
 	DonationDate time.Time         `json:"donation_date"`
+	Received     bool              `json:"received"`
 }

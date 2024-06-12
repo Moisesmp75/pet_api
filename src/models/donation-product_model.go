@@ -10,4 +10,5 @@ type DonationProduct struct {
 	OngID    uint64    `gorm:"not null"`
 	Ong      User      `gorm:"foreignKey:OngID"`
 	Products []Product `gorm:"constraint:OnDelete:CASCADE;foreignKey:DonationProductID;references:ID"`
+	Received bool      `gorm:"default:false"`
 }

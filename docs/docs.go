@@ -218,6 +218,172 @@ const docTemplate = `{
                 }
             }
         },
+        "/donations/money": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene una lista paginada de todas las donaciones de dinero.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Lista todas las donaciones de dinero",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset para paginación",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Límite de resultados por página",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filtrar donaciones por ong",
+                        "name": "ong_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponsePag-response_DonationMoneyResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Crea una nueva donacion de dinero en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Crea una nueva donacion de dinero",
+                "parameters": [
+                    {
+                        "description": "Donacion",
+                        "name": "donationMoneyRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DonationMoneyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-request_DonationMoneyRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/donations/money/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene los detalles de una donación de dinero según su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Obtiene una donación de dinero por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la donación de dinero",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_DonationMoneyResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza una donación de dinero en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Actualiza una donación de dinero",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la donación de dinero",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Datos de la actualización de la donación",
+                        "name": "updateDonationMoneyRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateDonationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_DonationMoneyResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/donations/products": {
             "get": {
                 "security": [
@@ -225,7 +391,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Obtiene una lista paginada de todas las donaciones.",
+                "description": "Obtiene una lista paginada de todas las donaciones de productos.",
                 "consumes": [
                     "application/json"
                 ],
@@ -271,7 +437,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Crea una nueva donacion en la aplicación.",
+                "description": "Crea una nueva donacion de productos en la aplicación.",
                 "consumes": [
                     "application/json"
                 ],
@@ -281,7 +447,7 @@ const docTemplate = `{
                 "tags": [
                     "donations"
                 ],
-                "summary": "Crea una nueva donacion",
+                "summary": "Crea una nueva donacion de producto",
                 "parameters": [
                     {
                         "description": "Donacion",
@@ -328,6 +494,50 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "schema": {
+                            "$ref": "#/definitions/response.BaseResponse-response_DonationProductResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza una donación de productos en la aplicación.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "donations"
+                ],
+                "summary": "Actualiza una donación de productos",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la donación de productos",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Datos de la actualización de la donación",
+                        "name": "updateDonationRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateDonationRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -1563,6 +1773,21 @@ const docTemplate = `{
                 }
             }
         },
+        "request.DonationMoneyRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "ong_id"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "ong_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "request.DonationProductRequest": {
             "type": "object",
             "required": [
@@ -1725,6 +1950,17 @@ const docTemplate = `{
             "properties": {
                 "state": {
                     "type": "string"
+                }
+            }
+        },
+        "request.UpdateDonationRequest": {
+            "type": "object",
+            "required": [
+                "received"
+            ],
+            "properties": {
+                "received": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1961,6 +2197,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponse-request_DonationMoneyRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/request.DonationMoneyRequest"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponse-request_DonationProductRequest": {
             "type": "object",
             "properties": {
@@ -1989,6 +2242,23 @@ const docTemplate = `{
                 },
                 "resource": {
                     "$ref": "#/definitions/response.AdoptionResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.BaseResponse-response_DonationMoneyResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.DonationMoneyResponse"
                 },
                 "success": {
                     "type": "boolean"
@@ -2157,6 +2427,26 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BaseResponsePag-response_DonationMoneyResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/common.Pagination"
+                },
+                "resource": {
+                    "$ref": "#/definitions/response.DonationMoneyResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BaseResponsePag-response_DonationProductResponse": {
             "type": "object",
             "properties": {
@@ -2257,6 +2547,29 @@ const docTemplate = `{
                 }
             }
         },
+        "response.DonationMoneyResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "donation_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ong": {
+                    "$ref": "#/definitions/response.UserResponse"
+                },
+                "received": {
+                    "type": "boolean"
+                },
+                "user": {
+                    "$ref": "#/definitions/response.UserResponse"
+                }
+            }
+        },
         "response.DonationProductResponse": {
             "type": "object",
             "properties": {
@@ -2274,6 +2587,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/response.ProductResponse"
                     }
+                },
+                "received": {
+                    "type": "boolean"
                 },
                 "user": {
                     "$ref": "#/definitions/response.UserResponse"
