@@ -177,5 +177,5 @@ func UpdateDonationProduct(c *fiber.Ctx) error {
 			c.Status(fiber.StatusInternalServerError).JSON(response.ErrorResponse(err.Error()))
 		}
 	}
-	return c.JSON(response.MessageResponse("update adoption successfully", resp))
+	return c.JSON(response.MessageResponse("update donation successfully", resp))
 }
